@@ -1,0 +1,162 @@
+/* Main Editor Window */
+GridBackground {
+    --grid-background-color: rgb(40, 40, 40);
+    --line-color: rgba(193, 196, 192, 0.1);
+    --thick-line-color: rgba(193, 196, 192, 0.1);
+    --spacing: 15;
+}
+
+#graph-curtain {
+    flex: auto 1 1;
+    background-color: rgb(20, 20, 20);
+    justify-content: center;
+    align-items: center;
+}
+
+#graph-curtain > Label {
+    font-size: 24px;
+    max-width: 90%;
+    -unity-text-align: upper-center;
+    white-space: normal;
+}
+
+.comment {
+    flex-direction: column;
+}
+
+#comment-text {
+    white-space: normal;
+    margin: 6px;
+}
+
+.behaviour-node {
+    flex-direction: row;
+}
+
+.comment-title {
+    -unity-text-align: upper-center;
+    margin: 2px;
+    font-size: 18px;
+    -unity-font-style: bold;
+}
+
+/* Inspector */
+#property-name {
+    width: 40%;
+}
+
+#property-container {
+    flex-direction: row;
+    margin: 2px 6px 2px 2px;
+}
+
+/* Node View */
+NodeView {
+    padding: 0;
+    margin: 0;
+    -unity-overflow-clip-box: content-box;
+}
+
+.graphElement {
+    margin: 0;
+}
+
+#node-border {
+    border-radius: 6px;
+    border-width: 1px;
+    border-color: rgb(25, 25, 25);
+    overflow: hidden;
+}
+
+.rootNode > #node-border {
+    background-color: rgb(80, 54, 54);
+}
+
+.compositeNode > #node-border {
+    background-color: rgb(80, 80, 54);
+}
+
+.decoratorNode > #node-border {
+    background-color: rgb(54, 80, 80);
+}
+
+.leafNode > #node-border {
+    background-color: rgb(54, 80, 54);
+}
+
+
+#selection-border {
+    border-radius: 8px;
+    margin: 4px;
+    position: absolute;
+    left: -8px;
+    top: -8px;
+    right: -8px;
+    bottom: -8px;
+}
+
+:hover > #selection-border {
+    border-color: rgb(68, 192, 255);
+    /*border-color: white;*/
+    border-width: 1px;
+}
+
+:selected > #selection-border {
+    border-color: rgb(68, 192, 255);
+    /*border-color: white;*/
+    border-width: 1px;
+}
+
+:selected:hover > #selection-border {
+    border-color: rgb(68, 192, 255);
+    /*border-color: white;*/
+    border-width: 2px;
+}
+
+#title {
+    flex-direction: row;
+    justify-content: center;
+    height: 36px;
+}
+
+#title-label {
+    margin: 4px;
+    align-self: center;
+}
+
+#contents {
+    flex: 1 0 auto;
+}
+
+#contents > #top {
+    flex-direction: row;
+}
+
+#input {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    flex: 1 0 auto;
+    justify-content: center;
+}
+
+#output {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    flex: 1 0 auto;
+    justify-content: center;
+}
+
+#divider {
+    border-color: rgb(35, 35, 35);
+    background-color: rgb(35, 35, 35);
+}
+
+#divider.vertical {
+    width: 1px;
+    border-right-width: 1px;
+}
+
+#divider.horizontal {
+    height: 1px;
+    border-bottom-width: 1px;
+}

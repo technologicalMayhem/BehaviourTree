@@ -1,0 +1,21 @@
+<UXML xmlns="UnityEngine.UIElements">
+    <VisualElement name="selection-border" style="display: flex;"/>
+    <VisualElement name="node-border" class="behaviour-node">
+        <VisualElement name="input"/>
+        <VisualElement name="title" style="height: auto;">
+            <Label name="title-label" text="Example Text" class="unity-text-element unity-label"/>
+            <VisualElement name="title-button-container" style="display: none;">
+                <VisualElement name="collapse-button">
+                    <VisualElement name="icon"/>
+                </VisualElement>
+            </VisualElement>
+        </VisualElement>
+        <VisualElement name="output"/>
+        <VisualElement name="contents" style="display: none;">
+            <VisualElement name="divider" class="horizontal"/>
+            <VisualElement name="top">
+                <VisualElement name="divider" class="vertical"/>
+            </VisualElement>
+        </VisualElement>
+    </VisualElement>
+</UXML>

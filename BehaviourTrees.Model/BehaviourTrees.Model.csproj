@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net472</TargetFramework>
+        <LangVersion>8.0</LangVersion>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\net472\BehaviourTrees.Model.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DocumentationFile>bin\Debug\net472\BehaviourTrees.Model.xml</DocumentationFile>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\BehaviourTrees.Core\BehaviourTrees.Core.csproj" />
+    </ItemGroup>
+
+</Project>

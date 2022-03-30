@@ -1,0 +1,18 @@
+<UXML xmlns="UnityEngine.UIElements" xmlns:bte="BehaviourTrees.UnityEditor.UIElements"
+      xmlns:editor="UnityEditor.UIElements">
+    <editor:Toolbar>
+        <editor:ToolbarMenu display-tooltip-when-elided="true" text="Assets"/>
+    </editor:Toolbar>
+    <VisualElement name="graph-curtain">
+        <Label text="Load a behaviour tree by opening it in the project view or using the assets dropdown."
+               display-tooltip-when-elided="true"/>
+    </VisualElement>
+    <bte:SplitView orientation="Horizontal" name="split-view" fixed-pane-initial-dimension="1200"
+                   style="display: none;">
+        <bte:BehaviourTreeView focusable="true" style="flex-grow: 1; flex-shrink: 0;"/>
+        <VisualElement style="flex-grow: 0; flex-shrink: 1; top: auto; left: auto; right: -5px; bottom: -5px;">
+            <bte:InspectorView/>
+            <Foldout text="Blackboard" name="align-test"/>
+        </VisualElement>
+    </bte:SplitView>
+</UXML>
