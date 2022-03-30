@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.Serialization;
 using System.Text;
-using System.Text.Json.Serialization;
 using BehaviourTrees.Core;
 
 namespace BehaviourTrees.Model
 {
-    public sealed class ConceptualBehaviourTree : IJsonOnDeserialized
+    public sealed class ConceptualBehaviourTree
     {
         private readonly Random _random = new Random();
         public readonly Dictionary<string, IList<string>> Connections;
@@ -20,7 +20,8 @@ namespace BehaviourTrees.Model
             Connections = new Dictionary<string, IList<string>>();
         }
 
-        public void OnDeserialized()
+        [OnDeserialized]
+        public void OnDeserialized(StreamingContext context)
         {
             foreach (var nodeModel in Nodes) EnsureDictionaryIsCorrect(nodeModel);
         }

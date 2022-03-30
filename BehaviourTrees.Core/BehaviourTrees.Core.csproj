@@ -13,8 +13,4 @@
         <DocumentationFile>bin\Debug\net472\BehaviourTrees.Core.xml</DocumentationFile>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="System.Text.Json" Version="6.0.2" />
-    </ItemGroup>
-
 </Project>

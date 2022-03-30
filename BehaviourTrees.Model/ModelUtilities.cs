@@ -2,17 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
 using BehaviourTrees.Core;
+using Newtonsoft.Json;
 
 namespace BehaviourTrees.Model
 {
     public static class ModelUtilities
     {
-        private static readonly JsonSerializerOptions Options = new JsonSerializerOptions
+        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
-            IncludeFields = true,
-            Converters = { new TypeConverter() }
+            // Converters = { new TypeConverter() }
         };
 
         public static bool InheritsFrom<TBaseType>(this Type type)
@@ -44,12 +43,12 @@ namespace BehaviourTrees.Model
 
         public static string Serialize(this ConceptualBehaviourTree tree)
         {
-            return JsonSerializer.Serialize(tree, Options);
+            return JsonConvert.SerializeObject(tree, Settings);
         }
 
         public static ConceptualBehaviourTree Deserialize(string serializedModel)
         {
-            var conceptualBehaviourTree = JsonSerializer.Deserialize<ConceptualBehaviourTree>(serializedModel, Options);
+            var conceptualBehaviourTree = JsonConvert.DeserializeObject<ConceptualBehaviourTree>(serializedModel, Settings);
             return conceptualBehaviourTree;
         }
     }

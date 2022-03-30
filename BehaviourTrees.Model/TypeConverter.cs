@@ -1,20 +1,19 @@
 using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace BehaviourTrees.Model
 {
-    internal class TypeConverter : JsonConverter<Type>
-    {
-        public override Type Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            var s = reader.GetString();
-            return s == null ? null : Type.GetType(s);
-        }
-
-        public override void Write(Utf8JsonWriter writer, Type value, JsonSerializerOptions options)
-        {
-            writer.WriteStringValue(value.FullName);
-        }
-    }
+    // internal class TypeConverter : JsonConverter<Type>
+    // {
+    //     public override Type ReadJson(JsonReader reader, Type objectType, Type existingValue, bool hasExistingValue,
+    //         JsonSerializer serializer)        {
+    //         var s = reader.ReadAsString();
+    //         return s == null ? null : Type.GetType(s);
+    //     }
+    //
+    //     public override void WriteJson(JsonWriter writer, Type value, JsonSerializer serializer)
+    //     {
+    //         writer.WriteValue(value.FullName);
+    //     }
+    // }
 }
