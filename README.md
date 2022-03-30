@@ -11,5 +11,6 @@ Some of the things that need improving on, in no paticular order:
 - Editor > Blackboard Inspector: Adding a inspector that let's you track what blackboard values exists and of what types they are as well as which nodes use them would be very helpful. Aditionally it would be very useful if you could see the actual values during runtime.
 - Model > Support for Extensions: It would be great if the model had support for arbitrary data that might be added to if someone expands on this or they just don't make much sense to add to the base implemenations.
 - General: Add some way to automatically put all the depencies and stuff in one output folder. Right now this is a bit of a mess.
+- General: Add tests to the project so that i know ahead of time if a change i might make breaks things.
 
 This is the first bigger thing I have made for Unity so I would love to receive feedback on this.
