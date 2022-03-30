@@ -14,6 +14,8 @@ namespace BehaviourTrees.Model
     /// </summary>
     public static class BehaviourTreeConstructor
     {
+        private static object _value;
+
         /// <summary>
         ///     Construct a <see cref="BehaviourTree{TContext}" /> from the model.
         /// </summary>
@@ -86,7 +88,9 @@ namespace BehaviourTrees.Model
                 foreach (var keyValuePair in model.Values)
                 {
                     var fieldInfo = fields.First(info => info.Name == keyValuePair.Key);
-                    fieldInfo.SetValue(node, keyValuePair.Value);
+                    //Make sure that we do potentially necessary casts (example: float could get deserialized as double)
+                    _value = Convert.ChangeType(keyValuePair.Value, fieldInfo.FieldType);
+                    fieldInfo.SetValue(node, _value);
                 }
 
                 var contextField = fields.FirstOrDefault(info => info.Name == "Context");
