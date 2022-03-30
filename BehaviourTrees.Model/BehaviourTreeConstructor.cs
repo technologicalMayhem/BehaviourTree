@@ -89,7 +89,11 @@ namespace BehaviourTrees.Model
                     fieldInfo.SetValue(node, keyValuePair.Value);
                 }
 
-                if (node is LeafNode<TContext> leaf) leaf.Context = context;
+                var contextField = fields.FirstOrDefault(info => info.Name == "Context");
+                if (contextField != null)
+                {
+                    contextField.SetValue(node, context);
+                }
             }
         }
 
