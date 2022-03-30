@@ -1,6 +1,6 @@
 namespace BehaviourTrees.Core.Blackboard.Accessors
 {
-    internal class Get<T> : IGet<T> where T : class
+    internal class Get<T> : IGet<T>
     {
         private readonly ValueHolder<T> _valueHolder;
 

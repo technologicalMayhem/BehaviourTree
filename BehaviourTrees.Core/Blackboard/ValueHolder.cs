@@ -6,7 +6,7 @@ namespace BehaviourTrees.Core.Blackboard
     ///     Holds the reference to a value on the blackboard alongside accessors to it with different levels of access.
     /// </summary>
     /// <typeparam name="T">The type of the value.</typeparam>
-    internal class ValueHolder<T> : IValueHolder where T : class
+    internal class ValueHolder<T> : IValueHolder
     {
         /// <summary>
         ///     Creates a new instance of a value holder.

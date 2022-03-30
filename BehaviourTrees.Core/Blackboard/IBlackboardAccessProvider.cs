@@ -8,7 +8,7 @@ namespace BehaviourTrees.Core.Blackboard
         /// <param name="key">The key of the value.</param>
         /// <typeparam name="T">The type of the value.</typeparam>
         /// <returns>A accessor to the value allowing both read and write.</returns>
-        IGetSet<T> ProvideGetSet<T>(string key) where T : class;
+        IGetSet<T> ProvideGetSet<T>(string key);
 
         /// <summary>
         ///     Provides read access to a value on the blackboard.
@@ -16,7 +16,7 @@ namespace BehaviourTrees.Core.Blackboard
         /// <param name="key">The key of the value.</param>
         /// <typeparam name="T">The type of the value.</typeparam>
         /// <returns>A accessor to the value allowing only read access.</returns>
-        IGet<T> ProvideGet<T>(string key) where T : class;
+        IGet<T> ProvideGet<T>(string key);
 
         /// <summary>
         ///     Provides write access to a value on the blackboard.
@@ -24,7 +24,7 @@ namespace BehaviourTrees.Core.Blackboard
         /// <param name="key">The key of the value.</param>
         /// <typeparam name="T">The type of the value.</typeparam>
         /// <returns>A accessor to the value allowing only write access.</returns>
-        ISet<T> ProvideSet<T>(string key) where T : class;
+        ISet<T> ProvideSet<T>(string key);
     }
 
     public interface IGetSet<T>

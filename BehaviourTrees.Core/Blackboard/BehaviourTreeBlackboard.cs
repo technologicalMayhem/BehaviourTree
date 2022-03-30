@@ -73,7 +73,7 @@ namespace BehaviourTrees.Core.Blackboard
         ///     different type to <typeparamref name="T" />.
         /// </exception>
         internal object GetBlackboardAccessor<T>(object requester, string key,
-            BlackboardAccess desiredBlackboardAccess) where T : class
+            BlackboardAccess desiredBlackboardAccess)
         {
             if (_registrationData.ContainsKey(requester) && _registrationData[requester].ContainsKey(key))
                 _registrationData[requester][key] |= desiredBlackboardAccess;

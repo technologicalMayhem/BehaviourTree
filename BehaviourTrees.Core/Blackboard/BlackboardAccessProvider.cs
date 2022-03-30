@@ -15,21 +15,21 @@ namespace BehaviourTrees.Core.Blackboard
         }
 
         /// <inheritdoc />
-        public IGetSet<T> ProvideGetSet<T>(string key) where T : class
+        public IGetSet<T> ProvideGetSet<T>(string key)
         {
             return _behaviourTreeBlackboard.GetBlackboardAccessor<T>
                 (_object, key, BlackboardAccess.Read | BlackboardAccess.Write) as IGetSet<T>;
         }
 
         /// <inheritdoc />
-        public IGet<T> ProvideGet<T>(string key) where T : class
+        public IGet<T> ProvideGet<T>(string key)
         {
             return _behaviourTreeBlackboard.GetBlackboardAccessor<T>
                 (_object, key, BlackboardAccess.Read) as IGet<T>;
         }
 
         /// <inheritdoc />
-        public ISet<T> ProvideSet<T>(string key) where T : class
+        public ISet<T> ProvideSet<T>(string key)
         {
             return _behaviourTreeBlackboard.GetBlackboardAccessor<T>
                 (_object, key, BlackboardAccess.Write) as ISet<T>;
