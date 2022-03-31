@@ -10,7 +10,6 @@ namespace BehaviourTrees.Model
         public string Id;
         public Vector2 Position;
         public Type Type;
-        public IReadOnlyDictionary<string, object> Values => new ReadOnlyDictionary<string, object>(_values);
-        internal Dictionary<string, object> _values;
+        public Dictionary<string, object> Values;
     }
 }
