@@ -85,7 +85,7 @@ namespace BehaviourTrees.Model
                 var model = tree.Nodes.First(model => model.Id == node.Id);
                 var fields = node.GetFillableFields().ToArray();
 
-                foreach (var keyValuePair in model.Values)
+                foreach (var keyValuePair in model._values)
                 {
                     var fieldInfo = fields.First(info => info.Name == keyValuePair.Key);
                     //Make sure that we do potentially necessary casts (example: float could get deserialized as double)

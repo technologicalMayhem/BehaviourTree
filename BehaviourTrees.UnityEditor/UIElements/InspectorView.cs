@@ -32,7 +32,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
                     var val = value.Value;
 
                     propertyView.CreateEditor(TreeView.TreeContainer, value.Key, val.GetType(),
-                        o => { _node.Node.Values[value.Key] = o; });
+                        o => { TreeView.TreeContainer.TreeModel.SetNodeValue(_node.Node, value.Key, o); });
                     propertyView.SetValue(val);
                     _propertyViewContainer.Add(propertyView);
                 }

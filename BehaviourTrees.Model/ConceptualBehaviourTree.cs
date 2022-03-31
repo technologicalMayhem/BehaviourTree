@@ -113,19 +113,30 @@ namespace BehaviourTrees.Model
             FireTreeChangedEvent();
         }
 
+        public object GetNodeValue(NodeModel node, string key)
+        {
+            return node._values[key];
+        }
+        
+        public void SetNodeValue(NodeModel node, string key, object value)
+        {
+            node._values[key] = value;
+            FireTreeChangedEvent();
+        }
+
         private static void EnsureDictionaryIsCorrect(NodeModel model)
         {
-            model.Values ??= new Dictionary<string, object>();
+            model._values ??= new Dictionary<string, object>();
 
             foreach (var field in model.Type.GetFields().Where(field => field.IsPublic))
             {
                 if (field.FieldType.IsInterface) continue;
                 if (field.GetCustomAttributes(true).Any(o => o is ExcludeFromEditorAttribute)) continue;
-                if (!model.Values.ContainsKey(field.Name))
+                if (!model._values.ContainsKey(field.Name))
                 {
                     var value =
                         field.FieldType == typeof(string) ? string.Empty : Activator.CreateInstance(field.FieldType);
-                    model.Values.Add(field.Name, value);
+                    model._values.Add(field.Name, value);
                 }
             }
         }
