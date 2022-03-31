@@ -108,7 +108,8 @@ namespace BehaviourTrees.UnityEditor.UIElements
         private void AddDerivedTypesToContextMenu(Type baseType, DropdownMenu menu, Vector2 mousePosition)
         {
             foreach (var derivedType in TypeCache.GetTypesDerivedFrom(baseType))
-                menu.AppendAction(EditorUtilities.GetMemberName(derivedType),_ => CreateNode(derivedType, mousePosition.x, mousePosition.y));
+                menu.AppendAction(EditorUtilities.GetMemberName(derivedType),
+                    _ => CreateNode(derivedType, mousePosition.x, mousePosition.y));
         }
 
         private void CreateNode(Type type, float posX = 0, float posY = 0)
@@ -182,6 +183,11 @@ namespace BehaviourTrees.UnityEditor.UIElements
             }
         }
 
+        public void MoveTo(Vector2 position)
+        {
+            UpdateViewTransform(new Vector3(position.x, position.y, 0), Vector3.one);
+        }
+
         /// <summary>
         ///     Make the corresponding edits to the <see cref="ConceptualBehaviourTree" /> when graph elements are being changed.
         /// </summary>
@@ -200,8 +206,8 @@ namespace BehaviourTrees.UnityEditor.UIElements
                             break;
                         case Edge edge:
                             Undo.RecordObject(TreeContainer, "Delete Connection");
-                            var parentView = (NodeView) edge.output.node;
-                            var childView = (NodeView) edge.input.node;
+                            var parentView = (NodeView)edge.output.node;
+                            var childView = (NodeView)edge.input.node;
 
                             TreeModel.RemoveChild(parentView.Node, childView.Node);
                             //We need to update the ports on the next frame as right now our updates have not propagated properly

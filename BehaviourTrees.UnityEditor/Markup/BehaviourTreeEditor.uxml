@@ -12,6 +12,7 @@
         <bte:BehaviourTreeView focusable="true" style="flex-grow: 1; flex-shrink: 0;"/>
         <VisualElement style="flex-grow: 0; flex-shrink: 1; top: auto; left: auto; right: -5px; bottom: -5px;">
             <bte:InspectorView/>
+            <bte:BlackboardView/>
         </VisualElement>
     </bte:SplitView>
 </UXML>

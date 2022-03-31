@@ -21,7 +21,8 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                     EditorUtilities.LocateUiDefinitionFile(nameof(PropertyView)));
             visualTree.CloneTree(this);
-
+            
+            styleSheets.Add(EditorUtilities.GetStyleSheet());
 
             _name = this.Q<Label>("property-name");
             _value = this.Q<VisualElement>("property-value");
@@ -31,7 +32,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
             Action<object> callback)
         {
             _container = containerReference;
-            _name.text = propertyName;
+            _name.text = EditorUtilities.SplitPascalCase(propertyName);
             _callback = callback;
             _value.Add(GetEditorElement(type));
         }

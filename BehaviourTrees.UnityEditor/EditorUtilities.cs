@@ -8,14 +8,19 @@ namespace BehaviourTrees.UnityEditor
 {
     internal class EditorUtilities
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="className"></param>
-        /// <returns></returns>
+
+        internal static VisualTreeAsset LoadPartialUi(string className, string partialName)
+        {
+            return AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(LocatePartialUiDefinitionFile(className, partialName));
+        }
         internal static string LocateUiDefinitionFile(string className)
         {
             return $"Assets/Plugins/BehaviourTrees/Markup/{className}.uxml";
+        }
+
+        private static string LocatePartialUiDefinitionFile(string className, string partialName)
+        {
+            return $"Assets/Plugins/BehaviourTrees/Markup/{className}/{partialName}.uxml";
         }
 
         internal static StyleSheet GetStyleSheet()
@@ -31,16 +36,16 @@ namespace BehaviourTrees.UnityEditor
         internal static string GetMemberName(MemberInfo nodeType)
         {
             var nameAttribute = nodeType.GetCustomAttribute<NodeNameAttribute>();
-            if (nameAttribute != null)
-            {
-                return nameAttribute.Name;
-            }
-            
+            return nameAttribute != null ? nameAttribute.Name : SplitPascalCase(nodeType.Name);
+        }
+
+        internal static string SplitPascalCase(string pascalCaseString)
+        {
             var pascalRegex = new Regex(
                 @"(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|(?<=[A-Za-z])(?=[^A-Za-z])"
             );
 
-            return pascalRegex.Replace(nodeType.Name, " ");
+            return pascalRegex.Replace(pascalCaseString, " ");
         }
     }
 }

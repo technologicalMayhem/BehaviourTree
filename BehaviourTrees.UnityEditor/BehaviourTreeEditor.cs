@@ -12,6 +12,7 @@ namespace BehaviourTrees.UnityEditor
     {
         private VisualElement _curtain;
         private InspectorView _inspector;
+        private BlackboardView _blackboard;
         private SplitView _splitView;
         private BehaviourTreeView _treeView;
 
@@ -60,7 +61,9 @@ namespace BehaviourTrees.UnityEditor
             _curtain = root.Q("graph-curtain");
             _treeView = root.Q<BehaviourTreeView>();
             _inspector = root.Q<InspectorView>();
+            _blackboard = root.Q<BlackboardView>();
             _inspector.TreeView = _treeView;
+            _blackboard.TreeView = _treeView;
 
             _treeView.TreeLoaded += () =>
             {

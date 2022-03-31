@@ -1,0 +1,10 @@
+<UXML xmlns="UnityEngine.UIElements">
+    <VisualElement class="blackboard-node">
+        <Button name="node-goto">Goto Node</Button>
+        <TextElement name="node-type"/>
+        <VisualElement class="blackboard-access">
+            <TextElement text="Access: "/>
+            <TextElement name="node-access"/>
+        </VisualElement>
+    </VisualElement>
+</UXML>
