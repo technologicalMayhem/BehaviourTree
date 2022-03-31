@@ -55,7 +55,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
         private void Update(object sender, EventArgs eventArgs)
         {
             _collection.Clear();
-            var blackboardData = GetData();
+            var blackboardData = CollectBlackboardDataFromNodes();
             CreateVisualElements(blackboardData);
         }
 
@@ -88,86 +88,99 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 {
                     subscribedNodeVisual.CloneTree(subscribedNodes);
                     var blackboardNode = subscribedNodes.Children().Last();
-                    var button = blackboardNode.Q<Button>("node-goto");
-                    button.text = "Goto node";
+                    
                     var modelPosition = blackboardData.Model.Position;
                     var newPosition = new Vector3(-modelPosition.X, -modelPosition.Y);
                     var contentContainerLayout = _treeView.contentViewContainer.parent.contentRect;
                     newPosition.x += contentContainerLayout.width / 2;
                     newPosition.y += contentContainerLayout.height / 2;
+                    
+                    var button = blackboardNode.Q<Button>("node-goto");
+                    button.text = "Goto node";
                     button.clicked += () => _treeView.MoveTo(new Vector2(newPosition.x, newPosition.y));
+
                     blackboardNode.Q<TextElement>("node-type").text = blackboardData.Model.Type.Name;
                     blackboardNode.Q<TextElement>("node-access").text = blackboardData.Access;
                 }
             }
         }
 
-        private IEnumerable<BlackboardData> GetData()
+        private IEnumerable<BlackboardData> CollectBlackboardDataFromNodes()
         {
-            var list = new List<BlackboardData>();
+            var dataList = new List<BlackboardData>();
+            const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            var fields = new Dictionary<NodeModel, IEnumerable<FieldInfo>>();
 
-            foreach (var node in _treeView.TreeContainer.TreeModel.Nodes)
+            foreach (var modelNode in _treeView.TreeContainer.TreeModel.Nodes)
             {
-                var collection = node.Type
-                    .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                    .Where(info =>
-                        info.GetCustomAttribute<BlackboardKeyAttribute>() != null
-                        && info.FieldType.IsConstructedGenericType
-                    ).Where(info =>
-                        info.FieldType.GetGenericTypeDefinition() == typeof(Core.Blackboard.ISet<>)
-                        || info.FieldType.GetGenericTypeDefinition() == typeof(IGet<>)
-                        || info.FieldType.GetGenericTypeDefinition() == typeof(IGetSet<>)
-                    ).Select(info =>
-                    {
-                        var key = info.GetCustomAttribute<BlackboardKeyAttribute>().Key;
-                        var blackboardKey = LookupFieldNameValue(node, key);
-                        var type = info.FieldType.GenericTypeArguments[0];
-                        var genericTypeDefinition = info.FieldType.GetGenericTypeDefinition();
-                        var accessorText = string.Empty;
-
-                        if (genericTypeDefinition == typeof(IGetSet<>))
-                        {
-                            accessorText = "Get | Set";
-                        }
-
-                        if (genericTypeDefinition == typeof(IGet<>))
-                        {
-                            accessorText = "Get";
-                        }
-
-                        if (genericTypeDefinition == typeof(Core.Blackboard.ISet<>))
-                        {
-                            accessorText = "Set";
-                        }
-
-                        return new BlackboardData
-                        {
-                            Key = blackboardKey,
-                            ValueType = type.Name,
-                            Model = node,
-                            Access = accessorText
-                        };
-                    });
-                list.AddRange(collection);
+                var fieldInfos = modelNode.Type.GetFields(bindingFlags).Where(info =>
+                    info.GetCustomAttribute<BlackboardKeyAttribute>() != null
+                    && IsBlackboardAccessor(info.FieldType)
+                );
+                fields[modelNode] = fieldInfos;
             }
 
-            return list;
+            foreach (var pair in fields)
+            {
+                var node = pair.Key;
+                foreach (var info in pair.Value)
+                {
+                    var key = info.GetCustomAttribute<BlackboardKeyAttribute>().Key;
+                    var blackboardKey = LookupModelValue(node, key);
+                    
+                    var type = info.FieldType.GenericTypeArguments[0];
+                    var genericTypeDefinition = info.FieldType.GetGenericTypeDefinition();
+                    var accessorText = GetAccessorText(genericTypeDefinition);
+
+                    dataList.Add(new BlackboardData
+                    {
+                        Key = blackboardKey,
+                        ValueType = type.Name,
+                        Model = node,
+                        Access = accessorText
+                    });
+                }
+            }
+
+            return dataList;
+        }
+
+        private static string GetAccessorText(Type genericTypeDefinition)
+        {
+            var accessorText = string.Empty;
+
+            if (genericTypeDefinition == typeof(IGetSet<>))
+            {
+                accessorText = "Get | Set";
+            }
+
+            if (genericTypeDefinition == typeof(IGet<>))
+            {
+                accessorText = "Get";
+            }
+
+            if (genericTypeDefinition == typeof(Core.Blackboard.ISet<>))
+            {
+                accessorText = "Set";
+            }
+
+            return accessorText;
         }
 
 
+        private static bool IsBlackboardAccessor(Type type)
+        {
+            return type.IsConstructedGenericType
+                   && type.GetGenericTypeDefinition() == typeof(Core.Blackboard.ISet<>)
+                   || type.GetGenericTypeDefinition() == typeof(IGet<>)
+                   || type.GetGenericTypeDefinition() == typeof(IGetSet<>);
+        }
+
         [CanBeNull]
-        private static string LookupFieldNameValue(NodeModel node, string fieldName)
+        private static string LookupModelValue(NodeModel node, string fieldName)
         {
             node.Values.TryGetValue(fieldName, out var value);
             return value as string ?? fieldName;
-        }
-
-        private void RemoveChildren()
-        {
-            while (_collection.Children().Any())
-            {
-                _collection.Remove(_collection.Children().First());
-            }
         }
 
         private struct BlackboardData
