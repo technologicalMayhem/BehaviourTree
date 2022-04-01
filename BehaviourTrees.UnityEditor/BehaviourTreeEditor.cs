@@ -35,8 +35,8 @@ namespace BehaviourTrees.UnityEditor
 
         private static BehaviourTreeEditor CreateWindow()
         {
-            var wnd = GetWindow<BehaviourTreeEditor>("Behaviour Tree Editor", true, typeof(SceneView));
-            wnd.titleContent = new GUIContent("Behaviour Tree Editor");
+            var wnd = GetWindow<BehaviourTreeEditor>("Behaviour Tree", true, typeof(SceneView));
+            wnd.titleContent = new GUIContent("Behaviour Tree", EditorUtilities.GetEditorIcon());
             return wnd;
         }
 

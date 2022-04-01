@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using BehaviourTrees.Model;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BehaviourTrees.UnityEditor
@@ -31,6 +32,11 @@ namespace BehaviourTrees.UnityEditor
         private static string LocateStyleSheet()
         {
             return "Assets/Plugins/BehaviourTrees/Markup/style.uss";
+        }
+
+        internal static Texture GetEditorIcon()
+        {
+            return AssetDatabase.LoadAssetAtPath<Texture>("Assets/Plugins/BehaviourTrees/EditorIcon.png");
         }
 
         internal static string GetMemberName(MemberInfo nodeType)
