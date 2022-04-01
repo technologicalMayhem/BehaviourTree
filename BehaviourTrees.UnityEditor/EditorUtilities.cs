@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace BehaviourTrees.UnityEditor
 {
-    internal class EditorUtilities
+    internal static class EditorUtilities
     {
 
         internal static VisualTreeAsset LoadPartialUi(string className, string partialName)
