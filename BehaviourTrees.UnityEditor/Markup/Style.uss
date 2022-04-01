@@ -75,6 +75,17 @@ GridBackground {
     padding: 1px;
     border-width: 1px;
     border-color: gray;
+    flex-direction: row;
+}
+
+.blackboard-info{
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.blackboard-clickable:hover{
+    color: cyan;
+    cursor: link;
 }
 
 .blackboard-warning {

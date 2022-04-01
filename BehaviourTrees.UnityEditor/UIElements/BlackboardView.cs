@@ -94,12 +94,10 @@ namespace BehaviourTrees.UnityEditor.UIElements
                     var contentContainerLayout = _treeView.contentViewContainer.parent.contentRect;
                     newPosition.x += contentContainerLayout.width / 2;
                     newPosition.y += contentContainerLayout.height / 2;
-                    
-                    var button = blackboardNode.Q<Button>("node-goto");
-                    button.text = "Goto node";
-                    button.clicked += () => _treeView.MoveTo(new Vector2(newPosition.x, newPosition.y));
 
-                    blackboardNode.Q<TextElement>("node-type").text = blackboardData.Model.Type.Name;
+                    var textElement = blackboardNode.Q<TextElement>("node-type");
+                    textElement.AddManipulator(new Clickable(() => _treeView.MoveTo(new Vector2(newPosition.x, newPosition.y))));
+                    textElement.text = blackboardData.Model.Type.Name;
                     blackboardNode.Q<TextElement>("node-access").text = blackboardData.Access;
                 }
             }
