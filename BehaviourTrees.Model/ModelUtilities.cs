@@ -41,14 +41,14 @@ namespace BehaviourTrees.Model
             return node.GetType().GetFields();
         }
 
-        public static string Serialize(this ConceptualBehaviourTree tree)
+        public static string Serialize(this BehaviourTreeModel treeModel)
         {
-            return JsonConvert.SerializeObject(tree, Settings);
+            return JsonConvert.SerializeObject(treeModel, Settings);
         }
 
-        public static ConceptualBehaviourTree Deserialize(string serializedModel)
+        public static BehaviourTreeModel Deserialize(string serializedModel)
         {
-            var conceptualBehaviourTree = JsonConvert.DeserializeObject<ConceptualBehaviourTree>(serializedModel, Settings);
+            var conceptualBehaviourTree = JsonConvert.DeserializeObject<BehaviourTreeModel>(serializedModel, Settings);
             return conceptualBehaviourTree;
         }
     }
