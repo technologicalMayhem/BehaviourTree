@@ -6,19 +6,19 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <DocumentationFile>bin\Release\net472\BehaviourTrees.Model.xml</DocumentationFile>
+        <DocumentationFile>bin\Release\net472\BehaviourTrees.Model.xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <DocumentationFile>bin\Debug\net472\BehaviourTrees.Model.xml</DocumentationFile>
     </PropertyGroup>
-    
+
     <ItemGroup>
-        <ProjectReference Include="..\BehaviourTrees.Core\BehaviourTrees.Core.csproj" />
+        <ProjectReference Include="..\BehaviourTrees.Core\BehaviourTrees.Core.csproj"/>
     </ItemGroup>
-    
+
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
     </ItemGroup>
 
 </Project>

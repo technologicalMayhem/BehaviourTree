@@ -6,12 +6,12 @@ using System.Linq;
 namespace BehaviourTrees.Model
 {
     /// <summary>
-    /// This class provides extension methods to help editing a <see cref="NodeModel"/>.
+    ///     This class provides extension methods to help editing a <see cref="NodeModel" />.
     /// </summary>
     public static class NodeModelHelpers
     {
         /// <summary>
-        /// Checks if the models properties still reflect the ones of the type it is representing.
+        ///     Checks if the models properties still reflect the ones of the type it is representing.
         /// </summary>
         /// <param name="model">The model to validate.</param>
         /// <param name="removedProperties">The list of properties that have been removed.</param>
@@ -38,8 +38,8 @@ namespace BehaviourTrees.Model
         }
 
         /// <summary>
-        /// <p>Makes changes to a node models properties so they line up with it's representing type.</p>
-        /// <p>Changes that will be made can be checked with <see cref="ValidateProperties"/> beforehand.</p>
+        ///     <p>Makes changes to a node models properties so they line up with it's representing type.</p>
+        ///     <p>Changes that will be made can be checked with <see cref="ValidateProperties" /> beforehand.</p>
         /// </summary>
         /// <param name="model">The model to update the properties of.</param>
         /// <param name="destructive">Should missing properties be deleted and changed replaced with default values?</param>
@@ -65,9 +65,7 @@ namespace BehaviourTrees.Model
             var changedPropertiesArray = changedProperties as string[] ?? changedProperties.ToArray();
 
             foreach (var property in removedProperties.Concat(changedPropertiesArray))
-            {
                 model.Properties.Remove(property);
-            }
 
             foreach (var property in changedPropertiesArray)
             {
@@ -77,8 +75,8 @@ namespace BehaviourTrees.Model
         }
 
         /// <summary>
-        /// Gets information about the fields of the representing type of a node model that can be filled during
-        /// construction of the behaviour tree.
+        ///     Gets information about the fields of the representing type of a node model that can be filled during
+        ///     construction of the behaviour tree.
         /// </summary>
         /// <param name="model">The model that contain the representing type.</param>
         /// <returns>Information about the fields that can be filled.</returns>

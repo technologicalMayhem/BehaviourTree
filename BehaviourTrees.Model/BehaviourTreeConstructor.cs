@@ -92,10 +92,7 @@ namespace BehaviourTrees.Model
                 }
 
                 var contextField = fields.FirstOrDefault(info => info.Name == "Context");
-                if (contextField != null)
-                {
-                    contextField.SetValue(node, context);
-                }
+                if (contextField != null) contextField.SetValue(node, context);
             }
         }
 

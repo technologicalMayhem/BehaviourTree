@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace BehaviourTrees.Model
 {
     /// <summary>
-    /// A set of utilities to help with editing the models.
+    ///     A set of utilities to help with editing the models.
     /// </summary>
     public static class ModelUtilities
     {
@@ -18,7 +18,7 @@ namespace BehaviourTrees.Model
         };
 
         /// <summary>
-        /// Tests if the given type inherits from the other.
+        ///     Tests if the given type inherits from the other.
         /// </summary>
         /// <param name="type">The type to check if it inherits from the given base type.</param>
         /// <typeparam name="TBaseType">The base type.</typeparam>
@@ -29,7 +29,7 @@ namespace BehaviourTrees.Model
         }
 
         /// <summary>
-        /// Tests if the given type inherits from the other.
+        ///     Tests if the given type inherits from the other.
         /// </summary>
         /// <param name="type">The type to check if it inherits from the given base type.</param>
         /// <param name="baseType">The base type to check against.</param>
@@ -51,7 +51,7 @@ namespace BehaviourTrees.Model
         }
 
         /// <summary>
-        /// Find all fields that can be assigned during construction.
+        ///     Find all fields that can be assigned during construction.
         /// </summary>
         /// <param name="node">The node to lookup the fields for.</param>
         /// <returns>A collection of the fields that can be assigned.</returns>
@@ -62,7 +62,7 @@ namespace BehaviourTrees.Model
         }
 
         /// <summary>
-        /// Serializes a <see cref="BehaviourTreeModel"/>.
+        ///     Serializes a <see cref="BehaviourTreeModel" />.
         /// </summary>
         /// <param name="treeModel">The model to serialize.</param>
         /// <returns>A string representing the model.</returns>
@@ -72,7 +72,7 @@ namespace BehaviourTrees.Model
         }
 
         /// <summary>
-        /// Deserializes a <see cref="BehaviourTreeModel"/> from a string.
+        ///     Deserializes a <see cref="BehaviourTreeModel" /> from a string.
         /// </summary>
         /// <param name="serializedModel">A serialized behaviour tree model.</param>
         /// <returns>The deserialized model.</returns>
