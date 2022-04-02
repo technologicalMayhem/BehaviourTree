@@ -134,6 +134,7 @@ namespace BehaviourTrees.Model
         private static void SetupBlackboard(BehaviourTreeBlackboard behaviourTreeBlackboard,
             IEnumerable<IBehaviourTreeNode> nodes)
         {
+            // ReSharper disable once SuspiciousTypeConversion.Global
             foreach (var registersToBlackboard in nodes.OfType<IRegistersToBlackboard>())
                 behaviourTreeBlackboard.ProvideBlackboardAccess(registersToBlackboard);
         }
