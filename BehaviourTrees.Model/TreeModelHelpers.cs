@@ -127,7 +127,7 @@ namespace BehaviourTrees.Model
         /// <exception cref="InvalidOperationException">
         ///     Will be thrown if a root node is passed as <paramref name="childNode" />
         /// </exception>
-        public static void RemoveChild(BehaviourTreeModel treeModel, NodeModel childNode, NodeModel parentNode)
+        public static void RemoveChild(this BehaviourTreeModel treeModel, NodeModel childNode, NodeModel parentNode)
         {
             if (childNode.RepresentingType == typeof(RootNode))
                 throw new InvalidOperationException("Root node can't be a child to another node");
