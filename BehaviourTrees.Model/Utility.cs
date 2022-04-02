@@ -6,6 +6,11 @@ namespace BehaviourTrees.Model
     internal static class Utility
     {
         private static readonly Random Random = new Random();
+        
+        /// <summary>
+        /// Creates a short id.
+        /// </summary>
+        /// <returns>A short id.</returns>
         internal static string CreateShortId()
         {
             while (true)
