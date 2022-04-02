@@ -24,11 +24,15 @@ namespace BehaviourTrees.Model
             out IEnumerable<string> changedProperties,
             out IEnumerable<string> addedProperties)
         {
-            removedProperties = new List<string>();
-            changedProperties = new List<string>();
-            addedProperties = new List<string>();
+            var typeProperties = model.GetFillableFieldsFromType().ToArray();
+            var modelProperties = model.Properties;
 
-            throw new NotImplementedException();
+            removedProperties = modelProperties.Keys.Except(typeProperties.Select(info => info.FieldName));
+            addedProperties = typeProperties.Select(info => info.FieldName).Except(model.Properties.Keys);
+
+            changedProperties = typeProperties
+                .Where(info => info.FieldType != modelProperties[info.FieldName].GetType())
+                .Select(info => info.FieldName);
 
             return removedProperties.Any() || changedProperties.Any() || addedProperties.Any();
         }
@@ -42,7 +46,55 @@ namespace BehaviourTrees.Model
         /// <exception cref="NotImplementedException"></exception>
         public static void UpdateProperties(this NodeModel model, bool destructive = false)
         {
-            throw new NotImplementedException();
+            var changesRequired = model.ValidateProperties(
+                out var removedProperties,
+                out var changedProperties,
+                out var addedProperties);
+
+            if (!changesRequired) return;
+
+            var fieldInfos = model.GetFillableFieldsFromType().ToArray();
+
+            foreach (var property in addedProperties)
+            {
+                var fieldInfo = fieldInfos.First(info => info.FieldName == property);
+                model.Properties.Add(fieldInfo.FieldName, fieldInfo.DefaultValue);
+            }
+
+            if (!destructive) return;
+            var changedPropertiesArray = changedProperties as string[] ?? changedProperties.ToArray();
+
+            foreach (var property in removedProperties.Concat(changedPropertiesArray))
+            {
+                model.Properties.Remove(property);
+            }
+
+            foreach (var property in changedPropertiesArray)
+            {
+                var fieldInfo = fieldInfos.First(info => info.FieldName == property);
+                model.Properties.Add(fieldInfo.FieldName, fieldInfo.DefaultValue);
+            }
+        }
+
+        /// <summary>
+        /// Gets information about the fields of the representing type of a node model that can be filled during
+        /// construction of the behaviour tree.
+        /// </summary>
+        /// <param name="model">The model that contain the representing type.</param>
+        /// <returns>Information about the fields that can be filled.</returns>
+        [Pure]
+        public static IEnumerable<NodeFieldInfo> GetFillableFieldsFromType(this NodeModel model)
+        {
+            var fieldInfos = model.RepresentingType.GetFields()
+                .Where(info => info.Name != "Context");
+
+            var instance = Activator.CreateInstance(model.RepresentingType);
+            return fieldInfos.Select(info => new NodeFieldInfo
+            {
+                FieldName = info.Name,
+                FieldType = info.FieldType,
+                DefaultValue = info.GetValue(instance)
+            });
         }
     }
 }
