@@ -11,12 +11,12 @@ namespace BehaviourTrees.Model
         /// <summary>
         ///     A unique identifier to refer to the node as.
         /// </summary>
-        public string Id;
+        public string Id = Utility.CreateShortId();
 
         /// <summary>
         ///     The properties of this node. They indicate what field names should be set to which values during construction.
         /// </summary>
-        public Dictionary<string, object> Properties;
+        public Dictionary<string, object> Properties = new Dictionary<string, object>();
 
         /// <summary>
         ///     The node type that this model represents.
