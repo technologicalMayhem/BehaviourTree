@@ -1,9 +1,0 @@
-<UXML xmlns="UnityEngine.UIElements">
-    <VisualElement class="blackboard-list-item">
-        <VisualElement>
-            <TextElement class="blackboard-key-label" name="value-key"/>
-            <TextElement name="value-type"/>
-        </VisualElement>
-        <VisualElement name="subscribed-nodes"/>
-    </VisualElement>
-</UXML>

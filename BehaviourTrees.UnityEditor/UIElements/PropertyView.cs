@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -9,83 +10,83 @@ namespace BehaviourTrees.UnityEditor.UIElements
 {
     public class PropertyView : VisualElement
     {
+        public EditorTreeContainer Tree;
+
         private readonly Label _name;
-        private readonly VisualElement _value;
-        private Action<object> _callback;
-        private EditorTreeContainer _container;
-        private Action<object> _setValue;
+        private readonly VisualElement _editorElement;
+        private Type _type;
 
         public PropertyView()
         {
             var visualTree =
                 AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                    EditorUtilities.LocateUiDefinitionFile(nameof(PropertyView)));
+                    TreeEditorUtility.LocateUiDefinitionFile(nameof(PropertyView)));
             visualTree.CloneTree(this);
-            
-            styleSheets.Add(EditorUtilities.GetStyleSheet());
+
+            styleSheets.Add(TreeEditorUtility.GetStyleSheet());
 
             _name = this.Q<Label>("property-name");
-            _value = this.Q<VisualElement>("property-value");
+            _editorElement = this.Q<VisualElement>("property-value");
         }
 
-        public void CreateEditor(EditorTreeContainer containerReference, string propertyName, Type type,
-            Action<object> callback)
+        public static PropertyView CreateEditor(string name, Type type, object value, Action<object> callback)
         {
-            _container = containerReference;
-            _name.text = EditorUtilities.SplitPascalCase(propertyName);
-            _callback = callback;
-            _value.Add(GetEditorElement(type));
-        }
+            var propertyView = new PropertyView();
 
-        public void SetValue(object value)
-        {
-            Undo.RecordObject(_container, "Change Value on Node");
-            _setValue.Invoke(value);
-        }
+            propertyView._name.text = name;
+            propertyView._editorElement.Add(propertyView.GetEditorElement(type, value, callback));
 
-        private VisualElement GetEditorElement(Type type)
+            return propertyView;
+        }
+        
+
+        private VisualElement GetEditorElement(Type type, object value, Action<object> callback)
         {
             if (type == typeof(string))
-                return CreateElementWithCallback<TextField, string>();
+                return CreateElementWithCallback<TextField, string>(value, callback);
 
             if (type == typeof(int))
-                return CreateElementWithCallback<IntegerField, int>();
+                return CreateElementWithCallback<IntegerField, int>(value, callback);
 
             if (type == typeof(long))
-                return CreateElementWithCallback<LongField, long>();
+                return CreateElementWithCallback<LongField, long>(value, callback);
 
             if (type == typeof(float))
-                return CreateElementWithCallback<FloatField, float>();
+                return CreateElementWithCallback<FloatField, float>(value, callback);
 
             if (type == typeof(double))
-                return CreateElementWithCallback<DoubleField, double>();
+                return CreateElementWithCallback<DoubleField, double>(value, callback);
 
             if (type == typeof(Vector2))
-                return CreateElementWithCallback<Vector2Field, Vector2>();
+                return CreateElementWithCallback<Vector2Field, Vector2>(value, callback);
 
             if (type == typeof(Vector3))
-                return CreateElementWithCallback<Vector3Field, Vector3>();
+                return CreateElementWithCallback<Vector3Field, Vector3>(value, callback);
 
             if (type == typeof(Vector4))
-                return CreateElementWithCallback<Vector4Field, Vector4>();
+                return CreateElementWithCallback<Vector4Field, Vector4>(value, callback);
 
             if (type == typeof(Rect))
-                return CreateElementWithCallback<RectField, Rect>();
+                return CreateElementWithCallback<RectField, Rect>(value, callback);
 
             if (TypeCache.GetTypesDerivedFrom<GameObject>().Contains(type) ||
                 TypeCache.GetTypesDerivedFrom<ScriptableObject>().Contains(type))
-                return CreateElementWithCallback<ObjectField, UnityObject>();
+                return CreateElementWithCallback<ObjectField, UnityObject>(value, callback);
 
             var label = new Label($"No editor for {type} found.");
             label.style.color = new StyleColor(Color.red);
             return label;
         }
 
-        private VisualElement CreateElementWithCallback<TField, TValue>() where TField : BaseField<TValue>, new()
+        private VisualElement CreateElementWithCallback<TField, TValue>(object value, Action<object> callback)
+            where TField : BaseField<TValue>, new()
         {
-            var editorElement = new TField();
-            editorElement.RegisterValueChangedCallback(evt => _callback.Invoke(evt.newValue));
-            _setValue = value => editorElement.value = (TValue)value;
+            var editorElement = new TField
+            {
+                //Due to boxing, a direct cast might not work, so this prevents an exception being thrown.
+                value = (TValue)Convert.ChangeType(value, typeof(TValue))
+            };
+            editorElement.RegisterValueChangedCallback(evt => callback(evt.newValue));
             return editorElement;
         }
 

@@ -1,6 +1,0 @@
-<UXML xmlns="UnityEngine.UIElements">
-    <VisualElement class="blackboard-node">
-        <TextElement name="node-type" class="blackboard-info blackboard-clickable"/>
-        <TextElement name="node-access" class="blackboard-info"/>
-    </VisualElement>
-</UXML>

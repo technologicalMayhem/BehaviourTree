@@ -59,48 +59,6 @@ GridBackground {
     margin: 2px 6px 2px 2px;
 }
 
-/* Blackboard */
-
-.blackboard {
-    margin: 2px 6px 2px 2px;
-}
-
-.blackboard-list-item {
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.blackboard-node {
-    margin: 1px;
-    padding: 1px;
-    border-width: 1px;
-    border-color: gray;
-    flex-direction: row;
-}
-
-.blackboard-info{
-    margin-left: 2px;
-    margin-right: 2px;
-}
-
-.blackboard-clickable:hover{
-    color: cyan;
-    cursor: link;
-}
-
-.blackboard-warning {
-    color: red;
-}
-
-.blackboard-key-label {
-    -unity-font-style: bold;
-}
-
-.blackboard-access {
-    flex-direction: row;
-    justify-content: flex-start;
-}
-
 /* Node View */
 NodeView {
     padding: 0;

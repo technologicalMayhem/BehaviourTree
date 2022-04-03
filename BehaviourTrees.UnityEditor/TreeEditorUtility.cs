@@ -1,15 +1,23 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 using BehaviourTrees.Model;
+using BehaviourTrees.UnityEditor.Converters;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BehaviourTrees.UnityEditor
 {
-    internal static class EditorUtilities
+    internal static class TreeEditorUtility
     {
-
+        internal static JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
+        {
+            Converters =
+            {
+                new Vector2Converter()
+            }
+        };
         internal static VisualTreeAsset LoadPartialUi(string className, string partialName)
         {
             return AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(LocatePartialUiDefinitionFile(className, partialName));

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using BehaviourTrees.Core;
 using BehaviourTrees.Model;
 using UnityEditor;
@@ -22,16 +21,18 @@ namespace BehaviourTrees.UnityEditor.UIElements
         public List<Port> OutputPorts;
 
         public NodeView(NodeModel node, EditorTreeContainer container)
-            : base(EditorUtilities.LocateUiDefinitionFile(nameof(NodeView)))
+            : base(TreeEditorUtility.LocateUiDefinitionFile(nameof(NodeView)))
         {
             Node = node;
             _container = container;
             OutputPorts = new List<Port>();
-            title = EditorUtilities.GetMemberName(Node.Type);
+            title = TreeEditorUtility.GetMemberName(Node.RepresentingType);
             viewDataKey = node.Id;
 
-            style.left = Node.Position.X;
-            style.top = Node.Position.Y;
+            var position = _container.ModelExtension.NodePositions[node.Id];
+            
+            style.left = position.x;
+            style.top = position.y;
 
             //Remove default stylesheet
             styleSheets.Clear();
@@ -40,7 +41,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
             AddOutputPorts();
             SetNodeStyle();
 
-            if (node.Type == typeof(RootNode)) capabilities -= Capabilities.Deletable;
+            if (node.RepresentingType == typeof(RootNode)) capabilities -= Capabilities.Deletable;
         }
 
         public override void OnSelected()
@@ -61,11 +62,11 @@ namespace BehaviourTrees.UnityEditor.UIElements
             if (openPorts.Count > 1)
                 foreach (var portToRemove in openPorts.Skip(1))
                     RemovePort(portToRemove);
-            else if (Node.Type.InheritsFrom<CompositeNode>() && openPorts.Count == 0) AddOutputPort();
+            else if (Node.RepresentingType.InheritsFrom<CompositeNode>() && openPorts.Count == 0) AddOutputPort();
 
             outputContainer.Sort(SortPorts);
 
-            if (Node.Type.InheritsFrom<CompositeNode>())
+            if (Node.RepresentingType.InheritsFrom<CompositeNode>())
             {
                 var num = 1;
                 foreach (var visualElement in outputContainer.Children())
@@ -107,18 +108,18 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
         private void SetNodeStyle()
         {
-            if (Node.Type == typeof(RootNode))
+            if (Node.RepresentingType == typeof(RootNode))
                 AddToClassList("rootNode");
-            else if (Node.Type.InheritsFrom<CompositeNode>())
+            else if (Node.RepresentingType.InheritsFrom<CompositeNode>())
                 AddToClassList("compositeNode");
-            else if (Node.Type.InheritsFrom<DecoratorNode>())
+            else if (Node.RepresentingType.InheritsFrom<DecoratorNode>())
                 AddToClassList("decoratorNode");
-            else if (Node.Type.InheritsFrom(typeof(LeafNode<>))) AddToClassList("leafNode");
+            else if (Node.RepresentingType.InheritsFrom(typeof(LeafNode<>))) AddToClassList("leafNode");
         }
 
         private void AddInputPorts()
         {
-            if (Node.Type == typeof(RootNode)) return;
+            if (Node.RepresentingType == typeof(RootNode)) return;
 
             var port = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, null);
             InputPort = port;
@@ -127,7 +128,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
         private void AddOutputPorts()
         {
-            if (Node.Type.InheritsFrom(typeof(LeafNode<>))) return;
+            if (Node.RepresentingType.InheritsFrom(typeof(LeafNode<>))) return;
 
             AddOutputPort();
         }
@@ -185,9 +186,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
             Undo.RecordObject(_container, "Behaviour Tree (Moved Node)");
             var pos = GetPosition();
-            _container.TreeModel.MoveNode(Node, pos.x, pos.y);
+            _container.ModelExtension.NodePositions[Node.Id] = new Vector2(pos.x, pos.y);
             _isMoving = false;
-            EditorUtility.SetDirty(_container);
+            _container.MarkDirty();
         }
 
         public event Action SelectionChanged;

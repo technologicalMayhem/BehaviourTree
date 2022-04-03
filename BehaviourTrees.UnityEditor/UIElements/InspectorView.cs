@@ -1,3 +1,5 @@
+using System;
+using BehaviourTrees.Model;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -6,36 +8,40 @@ namespace BehaviourTrees.UnityEditor.UIElements
     public class InspectorView : VisualElement
     {
         private readonly VisualElement _propertyViewContainer;
-        private NodeView _node;
 
-        public BehaviourTreeView TreeView;
+        public EditorTreeContainer Tree;
 
         public InspectorView()
         {
             var visualTree =
                 AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                    EditorUtilities.LocateUiDefinitionFile(nameof(InspectorView)));
+                    TreeEditorUtility.LocateUiDefinitionFile(nameof(InspectorView)));
             visualTree.CloneTree(this);
 
             _propertyViewContainer = this.Q("property-list");
         }
 
-        public void SetToNode(NodeView node)
+        public void SetToNode(NodeView nodeView)
         {
             _propertyViewContainer.Clear();
-
-            _node = node;
-            if (_node != null)
-                foreach (var value in _node.Node.Values)
+            if (nodeView == null) return;
+            
+            var node = nodeView.Node;
+            
+            foreach (var info in nodeView.Node.GetFillableFieldsFromType())
+            {
+                var splitName = TreeEditorUtility.SplitPascalCase(info.FieldName);
+                var value = node.Properties[info.FieldName];
+                var callback = new Action<object>(o =>
                 {
-                    var propertyView = new PropertyView();
-                    var val = value.Value;
+                    Undo.RecordObject(Tree, $"Edit node properties: ({node.GetType().Name} -> {splitName})");
+                    node.Properties[info.FieldName] = o;
+                    Tree.MarkDirty();
+                });
 
-                    propertyView.CreateEditor(TreeView.TreeContainer, value.Key, val.GetType(),
-                        o => { TreeView.TreeContainer.TreeModel.SetNodeValue(_node.Node, value.Key, o); });
-                    propertyView.SetValue(val);
-                    _propertyViewContainer.Add(propertyView);
-                }
+                var propertyView = PropertyView.CreateEditor(splitName, info.FieldType, value, callback);
+                _propertyViewContainer.Add(propertyView);
+            }
         }
 
         public new class UxmlFactory : UxmlFactory<InspectorView, UxmlTraits> { }

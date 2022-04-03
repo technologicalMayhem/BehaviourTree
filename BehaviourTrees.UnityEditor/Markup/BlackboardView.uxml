@@ -1,3 +1,0 @@
-<UXML xmlns="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements">
-    <VisualElement class="blackboard" name="blackboard"/>
-</UXML>

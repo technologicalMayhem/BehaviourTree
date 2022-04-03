@@ -13,7 +13,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
     //Todo: Runtime States
     //Todo: Runtime Editing?
     /// <summary>
-    ///     A editor for making changes to <see cref="ConceptualBehaviourTree" /> using a graph view.
+    ///     A editor for making changes to <see cref="BehaviourTreeModel" /> using a graph view.
     /// </summary>
     public class BehaviourTreeView : GraphView
     {
@@ -37,7 +37,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
             Undo.undoRedoPerformed += OnUndoRedo;
         }
 
-        private ConceptualBehaviourTree TreeModel => TreeContainer.TreeModel;
+        private BehaviourTreeModel TreeModel => TreeContainer.TreeModel;
 
         /// <inheritdoc />
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -64,20 +64,13 @@ namespace BehaviourTrees.UnityEditor.UIElements
         //Todo: Remove or implement properly
         public void AlignTest()
         {
-            var root = TreeModel.Nodes.First(model => model.Type == typeof(RootNode));
+            var root = TreeModel.Nodes.First(model => model.RepresentingType == typeof(RootNode));
             AlignChildren(root);
-        }
-
-        /// <summary>
-        ///     Save changes to the <see cref="ConceptualBehaviourTree" /> when it has been modified.
-        /// </summary>
-        public void SaveBehaviourTree(object sender, EventArgs eventArgs)
-        {
-            EditorUtility.SetDirty(TreeContainer);
         }
 
         public void LoadTree(EditorTreeContainer container)
         {
+            //Clear previous undo operations
             if (TreeContainer != null) Undo.ClearUndo(TreeContainer);
             PopulateView(container);
         }
@@ -108,16 +101,17 @@ namespace BehaviourTrees.UnityEditor.UIElements
         private void AddDerivedTypesToContextMenu(Type baseType, DropdownMenu menu, Vector2 mousePosition)
         {
             foreach (var derivedType in TypeCache.GetTypesDerivedFrom(baseType))
-                menu.AppendAction(EditorUtilities.GetMemberName(derivedType),
+                menu.AppendAction(TreeEditorUtility.GetMemberName(derivedType),
                     _ => CreateNode(derivedType, mousePosition.x, mousePosition.y));
         }
 
         private void CreateNode(Type type, float posX = 0, float posY = 0)
         {
             Undo.RecordObject(TreeContainer, "Create Node");
-            var node = TreeModel.CreateNode(type, posX, posY);
+            var node = TreeModel.CreateNode(type);
+            TreeContainer.ModelExtension.NodePositions[node.Id] = new Vector2(posX, posY);
             CreateNodeView(node);
-            EditorUtility.SetDirty(TreeContainer);
+            TreeContainer.MarkDirty();
         }
 
         private void OnUndoRedo()
@@ -132,7 +126,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
         private void PopulateView(EditorTreeContainer container)
         {
             TreeContainer = container;
-            if (TreeModel != null) TreeModel.TreeHasChanged -= SaveBehaviourTree;
 
             graphViewChanged -= OnGraphViewChanged;
             DeleteElements(graphElements);
@@ -159,13 +152,13 @@ namespace BehaviourTrees.UnityEditor.UIElements
             //TreeModel.TreeHasChanged += SaveBehaviourTree;
 
 
-            if (TreeModel.Nodes.All(node => node.Type != typeof(RootNode))) CreateNode(typeof(RootNode));
+            if (TreeModel.Nodes.All(node => node.RepresentingType != typeof(RootNode))) CreateNode(typeof(RootNode));
 
             foreach (var element in graphElements)
                 if (element is NodeView node)
                     node.UpdatePorts();
 
-            TreeLoaded();
+            TreeLoaded?.Invoke();
         }
 
         private void AlignChildren(NodeModel nodeParent)
@@ -189,7 +182,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
         }
 
         /// <summary>
-        ///     Make the corresponding edits to the <see cref="ConceptualBehaviourTree" /> when graph elements are being changed.
+        ///     Make the corresponding edits to the <see cref="BehaviourTreeModel" /> when graph elements are being changed.
         /// </summary>
         /// <param name="graphViewChange">Set of changes in the graph.</param>
         /// <returns>Set of changes in the graph</returns>
@@ -202,14 +195,14 @@ namespace BehaviourTrees.UnityEditor.UIElements
                     {
                         case NodeView nodeView:
                             Undo.RecordObject(TreeContainer, "Delete Node");
-                            TreeModel.Delete(nodeView.Node);
+                            TreeModel.RemoveNode(nodeView.Node);
                             break;
                         case Edge edge:
                             Undo.RecordObject(TreeContainer, "Delete Connection");
                             var parentView = (NodeView)edge.output.node;
                             var childView = (NodeView)edge.input.node;
 
-                            TreeModel.RemoveChild(parentView.Node, childView.Node);
+                            TreeModel.RemoveChild(childView.Node, parentView.Node);
                             //We need to update the ports on the next frame as right now our updates have not propagated properly
                             schedule.Execute(() => parentView.UpdatePorts());
                             break;
@@ -228,6 +221,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
                     schedule.Execute(() => parentView.UpdatePorts());
                 }
 
+            TreeContainer.MarkDirty();
             return graphViewChange;
         }
 

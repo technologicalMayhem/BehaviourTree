@@ -12,7 +12,6 @@ namespace BehaviourTrees.UnityEditor
     {
         private VisualElement _curtain;
         private InspectorView _inspector;
-        private BlackboardView _blackboard;
         private SplitView _splitView;
         private BehaviourTreeView _treeView;
 
@@ -30,13 +29,14 @@ namespace BehaviourTrees.UnityEditor
 
         private void LoadTree(EditorTreeContainer treeContainer)
         {
+            _inspector.Tree = treeContainer;
             _treeView.LoadTree(treeContainer);
         }
 
         private static BehaviourTreeEditor CreateWindow()
         {
             var wnd = GetWindow<BehaviourTreeEditor>("Behaviour Tree", true, typeof(SceneView));
-            wnd.titleContent = new GUIContent("Behaviour Tree", EditorUtilities.GetEditorIcon());
+            wnd.titleContent = new GUIContent("Behaviour Tree", TreeEditorUtility.GetEditorIcon());
             return wnd;
         }
 
@@ -47,12 +47,12 @@ namespace BehaviourTrees.UnityEditor
 
             // Import UXML
             var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                EditorUtilities.LocateUiDefinitionFile(nameof(BehaviourTreeEditor)));
+                TreeEditorUtility.LocateUiDefinitionFile(nameof(BehaviourTreeEditor)));
             visualTree.CloneTree(root);
 
             // A stylesheet can be added to a VisualElement.
             // The style will be applied to the VisualElement and all of its children.
-            var styleSheet = EditorUtilities.GetStyleSheet();
+            var styleSheet = TreeEditorUtility.GetStyleSheet();
             root.styleSheets.Add(styleSheet);
 
             root.schedule.Execute(() => root.styleSheets.Add(styleSheet));
@@ -61,16 +61,15 @@ namespace BehaviourTrees.UnityEditor
             _curtain = root.Q("graph-curtain");
             _treeView = root.Q<BehaviourTreeView>();
             _inspector = root.Q<InspectorView>();
-            _blackboard = root.Q<BlackboardView>();
-            _inspector.TreeView = _treeView;
-            _blackboard.TreeView = _treeView;
 
-            _treeView.TreeLoaded += () =>
-            {
-                _curtain.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
-                _splitView.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Auto);
-            };
-            _treeView.SelectionChanged += nodeView => { _inspector.SetToNode(nodeView); };
+            _treeView.TreeLoaded += RemoveCurtain;
+            _treeView.SelectionChanged += _inspector.SetToNode;
+        }
+
+        private void RemoveCurtain()
+        {
+            _curtain.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
+            _splitView.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Auto);
         }
 
         [OnOpenAsset]
@@ -80,7 +79,7 @@ namespace BehaviourTrees.UnityEditor
             var treeContainer = AssetDatabase.LoadAssetAtPath<EditorTreeContainer>(assetPath);
             if (treeContainer != null)
             {
-                treeContainer.TreeModel ??= new ConceptualBehaviourTree();
+                treeContainer.TreeModel ??= new BehaviourTreeModel();
                 OpenWindow(treeContainer);
             }
 
