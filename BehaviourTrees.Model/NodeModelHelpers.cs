@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
+using BehaviourTrees.Core;
 
 namespace BehaviourTrees.Model
 {
@@ -31,6 +33,7 @@ namespace BehaviourTrees.Model
             addedProperties = typeProperties.Select(info => info.FieldName).Except(model.Properties.Keys);
 
             changedProperties = typeProperties
+                .Where(info => modelProperties.ContainsKey(info.FieldName))
                 .Where(info => info.FieldType != modelProperties[info.FieldName].GetType())
                 .Select(info => info.FieldName);
 
@@ -83,8 +86,7 @@ namespace BehaviourTrees.Model
         [Pure]
         public static IEnumerable<NodeFieldInfo> GetFillableFieldsFromType(this NodeModel model)
         {
-            var fieldInfos = model.RepresentingType.GetFields()
-                .Where(info => info.Name != "Context");
+            var fieldInfos = GetFieldsWithoutBaseTypeFields(model.RepresentingType);
 
             var instance = Activator.CreateInstance(model.RepresentingType);
             return fieldInfos.Select(info => new NodeFieldInfo
@@ -93,6 +95,27 @@ namespace BehaviourTrees.Model
                 FieldType = info.FieldType,
                 DefaultValue = info.GetValue(instance)
             });
+        }
+
+        private static IEnumerable<FieldInfo> GetFieldsWithoutBaseTypeFields(Type type)
+        {
+            var fieldInfos = type.GetFields()
+                .Where(info =>
+                {
+                    //It should not never be null i think, but if is it's not what we are looking for anyway
+                    if (info.DeclaringType == null) return true;
+                    //If the field has been defined in Leaf node we don't want
+                    if (info.DeclaringType.IsConstructedGenericType)
+                    {
+                        return info.DeclaringType.GetGenericTypeDefinition() != typeof(LeafNode<>);
+                    }
+
+                    //If the field has been defined in any of these we also don't want it.
+                    return !new[] { typeof(RootNode), typeof(CompositeNode), typeof(DecoratorNode) }
+                        .Contains(info.DeclaringType);
+                });
+
+            return fieldInfos;
         }
     }
 }
