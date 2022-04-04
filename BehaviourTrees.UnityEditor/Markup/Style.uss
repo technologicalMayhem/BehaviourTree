@@ -1,3 +1,12 @@
+/* General */
+.separator-horizontal {
+    height: 1px;
+    border-color: gray;
+    border-width: 1px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
 /* Main Editor Window */
 GridBackground {
     --grid-background-color: rgb(40, 40, 40);

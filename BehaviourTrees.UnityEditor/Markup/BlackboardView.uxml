@@ -1,0 +1,18 @@
+<UXML xmlns="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements">
+    <VisualElement>
+        <VisualElement>
+            <VisualElement>
+                <Label text="Key"/>
+                <TextField name="new-key"/>
+            </VisualElement>
+            <VisualElement>
+                <Label text="Type"/>
+                <TextField name="new-type-search"/>
+                <DropdownField name="new-type-list"/>
+            </VisualElement>
+            <VisualElement name="new-error"/>
+            <Button name="new-create" text="Create new key"/>
+        </VisualElement>
+        <VisualElement name="blackboard-list"/>
+    </VisualElement>
+</UXML>

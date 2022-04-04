@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using BehaviourTrees.Model;
@@ -60,6 +62,17 @@ namespace BehaviourTrees.UnityEditor
             );
 
             return pascalRegex.Replace(pascalCaseString, " ");
+        }
+
+        public static string GetTypeName(Type type)
+        {
+            if (!type.IsConstructedGenericType) return type.Name;
+            if (!type.IsGenericType) return type.Name.Split('`').First();
+            
+            var baseName = type.Name.Split('`').First();
+            var parameters = string.Join(", ", type.GetGenericArguments().Select(t => t.Name));
+            
+            return $"{baseName}<{parameters}>";
         }
     }
 }

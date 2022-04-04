@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Reflection;
 using BehaviourTrees.Model;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -10,6 +12,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
         private readonly VisualElement _propertyViewContainer;
 
         public EditorTreeContainer Tree;
+        public BlackboardView BlackboardView;
 
         public InspectorView()
         {
@@ -39,11 +42,23 @@ namespace BehaviourTrees.UnityEditor.UIElements
                     Tree.MarkDirty();
                 });
 
-                var propertyView = PropertyView.CreateEditor(splitName, info.FieldType, value, callback);
+                var propertyView =
+                    IsBlackboardField(node.RepresentingType, info.FieldName, out var blackboardType)
+                        ? PropertyView.CreateBlackboardDropdown
+                            (Tree, splitName, blackboardType, value as string, callback, BlackboardView)
+                        : PropertyView.CreateEditor(splitName, info.FieldType, value, callback);
+
                 _propertyViewContainer.Add(propertyView);
             }
         }
 
+        private static bool IsBlackboardField(Type type, string fieldName, out Type blackboardType)
+        {
+            var attribute = type.GetField(fieldName).GetCustomAttribute<BlackboardDropdownAttribute>();
+            blackboardType = attribute?.Type;
+            return blackboardType != null;
+        }
+        
         public new class UxmlFactory : UxmlFactory<InspectorView, UxmlTraits> { }
     }
 }

@@ -40,6 +40,17 @@ namespace BehaviourTrees.UnityEditor.UIElements
         }
         
 
+        public static PropertyView CreateBlackboardDropdown(EditorTreeContainer tree, string name,
+            Type blackboardType, string key, Action<object> callback, BlackboardView blackboardView)
+        {
+            var propertyView = new PropertyView();
+
+            propertyView._name.text = name;
+            propertyView._editorElement.Add(new BlackboardDropdown(tree,blackboardType, key, callback));
+
+            return propertyView;
+        }
+
         private VisualElement GetEditorElement(Type type, object value, Action<object> callback)
         {
             if (type == typeof(string))

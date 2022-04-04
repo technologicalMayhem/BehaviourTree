@@ -14,6 +14,7 @@ namespace BehaviourTrees.UnityEditor
         private InspectorView _inspector;
         private SplitView _splitView;
         private BehaviourTreeView _treeView;
+        private BlackboardView _blackboard;
 
         [MenuItem("Window/AI/Behaviour Tree Editor")]
         public static void OpenWindow()
@@ -30,6 +31,7 @@ namespace BehaviourTrees.UnityEditor
         private void LoadTree(EditorTreeContainer treeContainer)
         {
             _inspector.Tree = treeContainer;
+            _blackboard.Container = treeContainer;
             _treeView.LoadTree(treeContainer);
         }
 
@@ -61,6 +63,8 @@ namespace BehaviourTrees.UnityEditor
             _curtain = root.Q("graph-curtain");
             _treeView = root.Q<BehaviourTreeView>();
             _inspector = root.Q<InspectorView>();
+            _blackboard = root.Q<BlackboardView>();
+            _inspector.BlackboardView = _blackboard;
 
             _treeView.TreeLoaded += RemoveCurtain;
             _treeView.SelectionChanged += _inspector.SetToNode;
