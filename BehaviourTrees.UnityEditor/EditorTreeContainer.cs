@@ -1,8 +1,6 @@
-using System;
 using BehaviourTrees.Model;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace BehaviourTrees.UnityEditor
 {
@@ -11,9 +9,9 @@ namespace BehaviourTrees.UnityEditor
     {
         [SerializeField] [HideInInspector] private string SerializedTree;
         [SerializeField] [HideInInspector] private string SerializedExtensions;
+        public EditorModelExtension ModelExtension = new EditorModelExtension();
 
         public BehaviourTreeModel TreeModel = new BehaviourTreeModel();
-        public EditorModelExtension ModelExtension = new EditorModelExtension();
 
         public void OnBeforeSerialize()
         {

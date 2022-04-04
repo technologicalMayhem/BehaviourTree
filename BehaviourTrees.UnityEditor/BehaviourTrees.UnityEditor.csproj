@@ -6,8 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BehaviourTrees.Core\BehaviourTrees.Core.csproj" />
-        <ProjectReference Include="..\BehaviourTrees.Model\BehaviourTrees.Model.csproj" />
+        <ProjectReference Include="..\BehaviourTrees.Core\BehaviourTrees.Core.csproj"/>
+        <ProjectReference Include="..\BehaviourTrees.Model\BehaviourTrees.Model.csproj"/>
     </ItemGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -17,23 +17,23 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <DocumentationFile>bin\Debug\net472\BehaviourTrees.UnityEditor.xml</DocumentationFile>
     </PropertyGroup>
-    
+
     <ItemGroup>
-      <None Update="Markup\**">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="EditorIcon.png">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <None Update="Markup\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="EditorIcon.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
-    
+
     <ItemGroup>
-      <Reference Include="UnityEditor">
-        <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.17f1\Editor\Data\Managed\UnityEditor.dll</HintPath>
-      </Reference>
-      <Reference Include="UnityEngine">
-        <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.17f1\Editor\Data\Managed\UnityEngine.dll</HintPath>
-      </Reference>
+        <Reference Include="UnityEditor">
+            <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.17f1\Editor\Data\Managed\UnityEditor.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine">
+            <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.17f1\Editor\Data\Managed\UnityEngine.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>

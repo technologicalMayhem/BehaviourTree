@@ -1,4 +1,3 @@
-using System;
 using BehaviourTrees.Model;
 using BehaviourTrees.UnityEditor.UIElements;
 using UnityEditor;
@@ -10,37 +9,11 @@ namespace BehaviourTrees.UnityEditor
 {
     public class BehaviourTreeEditor : EditorWindow
     {
+        private BlackboardView _blackboard;
         private VisualElement _curtain;
         private InspectorView _inspector;
         private SplitView _splitView;
         private BehaviourTreeView _treeView;
-        private BlackboardView _blackboard;
-
-        [MenuItem("Window/AI/Behaviour Tree Editor")]
-        public static void OpenWindow()
-        {
-            CreateWindow();
-        }
-
-        private static void OpenWindow(EditorTreeContainer treeContainer)
-        {
-            var window = CreateWindow();
-            window.LoadTree(treeContainer);
-        }
-
-        private void LoadTree(EditorTreeContainer treeContainer)
-        {
-            _inspector.Tree = treeContainer;
-            _blackboard.Container = treeContainer;
-            _treeView.LoadTree(treeContainer);
-        }
-
-        private static BehaviourTreeEditor CreateWindow()
-        {
-            var wnd = GetWindow<BehaviourTreeEditor>("Behaviour Tree", true, typeof(SceneView));
-            wnd.titleContent = new GUIContent("Behaviour Tree", TreeEditorUtility.GetEditorIcon());
-            return wnd;
-        }
 
         public void CreateGUI()
         {
@@ -68,6 +41,32 @@ namespace BehaviourTrees.UnityEditor
 
             _treeView.TreeLoaded += RemoveCurtain;
             _treeView.SelectionChanged += _inspector.SetToNode;
+        }
+
+        [MenuItem("Window/AI/Behaviour Tree Editor")]
+        public static void OpenWindow()
+        {
+            CreateWindow();
+        }
+
+        private static void OpenWindow(EditorTreeContainer treeContainer)
+        {
+            var window = CreateWindow();
+            window.LoadTree(treeContainer);
+        }
+
+        private void LoadTree(EditorTreeContainer treeContainer)
+        {
+            _inspector.Tree = treeContainer;
+            _blackboard.Container = treeContainer;
+            _treeView.LoadTree(treeContainer);
+        }
+
+        private static BehaviourTreeEditor CreateWindow()
+        {
+            var wnd = GetWindow<BehaviourTreeEditor>("Behaviour Tree", true, typeof(SceneView));
+            wnd.titleContent = new GUIContent("Behaviour Tree", TreeEditorUtility.GetEditorIcon());
+            return wnd;
         }
 
         private void RemoveCurtain()

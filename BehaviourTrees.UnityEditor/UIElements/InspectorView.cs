@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using BehaviourTrees.Model;
 using UnityEditor;
@@ -10,9 +9,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
     public class InspectorView : VisualElement
     {
         private readonly VisualElement _propertyViewContainer;
+        public BlackboardView BlackboardView;
 
         public EditorTreeContainer Tree;
-        public BlackboardView BlackboardView;
 
         public InspectorView()
         {
@@ -28,9 +27,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
         {
             _propertyViewContainer.Clear();
             if (nodeView == null) return;
-            
+
             var node = nodeView.Node;
-            
+
             foreach (var info in nodeView.Node.GetFillableFieldsFromType())
             {
                 var splitName = TreeEditorUtility.SplitPascalCase(info.FieldName);
@@ -58,7 +57,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
             blackboardType = attribute?.Type;
             return blackboardType != null;
         }
-        
+
         public new class UxmlFactory : UxmlFactory<InspectorView, UxmlTraits> { }
     }
 }

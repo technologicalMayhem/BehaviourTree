@@ -75,6 +75,11 @@ namespace BehaviourTrees.UnityEditor.UIElements
             PopulateView(container);
         }
 
+        public void MoveTo(Vector2 position)
+        {
+            UpdateViewTransform(new Vector3(position.x, position.y, 0), Vector3.one);
+        }
+
         /// <summary>
         ///     Gets the position of the mouse cursor on the GraphView element.
         /// </summary>
@@ -120,8 +125,8 @@ namespace BehaviourTrees.UnityEditor.UIElements
         }
 
         /// <summary>
-        /// Clears the view and populates it with all the elements from the given <see cref="EditorTreeContainer" /> to allow
-        /// editing.
+        ///     Clears the view and populates it with all the elements from the given <see cref="EditorTreeContainer" /> to allow
+        ///     editing.
         /// </summary>
         private void PopulateView(EditorTreeContainer container)
         {
@@ -174,11 +179,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 childNode.SetPosition(pos);
                 schedule.Execute(() => AlignChildren(child));
             }
-        }
-
-        public void MoveTo(Vector2 position)
-        {
-            UpdateViewTransform(new Vector3(position.x, position.y, 0), Vector3.one);
         }
 
         /// <summary>

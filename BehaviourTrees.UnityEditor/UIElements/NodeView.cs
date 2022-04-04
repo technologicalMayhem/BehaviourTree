@@ -30,13 +30,13 @@ namespace BehaviourTrees.UnityEditor.UIElements
             viewDataKey = node.Id;
 
             var position = _container.ModelExtension.NodePositions[node.Id];
-            
+
             style.left = position.x;
             style.top = position.y;
 
             //Remove default stylesheet
             styleSheets.Clear();
-            
+
             AddInputPorts();
             AddOutputPorts();
             SetNodeStyle();

@@ -8,9 +8,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
 {
     public sealed class BlackboardDropdown : DropdownField
     {
-        private readonly EditorTreeContainer _tree;
         private readonly Type _blackboardType;
         private readonly Action<string> _callback;
+        private readonly EditorTreeContainer _tree;
 
         public BlackboardDropdown(EditorTreeContainer tree, Type blackboardType, string key, Action<string> callback)
             : base(null, 0, FormatSelectedValueCallback, FormatListItemCallback)
@@ -18,11 +18,11 @@ namespace BehaviourTrees.UnityEditor.UIElements
             _tree = tree;
             _blackboardType = blackboardType;
             _callback = callback;
-            
+
             UpdateChoices();
             this.RegisterValueChangedCallback(ValueChanged);
             SetValueWithoutNotify($"{key} ({TreeEditorUtility.GetTypeName(blackboardType)})");
-            
+
             _tree.ModelExtension.BlackboardKeysChanged += (sender, args) => UpdateChoices();
         }
 
@@ -40,8 +40,14 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 .ToList();
         }
 
-        private static string FormatListItemCallback(string arg) => arg;
+        private static string FormatListItemCallback(string arg)
+        {
+            return arg;
+        }
 
-        private static string FormatSelectedValueCallback(string arg) => arg;
+        private static string FormatSelectedValueCallback(string arg)
+        {
+            return arg;
+        }
     }
 }

@@ -106,9 +106,7 @@ namespace BehaviourTrees.Model
                     if (info.DeclaringType == null) return true;
                     //If the field has been defined in Leaf node we don't want
                     if (info.DeclaringType.IsConstructedGenericType)
-                    {
                         return info.DeclaringType.GetGenericTypeDefinition() != typeof(LeafNode<>);
-                    }
 
                     //If the field has been defined in any of these we also don't want it.
                     return !new[] { typeof(RootNode), typeof(CompositeNode), typeof(DecoratorNode) }

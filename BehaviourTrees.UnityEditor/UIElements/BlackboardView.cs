@@ -1,38 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BehaviourTrees.UnityEditor.UIElements
 {
     public class BlackboardView : VisualElement
     {
-        public EditorTreeContainer Container
-        {
-            get => _container;
-            set
-            {
-                _container = value;
-                UpdateBlackboard();
-            }
-        }
-
-        private EditorTreeContainer _container;
-        private readonly VisualElement _list;
-        private readonly VisualElement _errors;
-        private readonly TextField _newKey;
-        private readonly TextField _newTypeSearch;
-        private readonly DropdownField _newTypeList;
-        private Type[] _choices;
-        private readonly Type[] _nonGenericTypes;
-        private readonly Type[] _genericTypes;
-
         private const string MatchGeneric = @"(\b[^<>]+)\<(.+)\>$";
         private const string SelectParameters = @"(\b[^,]+)";
+        private readonly VisualElement _errors;
+        private readonly Type[] _genericTypes;
+        private readonly VisualElement _list;
+        private readonly TextField _newKey;
+        private readonly DropdownField _newTypeList;
+        private readonly TextField _newTypeSearch;
+        private readonly Type[] _nonGenericTypes;
+        private Type[] _choices;
+
+        private EditorTreeContainer _container;
 
         public BlackboardView()
         {
@@ -62,6 +50,16 @@ namespace BehaviourTrees.UnityEditor.UIElements
             button.clicked += CreateNewKey;
         }
 
+        public EditorTreeContainer Container
+        {
+            get => _container;
+            set
+            {
+                _container = value;
+                UpdateBlackboard();
+            }
+        }
+
         private void UpdateList(ChangeEvent<string> evt)
         {
             var match = Regex.Match(evt.newValue, MatchGeneric);
@@ -74,9 +72,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 for (var parameterMatch = Regex.Match(parameterCapture, SelectParameters);
                      parameterMatch.Success;
                      parameterMatch = parameterMatch.NextMatch())
-                {
                     parameters.Add(_nonGenericTypes.FirstOrDefault(type => type.Name == parameterMatch.Value));
-                }
 
                 var genericBase = _genericTypes
                     .FirstOrDefault(type => type.Name == match.Groups[1].Value + $"`{parameters.Count}");
@@ -89,10 +85,8 @@ namespace BehaviourTrees.UnityEditor.UIElements
             }
 
             if (matchingTypes.Length == 0)
-            {
                 matchingTypes = _nonGenericTypes
                     .Where(type => TreeEditorUtility.GetTypeName(type).Contains(evt.newValue)).ToArray();
-            }
 
             _choices = matchingTypes.Take(50).ToArray();
             _newTypeList.choices = _choices.Select(TreeEditorUtility.GetTypeName).ToList();
@@ -122,7 +116,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 errors.Add("Key already exists.");
 
             if (_choices.All(type => TreeEditorUtility.GetTypeName(type) != _newTypeList.value))
-                errors.Add($"No type selected.");
+                errors.Add("No type selected.");
 
             foreach (var error in errors)
                 _errors.Add(new Label(error));

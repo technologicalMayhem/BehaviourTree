@@ -20,28 +20,32 @@ namespace BehaviourTrees.UnityEditor
                 new Vector2Converter()
             }
         };
+
+        public static string GetTypeName(Type type)
+        {
+            if (!type.IsConstructedGenericType) return type.Name;
+            if (!type.IsGenericType) return type.Name.Split('`').First();
+
+            var baseName = type.Name.Split('`').First();
+            var parameters = string.Join(", ", type.GetGenericArguments().Select(t => t.Name));
+
+            return $"{baseName}<{parameters}>";
+        }
+
         internal static VisualTreeAsset LoadPartialUi(string className, string partialName)
         {
-            return AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(LocatePartialUiDefinitionFile(className, partialName));
+            return AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
+                LocatePartialUiDefinitionFile(className, partialName));
         }
+
         internal static string LocateUiDefinitionFile(string className)
         {
             return $"Assets/Plugins/BehaviourTrees/Markup/{className}.uxml";
         }
 
-        private static string LocatePartialUiDefinitionFile(string className, string partialName)
-        {
-            return $"Assets/Plugins/BehaviourTrees/Markup/{className}/{partialName}.uxml";
-        }
-
         internal static StyleSheet GetStyleSheet()
         {
             return AssetDatabase.LoadAssetAtPath<StyleSheet>(LocateStyleSheet());
-        }
-
-        private static string LocateStyleSheet()
-        {
-            return "Assets/Plugins/BehaviourTrees/Markup/style.uss";
         }
 
         internal static Texture GetEditorIcon()
@@ -64,15 +68,14 @@ namespace BehaviourTrees.UnityEditor
             return pascalRegex.Replace(pascalCaseString, " ");
         }
 
-        public static string GetTypeName(Type type)
+        private static string LocatePartialUiDefinitionFile(string className, string partialName)
         {
-            if (!type.IsConstructedGenericType) return type.Name;
-            if (!type.IsGenericType) return type.Name.Split('`').First();
-            
-            var baseName = type.Name.Split('`').First();
-            var parameters = string.Join(", ", type.GetGenericArguments().Select(t => t.Name));
-            
-            return $"{baseName}<{parameters}>";
+            return $"Assets/Plugins/BehaviourTrees/Markup/{className}/{partialName}.uxml";
+        }
+
+        private static string LocateStyleSheet()
+        {
+            return "Assets/Plugins/BehaviourTrees/Markup/style.uss";
         }
     }
 }

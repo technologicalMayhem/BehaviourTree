@@ -1,4 +1,4 @@
-<UXML xmlns="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements">
+<UXML xmlns="UnityEngine.UIElements">
     <VisualElement class="blackboard">
         <VisualElement>
             <VisualElement class="new-block">

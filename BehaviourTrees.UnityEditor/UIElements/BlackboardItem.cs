@@ -6,7 +6,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
 {
     public class BlackboardItem : VisualElement
     {
-
         public BlackboardItem(string key, string type, Action callback)
         {
             var visualTree =

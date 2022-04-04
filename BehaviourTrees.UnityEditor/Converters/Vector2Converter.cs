@@ -5,9 +5,8 @@ using UnityEngine;
 
 namespace BehaviourTrees.UnityEditor.Converters
 {
-    
     /// <summary>
-    /// Converts a Vector2 object to and from JSON
+    ///     Converts a Vector2 object to and from JSON
     /// </summary>
     public class Vector2Converter : JsonConverter<Vector2>
     {
@@ -21,7 +20,8 @@ namespace BehaviourTrees.UnityEditor.Converters
         }
 
         /// <inheritdoc />
-        public override Vector2 ReadJson(JsonReader reader, Type objectType, Vector2 existingValue, bool hasExistingValue,
+        public override Vector2 ReadJson(JsonReader reader, Type objectType, Vector2 existingValue,
+            bool hasExistingValue,
             JsonSerializer serializer)
         {
             var o = JObject.Load(reader);

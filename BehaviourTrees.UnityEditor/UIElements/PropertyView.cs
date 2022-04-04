@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -10,11 +9,11 @@ namespace BehaviourTrees.UnityEditor.UIElements
 {
     public class PropertyView : VisualElement
     {
-        public EditorTreeContainer Tree;
+        private readonly VisualElement _editorElement;
 
         private readonly Label _name;
-        private readonly VisualElement _editorElement;
         private Type _type;
+        public EditorTreeContainer Tree;
 
         public PropertyView()
         {
@@ -38,7 +37,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
             return propertyView;
         }
-        
+
 
         public static PropertyView CreateBlackboardDropdown(EditorTreeContainer tree, string name,
             Type blackboardType, string key, Action<object> callback, BlackboardView blackboardView)
@@ -46,7 +45,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
             var propertyView = new PropertyView();
 
             propertyView._name.text = name;
-            propertyView._editorElement.Add(new BlackboardDropdown(tree,blackboardType, key, callback));
+            propertyView._editorElement.Add(new BlackboardDropdown(tree, blackboardType, key, callback));
 
             return propertyView;
         }

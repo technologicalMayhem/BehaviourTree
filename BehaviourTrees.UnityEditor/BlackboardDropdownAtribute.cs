@@ -6,6 +6,7 @@ namespace BehaviourTrees.UnityEditor
     public class BlackboardDropdownAttribute : Attribute
     {
         public Type Type;
+
         public BlackboardDropdownAttribute(Type type)
         {
             Type = type;

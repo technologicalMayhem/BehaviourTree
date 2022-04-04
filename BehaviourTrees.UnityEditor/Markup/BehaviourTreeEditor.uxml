@@ -1,5 +1,5 @@
-<UXML xmlns="UnityEngine.UIElements" xmlns:bte="BehaviourTrees.UnityEditor.UIElements"
-      xmlns:editor="UnityEditor.UIElements">
+<UXML xmlns:bte="BehaviourTrees.UnityEditor.UIElements" xmlns:editor="UnityEditor.UIElements"
+      xmlns="UnityEngine.UIElements">
     <editor:Toolbar>
         <editor:ToolbarMenu display-tooltip-when-elided="true" text="Assets"/>
     </editor:Toolbar>
