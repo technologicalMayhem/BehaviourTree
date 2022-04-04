@@ -1,7 +1,7 @@
 <UXML xmlns="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements">
-    <VisualElement name="blackboard-item">
-        <Label name="key" />
-        <Label name="type"/>
-        <Label name="remove" text="Remove"/>
+    <VisualElement name="blackboard-item" class="blackboard-item">
+        <Label name="key"/>
+        <Label name="type" class="blackboard-item-type"/>
+        <Label name="remove" class="blackboard-item-remove" text="Remove"/>
     </VisualElement>
 </UXML>

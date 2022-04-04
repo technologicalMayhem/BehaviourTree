@@ -29,6 +29,15 @@ GridBackground {
     white-space: normal;
 }
 
+.right-panel {
+    margin: 2px;
+}
+
+.right-panel-element {
+    height: 50%;
+}
+
+/* Tree View */
 .comment {
     flex-direction: column;
 }
@@ -66,6 +75,55 @@ GridBackground {
 .sidebar-container {
     flex-direction: row;
     margin: 2px 6px 2px 2px;
+}
+
+/* Blackboard */
+.blackboard {
+    flex-grow: 1;
+}
+
+.new-block {
+    flex-direction: row;
+}
+
+.new-fields {
+    flex-grow: 1;
+}
+
+.new-fields > * {
+    height: 20px;
+    margin: 3px 1px;
+}
+
+.new-labels > * {
+    height: 20px;
+    margin: 3px 1px;
+}
+
+.blackboard-scroller {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.blackboard-item {
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.blackboard-item-type {
+    margin-left: auto;
+}
+
+.blackboard-item-remove {
+    color: brown;
+    margin-left: 10px;
+    border-bottom-width: 1px;
+}
+
+.blackboard-item-remove:hover {
+    cursor: link;
+    border-bottom-color: brown;
 }
 
 /* Node View */
