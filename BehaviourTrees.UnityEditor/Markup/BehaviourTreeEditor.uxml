@@ -7,7 +7,7 @@
         <Label text="Load a behaviour tree by opening it in the project view or using the assets dropdown."
                display-tooltip-when-elided="true"/>
     </VisualElement>
-    <bte:SplitView orientation="Horizontal" name="split-view" fixed-pane-initial-dimension="1200">
+    <bte:SplitView class="hide" orientation="Horizontal" name="split-view" fixed-pane-initial-dimension="1200">
         <bte:BehaviourTreeView focusable="true"/>
         <VisualElement class="right-panel">
             <ScrollView class="right-panel-inspector">

@@ -20,6 +20,10 @@ GridBackground {
     white-space: normal;
 }
 
+.hide {
+    display: none;
+}
+
 .right-panel {
     margin: 2px;
 }

@@ -71,8 +71,8 @@ namespace BehaviourTrees.UnityEditor
 
         private void RemoveCurtain()
         {
-            _curtain.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.None);
-            _splitView.style.display = new StyleEnum<DisplayStyle>(StyleKeyword.Auto);
+            _curtain.AddToClassList("hide");
+            _splitView.RemoveFromClassList("hide");
         }
 
         [OnOpenAsset]
