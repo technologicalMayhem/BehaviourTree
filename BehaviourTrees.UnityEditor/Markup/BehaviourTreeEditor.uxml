@@ -10,11 +10,10 @@
     <bte:SplitView orientation="Horizontal" name="split-view" fixed-pane-initial-dimension="1200">
         <bte:BehaviourTreeView focusable="true"/>
         <VisualElement class="right-panel">
-            <ScrollView class="right-panel-element">
+            <ScrollView class="right-panel-inspector">
                 <bte:InspectorView/>
             </ScrollView>
-            <VisualElement class="separator-horizontal"/>
-            <bte:BlackboardView class="right-panel-element"/>
+            <bte:BlackboardView class="right-panel-blackboard"/>
         </VisualElement>
     </bte:SplitView>
 </UXML>
