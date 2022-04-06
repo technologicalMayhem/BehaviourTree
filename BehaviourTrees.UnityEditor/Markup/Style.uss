@@ -237,3 +237,26 @@ NodeView {
     height: 1px;
     border-bottom-width: 1px;
 }
+
+/* Problem Window */
+
+.problem-item {
+    flex-direction: row;
+}
+
+.problem-warning {
+    color: orange;
+}
+
+.problem-error {
+    color: darkred;
+}
+
+.problem-link {
+    border-bottom-width: 1px;
+}
+
+.problem-link:hover {
+    border-bottom-color: white;
+    cursor: link;
+} 

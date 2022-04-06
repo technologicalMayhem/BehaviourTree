@@ -6,8 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BehaviourTrees.Core\BehaviourTrees.Core.csproj"/>
-        <ProjectReference Include="..\BehaviourTrees.Model\BehaviourTrees.Model.csproj"/>
+        <ProjectReference Include="..\BehaviourTrees.Core\BehaviourTrees.Core.csproj" />
+        <ProjectReference Include="..\BehaviourTrees.Model\BehaviourTrees.Model.csproj" />
     </ItemGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -24,6 +24,9 @@
         </None>
         <None Update="EditorIcon.png">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Markup\ProblemItem.uxml">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 

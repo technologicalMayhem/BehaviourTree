@@ -75,9 +75,19 @@ namespace BehaviourTrees.UnityEditor.UIElements
             PopulateView(container);
         }
 
+        public void MoveTo(string nodeId)
+        {
+            MoveTo(TreeContainer.ModelExtension.NodePositions[nodeId]);
+        }
+
         public void MoveTo(Vector2 position)
         {
-            UpdateViewTransform(new Vector3(position.x, position.y, 0), Vector3.one);
+            //Todo: Figure out why this works the way it does and try to make this clearer
+            var rect = contentViewContainer.parent.contentRect;
+            var viewportCenter = new Vector2(rect.width / 2, rect.height / 2);
+            var centeredPosition = position * -1 + viewportCenter;
+            
+            UpdateViewTransform(new Vector3(centeredPosition.x, centeredPosition.y, 0), Vector3.one);
         }
 
         /// <summary>

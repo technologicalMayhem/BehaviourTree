@@ -2,6 +2,7 @@ using BehaviourTrees.Model;
 using BehaviourTrees.UnityEditor.UIElements;
 using UnityEditor;
 using UnityEditor.Callbacks;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -14,6 +15,8 @@ namespace BehaviourTrees.UnityEditor
         private InspectorView _inspector;
         private SplitView _splitView;
         private BehaviourTreeView _treeView;
+
+        public BehaviourTreeView TreeView => _treeView;
 
         public void CreateGUI()
         {
@@ -38,6 +41,8 @@ namespace BehaviourTrees.UnityEditor
             _inspector = root.Q<InspectorView>();
             _blackboard = root.Q<BlackboardView>();
             _inspector.BlackboardView = _blackboard;
+
+            root.Q<ToolbarButton>("show-problems").clicked += ProblemsWindow.OpenWindow;
 
             _treeView.TreeLoaded += RemoveCurtain;
             _treeView.SelectionChanged += _inspector.SetToNode;
