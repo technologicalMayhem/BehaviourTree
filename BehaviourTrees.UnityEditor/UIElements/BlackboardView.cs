@@ -72,10 +72,12 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 for (var parameterMatch = Regex.Match(parameterCapture, SelectParameters);
                      parameterMatch.Success;
                      parameterMatch = parameterMatch.NextMatch())
-                    parameters.Add(_nonGenericTypes.FirstOrDefault(type => type.Name == parameterMatch.Value));
+                    parameters.Add(_nonGenericTypes.FirstOrDefault(type =>
+                        string.Equals(type.Name, parameterMatch.Value, StringComparison.CurrentCultureIgnoreCase)));
 
                 var genericBase = _genericTypes
-                    .FirstOrDefault(type => type.Name == match.Groups[1].Value + $"`{parameters.Count}");
+                    .FirstOrDefault(type => string.Equals(type.Name, match.Groups[1].Value + $"`{parameters.Count}",
+                        StringComparison.CurrentCultureIgnoreCase));
 
                 if (genericBase != null && parameters.All(type => type != null))
                 {
@@ -86,11 +88,13 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
             if (matchingTypes.Length == 0)
                 matchingTypes = _nonGenericTypes
-                    .Where(type => TreeEditorUtility.GetTypeName(type).Contains(evt.newValue)).ToArray();
+                    .Where(type => TreeEditorUtility.GetTypeName(type).ToLower().Contains(evt.newValue.ToLower())).ToArray();
 
             _choices = matchingTypes.Take(50).ToArray();
             _newTypeList.choices = _choices.Select(TreeEditorUtility.GetTypeName).ToList();
-            _newTypeList.SetValueWithoutNotify(_newTypeList.choices.FirstOrDefault());
+            var findExact = _choices.FirstOrDefault(type =>
+                string.Equals(type.Name, evt.newValue, StringComparison.CurrentCultureIgnoreCase))?.Name;
+            _newTypeList.SetValueWithoutNotify(findExact ?? _newTypeList.choices.FirstOrDefault());
         }
 
         private void CreateNewKey()
