@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -62,8 +63,30 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
         private void UpdateList(ChangeEvent<string> evt)
         {
-            var match = Regex.Match(evt.newValue, MatchGeneric);
-            var matchingTypes = Array.Empty<Type>();
+            //Todo: Maybe make this a bit simpler? Looks hard to parse what's going on here
+            var newChoices = new List<Type>();
+            var genericType = TryConstructGeneric(evt.newValue);
+            if (genericType != null)
+            {
+                newChoices.Add(genericType);
+            }
+            else
+            {
+                newChoices.AddRange(_nonGenericTypes
+                    .Where(type => TreeEditorUtility.GetTypeName(type).ToLower().Contains(evt.newValue.ToLower())));
+            }
+
+            _choices = newChoices.Take(50).ToArray();
+            _newTypeList.choices = _choices.Select(TreeEditorUtility.GetTypeName).ToList();
+            var findExact = _choices.FirstOrDefault(type =>
+                string.Equals(type.Name, evt.newValue, StringComparison.CurrentCultureIgnoreCase))?.Name;
+            _newTypeList.SetValueWithoutNotify(findExact ?? _newTypeList.choices.FirstOrDefault());
+        }
+
+        [CanBeNull]
+        private Type TryConstructGeneric(string typeString)
+        {
+            var match = Regex.Match(typeString, MatchGeneric);
             if (match.Success)
             {
                 var parameterCapture = match.Groups[2].Value;
@@ -81,20 +104,11 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
                 if (genericBase != null && parameters.All(type => type != null))
                 {
-                    var generic = genericBase.MakeGenericType(parameters.ToArray());
-                    matchingTypes = new[] { generic };
+                    return genericBase.MakeGenericType(parameters.ToArray());
                 }
             }
 
-            if (matchingTypes.Length == 0)
-                matchingTypes = _nonGenericTypes
-                    .Where(type => TreeEditorUtility.GetTypeName(type).ToLower().Contains(evt.newValue.ToLower())).ToArray();
-
-            _choices = matchingTypes.Take(50).ToArray();
-            _newTypeList.choices = _choices.Select(TreeEditorUtility.GetTypeName).ToList();
-            var findExact = _choices.FirstOrDefault(type =>
-                string.Equals(type.Name, evt.newValue, StringComparison.CurrentCultureIgnoreCase))?.Name;
-            _newTypeList.SetValueWithoutNotify(findExact ?? _newTypeList.choices.FirstOrDefault());
+            return null;
         }
 
         private void CreateNewKey()
