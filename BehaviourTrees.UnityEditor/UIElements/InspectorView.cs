@@ -41,21 +41,13 @@ namespace BehaviourTrees.UnityEditor.UIElements
                     Tree.MarkDirty();
                 });
 
-                var propertyView =
-                    IsBlackboardField(node.RepresentingType, info.FieldName, out var blackboardType)
+                var propertyView = TreeEditorUtility.IsBlackboardField(node.RepresentingType, info.FieldName, out var blackboardType)
                         ? PropertyView.CreateBlackboardDropdown
                             (Tree, splitName, blackboardType, value as string, callback, BlackboardView)
                         : PropertyView.CreateEditor(splitName, info.FieldType, value, callback);
 
                 _propertyViewContainer.Add(propertyView);
             }
-        }
-
-        private static bool IsBlackboardField(Type type, string fieldName, out Type blackboardType)
-        {
-            var attribute = type.GetField(fieldName).GetCustomAttribute<BlackboardDropdownAttribute>();
-            blackboardType = attribute?.Type;
-            return blackboardType != null;
         }
 
         public new class UxmlFactory : UxmlFactory<InspectorView, UxmlTraits> { }

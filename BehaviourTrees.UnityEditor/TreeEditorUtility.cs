@@ -77,5 +77,12 @@ namespace BehaviourTrees.UnityEditor
         {
             return "Assets/Plugins/BehaviourTrees/Markup/style.uss";
         }
+
+        public static bool IsBlackboardField(Type type, string fieldName, out Type blackboardType)
+        {
+            var attribute = type.GetField(fieldName).GetCustomAttribute<BlackboardDropdownAttribute>();
+            blackboardType = attribute?.Type;
+            return blackboardType != null;
+        }
     }
 }
