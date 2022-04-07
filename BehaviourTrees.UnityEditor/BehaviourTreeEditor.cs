@@ -45,7 +45,8 @@ namespace BehaviourTrees.UnityEditor
             _blackboard = root.Q<BlackboardView>();
             _inspector.BlackboardView = _blackboard;
 
-            root.Q<ToolbarButton>("show-problems").clicked += ProblemsWindow.OpenWindow;
+            root.Q<ToolbarMenu>("toolbar-view").menu
+                .AppendAction("Problems Window", (_) => ProblemsWindow.OpenWindow());
 
             _treeView.TreeLoaded += RemoveCurtain;
             _treeView.SelectionChanged += _inspector.SetToNode;

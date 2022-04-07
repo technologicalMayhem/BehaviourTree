@@ -2,9 +2,7 @@
       xmlns="UnityEngine.UIElements">
     <editor:Toolbar>
         <editor:ToolbarMenu display-tooltip-when-elided="true" text="Assets"/>
-        <editor:ToolbarMenu text="View">
-            <editor:ToolbarButton name="show-problems" text="Problems Window"/>
-        </editor:ToolbarMenu>
+        <editor:ToolbarMenu name="toolbar-view" text="View"/>
     </editor:Toolbar>
     <VisualElement name="graph-curtain">
         <Label text="Load a behaviour tree by opening it in the project view or using the assets dropdown."
