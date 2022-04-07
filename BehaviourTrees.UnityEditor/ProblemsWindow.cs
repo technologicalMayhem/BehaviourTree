@@ -54,6 +54,8 @@ namespace BehaviourTrees.UnityEditor
 
             root.Q<Button>("analyze").clicked += Analyze;
             _problemsList = root.Q("problems");
+            
+            Analyze();
         }
 
         private void Analyze()
