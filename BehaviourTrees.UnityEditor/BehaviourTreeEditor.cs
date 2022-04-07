@@ -1,5 +1,6 @@
 using BehaviourTrees.Model;
 using BehaviourTrees.UnityEditor.UIElements;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.UIElements;
@@ -15,8 +16,10 @@ namespace BehaviourTrees.UnityEditor
         private InspectorView _inspector;
         private SplitView _splitView;
         private BehaviourTreeView _treeView;
+        private static BehaviourTreeEditor _instance;
 
         public BehaviourTreeView TreeView => _treeView;
+        [CanBeNull] public static BehaviourTreeEditor Instance => _instance;
 
         public void CreateGUI()
         {
@@ -71,6 +74,7 @@ namespace BehaviourTrees.UnityEditor
         {
             var wnd = GetWindow<BehaviourTreeEditor>("Behaviour Tree", true, typeof(SceneView));
             wnd.titleContent = new GUIContent("Behaviour Tree", TreeEditorUtility.GetEditorIcon());
+            _instance = wnd;
             return wnd;
         }
 

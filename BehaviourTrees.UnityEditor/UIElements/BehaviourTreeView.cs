@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BehaviourTrees.Core;
 using BehaviourTrees.Model;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
     /// </summary>
     public class BehaviourTreeView : GraphView
     {
-        public EditorTreeContainer TreeContainer;
+        private EditorTreeContainer _treeContainer;
 
         /// <summary>
         ///     Creates a new instance of a tree view for editing behaviour trees.
@@ -37,7 +38,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
             Undo.undoRedoPerformed += OnUndoRedo;
         }
 
-        private BehaviourTreeModel TreeModel => TreeContainer.TreeModel;
+        private BehaviourTreeModel TreeModel => _treeContainer.TreeModel;
+
+        [CanBeNull] public EditorTreeContainer TreeContainer => _treeContainer;
 
         /// <inheritdoc />
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -140,7 +143,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
         /// </summary>
         private void PopulateView(EditorTreeContainer container)
         {
-            TreeContainer = container;
+            _treeContainer = container;
 
             graphViewChanged -= OnGraphViewChanged;
             DeleteElements(graphElements);
