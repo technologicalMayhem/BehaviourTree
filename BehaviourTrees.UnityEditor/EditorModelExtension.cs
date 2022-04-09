@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace BehaviourTrees.UnityEditor
@@ -13,16 +12,6 @@ namespace BehaviourTrees.UnityEditor
         public void InvokeBlackboardKeysChanged(object sender)
         {
             BlackboardKeysChanged?.Invoke(sender, EventArgs.Empty);
-        }
-
-        public string Serialize()
-        {
-            return JsonConvert.SerializeObject(this, TreeEditorUtility.SerializerSettings);
-        }
-
-        public static EditorModelExtension Deserialize(string data)
-        {
-            return JsonConvert.DeserializeObject<EditorModelExtension>(data, TreeEditorUtility.SerializerSettings);
         }
 
         public event EventHandler BlackboardKeysChanged;

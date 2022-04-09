@@ -12,11 +12,6 @@ namespace BehaviourTrees.Model
     /// </summary>
     public static class ModelUtilities
     {
-        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
-        {
-            // Converters = { new TypeConverter() }
-        };
-
         /// <summary>
         ///     Tests if the given type inherits from the other.
         /// </summary>
@@ -59,27 +54,6 @@ namespace BehaviourTrees.Model
             this IBehaviourTreeNode node)
         {
             return node.GetType().GetFields();
-        }
-
-        /// <summary>
-        ///     Serializes a <see cref="BehaviourTreeModel" />.
-        /// </summary>
-        /// <param name="treeModel">The model to serialize.</param>
-        /// <returns>A string representing the model.</returns>
-        public static string Serialize(this BehaviourTreeModel treeModel)
-        {
-            return JsonConvert.SerializeObject(treeModel, Settings);
-        }
-
-        /// <summary>
-        ///     Deserializes a <see cref="BehaviourTreeModel" /> from a string.
-        /// </summary>
-        /// <param name="serializedModel">A serialized behaviour tree model.</param>
-        /// <returns>The deserialized model.</returns>
-        public static BehaviourTreeModel Deserialize(string serializedModel)
-        {
-            var conceptualBehaviourTree = JsonConvert.DeserializeObject<BehaviourTreeModel>(serializedModel, Settings);
-            return conceptualBehaviourTree;
         }
     }
 }
