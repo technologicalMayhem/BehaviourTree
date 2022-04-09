@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using BehaviourTrees.Core;
 
 namespace BehaviourTrees.UnityEditor.Validation
 {

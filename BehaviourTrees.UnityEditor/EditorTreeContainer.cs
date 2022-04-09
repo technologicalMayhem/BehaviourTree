@@ -9,12 +9,6 @@ namespace BehaviourTrees.UnityEditor
     [CreateAssetMenu(fileName = "New Behaviour Tree", menuName = "Behaviour Tree", order = 250)]
     public class EditorTreeContainer : ScriptableObject, ISerializationCallbackReceiver
     {
-        [SerializeField] [HideInInspector] private string SerializedTree;
-        [SerializeField] [HideInInspector] private string SerializedExtensions;
-        
-        public EditorModelExtension ModelExtension = new EditorModelExtension();
-        public BehaviourTreeModel TreeModel = new BehaviourTreeModel();
-
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             Converters = new JsonConverter[]
@@ -22,6 +16,12 @@ namespace BehaviourTrees.UnityEditor
                 new Vector2Converter()
             }
         };
+
+        [SerializeField] [HideInInspector] private string SerializedTree;
+        [SerializeField] [HideInInspector] private string SerializedExtensions;
+
+        public EditorModelExtension ModelExtension = new EditorModelExtension();
+        public BehaviourTreeModel TreeModel = new BehaviourTreeModel();
 
         public void OnBeforeSerialize()
         {

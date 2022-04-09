@@ -8,10 +8,10 @@ namespace BehaviourTrees.UnityEditor.Validation
         public override IEnumerable<ValidationResult> Validate(EditorTreeContainer container)
         {
             var results = new List<ValidationResult>();
-            
+
             results.AddRange(CheckForLoneNodes(container));
             results.AddRange(CheckForConnectedToSelf(container));
-            
+
             return results;
         }
 

@@ -18,8 +18,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
     /// </summary>
     public class BehaviourTreeView : GraphView
     {
-        private EditorTreeContainer _treeContainer;
-
         /// <summary>
         ///     Creates a new instance of a tree view for editing behaviour trees.
         /// </summary>
@@ -38,9 +36,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
             Undo.undoRedoPerformed += OnUndoRedo;
         }
 
-        private BehaviourTreeModel TreeModel => _treeContainer.TreeModel;
+        private BehaviourTreeModel TreeModel => TreeContainer.TreeModel;
 
-        [CanBeNull] public EditorTreeContainer TreeContainer => _treeContainer;
+        [CanBeNull] public EditorTreeContainer TreeContainer { get; private set; }
 
         /// <inheritdoc />
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -89,7 +87,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
             var rect = contentViewContainer.parent.contentRect;
             var viewportCenter = new Vector2(rect.width / 2, rect.height / 2);
             var centeredPosition = position * -1 + viewportCenter;
-            
+
             UpdateViewTransform(new Vector3(centeredPosition.x, centeredPosition.y, 0), Vector3.one);
         }
 
@@ -143,7 +141,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
         /// </summary>
         private void PopulateView(EditorTreeContainer container)
         {
-            _treeContainer = container;
+            TreeContainer = container;
 
             graphViewChanged -= OnGraphViewChanged;
             DeleteElements(graphElements);

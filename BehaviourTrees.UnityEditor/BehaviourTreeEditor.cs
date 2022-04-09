@@ -15,11 +15,10 @@ namespace BehaviourTrees.UnityEditor
         private VisualElement _curtain;
         private InspectorView _inspector;
         private SplitView _splitView;
-        private BehaviourTreeView _treeView;
-        private static BehaviourTreeEditor _instance;
 
-        public BehaviourTreeView TreeView => _treeView;
-        [CanBeNull] public static BehaviourTreeEditor Instance => _instance;
+        public BehaviourTreeView TreeView { get; private set; }
+
+        [CanBeNull] public static BehaviourTreeEditor Instance { get; private set; }
 
         public void CreateGUI()
         {
@@ -40,16 +39,16 @@ namespace BehaviourTrees.UnityEditor
 
             _splitView = root.Q<SplitView>();
             _curtain = root.Q("graph-curtain");
-            _treeView = root.Q<BehaviourTreeView>();
+            TreeView = root.Q<BehaviourTreeView>();
             _inspector = root.Q<InspectorView>();
             _blackboard = root.Q<BlackboardView>();
             _inspector.BlackboardView = _blackboard;
 
             root.Q<ToolbarMenu>("toolbar-view").menu
-                .AppendAction("Problems Window", (_) => ProblemsWindow.OpenWindow());
+                .AppendAction("Problems Window", _ => ProblemsWindow.OpenWindow());
 
-            _treeView.TreeLoaded += RemoveCurtain;
-            _treeView.SelectionChanged += _inspector.SetToNode;
+            TreeView.TreeLoaded += RemoveCurtain;
+            TreeView.SelectionChanged += _inspector.SetToNode;
         }
 
         [MenuItem("Window/AI/Behaviour Tree Editor")]
@@ -68,14 +67,14 @@ namespace BehaviourTrees.UnityEditor
         {
             _inspector.Tree = treeContainer;
             _blackboard.Container = treeContainer;
-            _treeView.LoadTree(treeContainer);
+            TreeView.LoadTree(treeContainer);
         }
 
         private static BehaviourTreeEditor CreateWindow()
         {
             var wnd = GetWindow<BehaviourTreeEditor>("Behaviour Tree", true, typeof(SceneView));
             wnd.titleContent = new GUIContent("Behaviour Tree", TreeEditorUtility.GetEditorIcon());
-            _instance = wnd;
+            Instance = wnd;
             return wnd;
         }
 

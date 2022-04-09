@@ -1,4 +1,4 @@
-<UXML xmlns:editor="UnityEditor.UIElements" xmlns="UnityEngine.UIElements">
+<UXML xmlns="UnityEngine.UIElements">
     <VisualElement class="problem-item">
         <Label name="severity"/>
         <Label name="jump" class="problem-link"/>

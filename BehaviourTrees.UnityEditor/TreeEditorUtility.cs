@@ -32,6 +32,13 @@ namespace BehaviourTrees.UnityEditor
             return $"{baseName}<{parameters}>";
         }
 
+        public static bool IsBlackboardField(Type type, string fieldName, out Type blackboardType)
+        {
+            var attribute = type.GetField(fieldName).GetCustomAttribute<BlackboardDropdownAttribute>();
+            blackboardType = attribute?.Type;
+            return blackboardType != null;
+        }
+
         internal static VisualTreeAsset LoadPartialUi(string className, string partialName)
         {
             return AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
@@ -76,13 +83,6 @@ namespace BehaviourTrees.UnityEditor
         private static string LocateStyleSheet()
         {
             return "Assets/Plugins/BehaviourTrees/Markup/style.uss";
-        }
-
-        public static bool IsBlackboardField(Type type, string fieldName, out Type blackboardType)
-        {
-            var attribute = type.GetField(fieldName).GetCustomAttribute<BlackboardDropdownAttribute>();
-            blackboardType = attribute?.Type;
-            return blackboardType != null;
         }
     }
 }

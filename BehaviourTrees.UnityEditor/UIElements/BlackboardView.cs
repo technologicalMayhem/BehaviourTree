@@ -67,14 +67,10 @@ namespace BehaviourTrees.UnityEditor.UIElements
             var newChoices = new List<Type>();
             var genericType = TryConstructGeneric(evt.newValue);
             if (genericType != null)
-            {
                 newChoices.Add(genericType);
-            }
             else
-            {
                 newChoices.AddRange(_nonGenericTypes
                     .Where(type => TreeEditorUtility.GetTypeName(type).ToLower().Contains(evt.newValue.ToLower())));
-            }
 
             _choices = newChoices.Take(50).ToArray();
             _newTypeList.choices = _choices.Select(TreeEditorUtility.GetTypeName).ToList();
@@ -103,9 +99,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
                         StringComparison.CurrentCultureIgnoreCase));
 
                 if (genericBase != null && parameters.All(type => type != null))
-                {
                     return genericBase.MakeGenericType(parameters.ToArray());
-                }
             }
 
             return null;

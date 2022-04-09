@@ -82,7 +82,7 @@ namespace BehaviourTrees.UnityEditor.Validation
         private static IEnumerable<ValidationResult> CheckForMissingKeys(EditorTreeContainer container)
         {
             var results = new List<ValidationResult>();
-            
+
             foreach (var node in container.TreeModel.Nodes)
             {
                 var unusedKeys = GetBlackboardFields(node, container)
@@ -95,7 +95,7 @@ namespace BehaviourTrees.UnityEditor.Validation
                     NodeId = node.Id,
                     Message = $"The blackboard key {data.BlackboardKey} in field {data.FieldName} does not exist."
                 });
-                
+
                 results.AddRange(validationResults);
             }
 
@@ -129,9 +129,7 @@ namespace BehaviourTrees.UnityEditor.Validation
                         out var expectedBlackboardType);
                     Type actualBlackboardType = null;
                     if (pair.Value is string s)
-                    {
                         container.ModelExtension.BlackboardKeys.TryGetValue(s, out actualBlackboardType);
-                    }
 
                     return new BlackboardFieldData
                     {

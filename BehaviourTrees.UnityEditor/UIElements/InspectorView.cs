@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using BehaviourTrees.Model;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -41,7 +40,8 @@ namespace BehaviourTrees.UnityEditor.UIElements
                     Tree.MarkDirty();
                 });
 
-                var propertyView = TreeEditorUtility.IsBlackboardField(node.RepresentingType, info.FieldName, out var blackboardType)
+                var propertyView =
+                    TreeEditorUtility.IsBlackboardField(node.RepresentingType, info.FieldName, out var blackboardType)
                         ? PropertyView.CreateBlackboardDropdown
                             (Tree, splitName, blackboardType, value as string, callback, BlackboardView)
                         : PropertyView.CreateEditor(splitName, info.FieldType, value, callback);

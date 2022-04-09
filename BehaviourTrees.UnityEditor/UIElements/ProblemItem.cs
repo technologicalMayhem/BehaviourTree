@@ -19,7 +19,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
         public static ProblemItem Create(ValidationResult result)
         {
             var problemItem = new ProblemItem();
-            
+
             var severity = problemItem.Q<Label>("severity");
             severity.text = result.Severity.ToString();
             severity.AddToClassList(result.Severity == Severity.Error ? "problem-error" : "problem-warning");
@@ -30,7 +30,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
             {
                 EditorWindow.GetWindow<BehaviourTreeEditor>().TreeView.MoveTo(result.NodeId);
             }));
-            
+
             problemItem.Q<Label>("message").text = result.Message;
 
             return problemItem;

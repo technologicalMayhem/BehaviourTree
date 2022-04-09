@@ -1,4 +1,4 @@
-<UXML xmlns:editor="UnityEditor.UIElements" xmlns="UnityEngine.UIElements">
+<UXML xmlns="UnityEngine.UIElements">
     <Button name="analyze" text="Analyze"/>
     <VisualElement name="problems"/>
 </UXML>
