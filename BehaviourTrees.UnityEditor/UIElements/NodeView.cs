@@ -29,7 +29,8 @@ namespace BehaviourTrees.UnityEditor.UIElements
             title = TreeEditorUtility.GetMemberName(Node.RepresentingType);
             viewDataKey = node.Id;
 
-            var position = _container.ModelExtension.NodePositions[node.Id];
+            if (!_container.ModelExtension.NodePositions.TryGetValue(node.Id, out var position))
+                position = Vector2.zero;
 
             style.left = position.x;
             style.top = position.y;
