@@ -13,7 +13,10 @@ namespace BehaviourTrees.UnityEditor
         {
             Converters = new JsonConverter[]
             {
-                new Vector2Converter()
+                new RectConverter(),
+                new Vector2Converter(),
+                new Vector3Converter(),
+                new Vector4Converter()
             }
         };
 
