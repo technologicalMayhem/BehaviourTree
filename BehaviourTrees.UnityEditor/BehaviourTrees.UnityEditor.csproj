@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net472</TargetFramework>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <UnityVersion>2021.2.17f1</UnityVersion>
         <LangVersion>8.0</LangVersion>
     </PropertyGroup>
 
@@ -22,21 +23,15 @@
         <None Update="Markup\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="EditorIcon.png">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Markup\ProblemItem.uxml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="UnityEditor">
-            <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.17f1\Editor\Data\Managed\UnityEditor.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine">
-            <HintPath>C:\Program Files\Unity\Hub\Editor\2021.2.17f1\Editor\Data\Managed\UnityEngine.dll</HintPath>
-        </Reference>
+        <PackageReference Include="Unity3D" Version="1.7.0"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="$(UnityInstallRoot)\$(UnityVersion)\$(UnityEditorPath)" Private="false"/>
     </ItemGroup>
 
 </Project>
