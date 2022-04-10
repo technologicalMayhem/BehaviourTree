@@ -90,9 +90,17 @@ namespace BehaviourTrees.UnityEditor.UIElements
             return OutputPorts.FirstOrDefault(port => port.connected is false) ?? AddOutputPort();
         }
 
+        public void SetPosition(Vector2 position)
+        {
+            SetPosition(new Rect(position, Vector2.zero));
+        }
+
         public override void SetPosition(Rect newPos)
         {
-            base.SetPosition(newPos);
+            style.position = Position.Absolute;
+            style.left = newPos.x;
+            style.top = newPos.y;
+            
             _timeSinceLastMove = 0;
             if (_isMoving is false)
             {

@@ -47,6 +47,8 @@ namespace BehaviourTrees.UnityEditor
             root.Q<ToolbarMenu>("toolbar-view").menu
                 .AppendAction("Problems Window", _ => ProblemsWindow.OpenWindow());
 
+            root.Q<ToolbarButton>("toolbar-format").clicked += () => TreeFormatter.FormatTreeStructure(TreeView);
+
             TreeView.TreeLoaded += RemoveCurtain;
             TreeView.SelectionChanged += _inspector.SetToNode;
         }

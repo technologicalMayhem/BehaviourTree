@@ -6,8 +6,6 @@ I created this since I didn't find a satisfactory way to create behaviour trees 
 Some of the things that need improving on, in no paticular order:
 - Editor > Exception Handling: 
   - The editor throws exceptions in a bunch of situations (like deleting the behaviour tree you are currently working on) and I need to add proper exception handling to those cases.
-- Editor > Reformat Tree: 
-  - I want to add the possiblity to have the editor reposition all the nodes in a nice and concise manner.
 - Core > Runtime States: 
   - It would be very helpful if for diagnostic purposes you could see what nodes are in which states and what part of the tree is currently being executed.
 - Core | Editor > Runtime Editing: 
