@@ -1,7 +1,6 @@
 <UXML xmlns:bte="BehaviourTrees.UnityEditor.UIElements" xmlns:editor="UnityEditor.UIElements"
       xmlns="UnityEngine.UIElements">
     <editor:Toolbar>
-        <editor:ToolbarMenu display-tooltip-when-elided="true" text="Assets"/>
         <editor:ToolbarMenu name="toolbar-view" text="View"/>
         <editor:ToolbarButton name="toolbar-format" text="Format Tree"/>
     </editor:Toolbar>
