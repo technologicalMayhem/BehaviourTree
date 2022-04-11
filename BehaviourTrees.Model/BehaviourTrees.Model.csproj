@@ -6,11 +6,11 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <DocumentationFile>bin\Release\net472\BehaviourTrees.Model.xml</DocumentationFile>
+        <DocumentationFile>bin\Release\netstandard2.1\BehaviourTrees.Model.xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <DocumentationFile>bin\Debug\net472\BehaviourTrees.Model.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netstandard2.1\BehaviourTrees.Model.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>

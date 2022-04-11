@@ -12,11 +12,11 @@
     </ItemGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <DocumentationFile>bin\Release\net472\BehaviourTrees.UnityEditor.xml</DocumentationFile>
+        <DocumentationFile>bin\Release\netstandard2.1\BehaviourTrees.UnityEditor.xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <DocumentationFile>bin\Debug\net472\BehaviourTrees.UnityEditor.xml</DocumentationFile>
+        <DocumentationFile>bin\Debug\netstandard2.1\BehaviourTrees.UnityEditor.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -26,8 +26,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Unity3D" Version="1.7.0"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+        <PackageReference Include="Unity3D" Version="1.7.0" PrivateAssets="none"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" PrivateAssets="none"/>
     </ItemGroup>
 
     <ItemGroup>
