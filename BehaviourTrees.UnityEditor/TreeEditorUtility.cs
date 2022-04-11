@@ -13,6 +13,9 @@ namespace BehaviourTrees.UnityEditor
 {
     internal static class TreeEditorUtility
     {
+        private const string BasePath =
+            "Packages/com.github.technologicalmayhem.behaviourtree/Editor";
+        
         internal static JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             Converters =
@@ -47,7 +50,7 @@ namespace BehaviourTrees.UnityEditor
 
         internal static string LocateUiDefinitionFile(string className)
         {
-            return $"Assets/Plugins/BehaviourTrees/Markup/{className}.uxml";
+            return $"{BasePath}/Markup/{className}.uxml";
         }
 
         internal static StyleSheet GetStyleSheet()
@@ -57,7 +60,7 @@ namespace BehaviourTrees.UnityEditor
 
         internal static Texture GetEditorIcon()
         {
-            return AssetDatabase.LoadAssetAtPath<Texture>("Assets/Plugins/BehaviourTrees/EditorIcon.png");
+            return AssetDatabase.LoadAssetAtPath<Texture>($"{BasePath}/EditorIcon.png");
         }
 
         internal static string GetMemberName(MemberInfo nodeType)
@@ -77,12 +80,12 @@ namespace BehaviourTrees.UnityEditor
 
         private static string LocatePartialUiDefinitionFile(string className, string partialName)
         {
-            return $"Assets/Plugins/BehaviourTrees/Markup/{className}/{partialName}.uxml";
+            return $"{BasePath}/Markup/{className}/{partialName}.uxml";
         }
 
         private static string LocateStyleSheet()
         {
-            return "Assets/Plugins/BehaviourTrees/Markup/style.uss";
+            return $"{BasePath}/Markup/style.uss";
         }
     }
 }
