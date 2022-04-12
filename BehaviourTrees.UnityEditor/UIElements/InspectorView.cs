@@ -14,9 +14,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
         public InspectorView()
         {
-            var visualTree =
-                AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                    TreeEditorUtility.LocateUiDefinitionFile(nameof(InspectorView)));
+            var visualTree = TreeEditorUtility.GetVisualTree(nameof(InspectorView));
             visualTree.CloneTree(this);
 
             _propertyViewContainer = this.Q("property-list");

@@ -8,9 +8,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
     {
         private ProblemItem()
         {
-            var visualTree =
-                AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                    TreeEditorUtility.LocateUiDefinitionFile(nameof(ProblemItem)));
+            var visualTree = TreeEditorUtility.GetVisualTree(nameof(ProblemItem));
             visualTree.CloneTree(this);
 
             styleSheets.Add(TreeEditorUtility.GetStyleSheet());

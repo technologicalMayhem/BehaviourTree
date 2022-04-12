@@ -17,9 +17,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
         public PropertyView()
         {
-            var visualTree =
-                AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                    TreeEditorUtility.LocateUiDefinitionFile(nameof(PropertyView)));
+            var visualTree = TreeEditorUtility.GetVisualTree(nameof(PropertyView));
             visualTree.CloneTree(this);
 
             styleSheets.Add(TreeEditorUtility.GetStyleSheet());

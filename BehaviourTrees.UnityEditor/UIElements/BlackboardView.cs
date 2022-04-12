@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
-using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace BehaviourTrees.UnityEditor.UIElements
@@ -25,9 +24,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
         public BlackboardView()
         {
-            var visualTree =
-                AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                    TreeEditorUtility.LocateUiDefinitionFile(nameof(BlackboardView)));
+            var visualTree = TreeEditorUtility.GetVisualTree(nameof(BlackboardView));
             visualTree.CloneTree(this);
 
             //Gets all types that could be created in the blackboard

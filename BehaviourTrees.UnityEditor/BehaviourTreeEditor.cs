@@ -26,8 +26,7 @@ namespace BehaviourTrees.UnityEditor
             var root = rootVisualElement;
 
             // Import UXML
-            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                TreeEditorUtility.LocateUiDefinitionFile(nameof(BehaviourTreeEditor)));
+            var visualTree = TreeEditorUtility.GetVisualTree(nameof(BehaviourTreeEditor));
             visualTree.CloneTree(root);
 
             // A stylesheet can be added to a VisualElement.

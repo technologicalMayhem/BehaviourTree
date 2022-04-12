@@ -100,7 +100,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
             style.position = Position.Absolute;
             style.left = newPos.x;
             style.top = newPos.y;
-            
+
             _timeSinceLastMove = 0;
             if (_isMoving is false)
             {

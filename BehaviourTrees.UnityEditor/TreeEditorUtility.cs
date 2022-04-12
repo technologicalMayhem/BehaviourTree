@@ -15,7 +15,7 @@ namespace BehaviourTrees.UnityEditor
     {
         private const string BasePath =
             "Packages/com.github.technologicalmayhem.behaviourtree/Editor";
-        
+
         internal static JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             Converters =
@@ -46,6 +46,11 @@ namespace BehaviourTrees.UnityEditor
         {
             return AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 LocatePartialUiDefinitionFile(className, partialName));
+        }
+
+        internal static VisualTreeAsset GetVisualTree(string className)
+        {
+            return AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(LocateUiDefinitionFile(className));
         }
 
         internal static string LocateUiDefinitionFile(string className)

@@ -31,8 +31,7 @@ namespace BehaviourTrees.UnityEditor
             var root = rootVisualElement;
 
             // Import UXML
-            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                TreeEditorUtility.LocateUiDefinitionFile(nameof(ProblemsWindow)));
+            var visualTree = TreeEditorUtility.GetVisualTree(nameof(ProblemsWindow));
             visualTree.CloneTree(root);
 
             //Get style sheet
