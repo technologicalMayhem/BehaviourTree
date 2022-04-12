@@ -3,8 +3,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using BehaviourTrees.Model;
-using BehaviourTrees.UnityEditor.Converters;
-using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -15,14 +13,6 @@ namespace BehaviourTrees.UnityEditor
     {
         private const string BasePath =
             "Packages/com.github.technologicalmayhem.behaviourtree/Editor";
-
-        internal static JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
-        {
-            Converters =
-            {
-                new Vector2Converter()
-            }
-        };
 
         public static string GetTypeName(Type type)
         {
