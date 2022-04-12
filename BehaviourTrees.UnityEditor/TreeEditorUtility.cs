@@ -32,12 +32,6 @@ namespace BehaviourTrees.UnityEditor
             return blackboardType != null;
         }
 
-        internal static VisualTreeAsset LoadPartialUi(string className, string partialName)
-        {
-            return AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                LocatePartialUiDefinitionFile(className, partialName));
-        }
-
         internal static VisualTreeAsset GetVisualTree(string className)
         {
             return AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(LocateUiDefinitionFile(className));
@@ -71,11 +65,6 @@ namespace BehaviourTrees.UnityEditor
             );
 
             return pascalRegex.Replace(pascalCaseString, " ");
-        }
-
-        private static string LocatePartialUiDefinitionFile(string className, string partialName)
-        {
-            return $"{BasePath}/Markup/{className}/{partialName}.uxml";
         }
 
         private static string LocateStyleSheet()
