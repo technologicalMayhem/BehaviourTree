@@ -16,7 +16,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
         private readonly VisualElement _list;
         private readonly TextField _newKey;
         private readonly DropdownField _newTypeList;
-        private readonly TextField _newTypeSearch;
         private readonly Type[] _nonGenericTypes;
         private Type[] _choices;
 
@@ -38,13 +37,13 @@ namespace BehaviourTrees.UnityEditor.UIElements
             _genericTypes = allTypes.Where(type => type.IsGenericType).ToArray();
 
             _newKey = this.Q<TextField>("new-key");
-            _newTypeSearch = this.Q<TextField>("new-type-search");
+            var newTypeSearch = this.Q<TextField>("new-type-search");
             _newTypeList = this.Q<DropdownField>("new-type-list");
             _errors = this.Q("new-error");
             var button = this.Q<Button>("new-create");
             _list = this.Q("blackboard-list");
 
-            _newTypeSearch.RegisterValueChangedCallback(UpdateList);
+            newTypeSearch.RegisterValueChangedCallback(UpdateList);
             button.clicked += CreateNewKey;
         }
 
