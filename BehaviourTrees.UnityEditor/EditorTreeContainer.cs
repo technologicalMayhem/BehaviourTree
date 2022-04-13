@@ -6,9 +6,16 @@ using UnityEngine;
 
 namespace BehaviourTrees.UnityEditor
 {
+    /// <summary>
+    ///     Contains the data that the <see cref="BehaviourTreeEditor" /> used to create and edit behaviour trees, as well
+    ///     as managing the serialization of the data within Unity.
+    /// </summary>
     [CreateAssetMenu(fileName = "New Behaviour Tree", menuName = "Behaviour Tree", order = 250)]
     public class EditorTreeContainer : ScriptableObject, ISerializationCallbackReceiver
     {
+        /// <summary>
+        ///     Settings used for the serialization of <see cref="TreeModel" /> and <see cref="ModelExtension" />.
+        /// </summary>
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             Converters = new JsonConverter[]
@@ -20,12 +27,23 @@ namespace BehaviourTrees.UnityEditor
             }
         };
 
+        /// <summary>
+        ///     Represents the <see cref="BehaviourTreeModel" /> in serialized form.
+        /// </summary>
         [SerializeField] [HideInInspector] private string SerializedTree;
+
+        /// <summary>
+        ///     Represents the <see cref="ModelExtension" /> in serialized form.
+        /// </summary>
         [SerializeField] [HideInInspector] private string SerializedExtensions;
 
+        /// <inheritdoc cref="EditorModelExtension" />
         public EditorModelExtension ModelExtension = new EditorModelExtension();
+
+        /// <inheritdoc cref="BehaviourTreeModel" />
         public BehaviourTreeModel TreeModel = new BehaviourTreeModel();
 
+        /// <inheritdoc />
         public void OnBeforeSerialize()
         {
             string tree;
@@ -46,6 +64,7 @@ namespace BehaviourTrees.UnityEditor
             SerializedExtensions = extension;
         }
 
+        /// <inheritdoc />
         public void OnAfterDeserialize()
         {
             BehaviourTreeModel tree;
@@ -66,6 +85,9 @@ namespace BehaviourTrees.UnityEditor
             ModelExtension = extension;
         }
 
+        /// <summary>
+        ///     Marks that edits have been made to the container that need to be saved.
+        /// </summary>
         public void MarkDirty()
         {
             EditorUtility.SetDirty(this);

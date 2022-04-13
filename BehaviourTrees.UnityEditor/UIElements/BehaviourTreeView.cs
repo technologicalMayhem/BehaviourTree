@@ -35,7 +35,14 @@ namespace BehaviourTrees.UnityEditor.UIElements
             Undo.undoRedoPerformed += OnUndoRedo;
         }
 
+        /// <summary>
+        ///     The tree model in the tree container.
+        /// </summary>
         private static BehaviourTreeModel TreeModel => TreeContainer.TreeModel;
+
+        /// <summary>
+        ///     A reference to the tree container contained in the main editor window.
+        /// </summary>
         private static EditorTreeContainer TreeContainer => BehaviourTreeEditor.GetOrOpen().TreeContainer;
 
         /// <inheritdoc />
@@ -60,11 +67,19 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 .ToList();
         }
 
+        /// <summary>
+        ///     Moves the viewport to the node with the given id.
+        /// </summary>
+        /// <param name="nodeId">The id of the node to move to.</param>
         public void MoveTo(string nodeId)
         {
             MoveTo(TreeContainer.ModelExtension.NodePositions[nodeId]);
         }
 
+        /// <summary>
+        ///     Move the viewport to the position.
+        /// </summary>
+        /// <param name="position">The position to move the viewport to.</param>
         public void MoveTo(Vector2 position)
         {
             //Todo: Figure out why this works the way it does and try to make this clearer
@@ -101,10 +116,16 @@ namespace BehaviourTrees.UnityEditor.UIElements
         private void AddDerivedTypesToContextMenu(Type baseType, DropdownMenu menu, Vector2 mousePosition)
         {
             foreach (var derivedType in TypeCache.GetTypesDerivedFrom(baseType))
-                menu.AppendAction(TreeEditorUtility.GetMemberName(derivedType),
+                menu.AppendAction(TreeEditorUtility.GetNodeName(derivedType),
                     _ => CreateNode(derivedType, mousePosition.x, mousePosition.y));
         }
 
+        /// <summary>
+        ///     Creates a new node. Optionally accepts a position for the new node.
+        /// </summary>
+        /// <param name="type">The type of the node to create.</param>
+        /// <param name="posX">The X position of the new node.</param>
+        /// <param name="posY">The Y position of the new node.</param>
         private void CreateNode(Type type, float posX = 0, float posY = 0)
         {
             Undo.RecordObject(TreeContainer, "Create Node");
@@ -114,6 +135,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
             TreeContainer.MarkDirty();
         }
 
+        /// <summary>
+        ///     Gets called when an undo or redo is performed.
+        /// </summary>
         private void OnUndoRedo()
         {
             if (TreeContainer != null) PopulateView();
@@ -216,7 +240,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
         private void CreateNodeView(NodeModel node)
         {
             var nodeView = new NodeView(node);
-            nodeView.SelectionChanged += () => schedule.Execute(OnSelectionChanged);
+            nodeView.SelectionChanged += (sender, args) => schedule.Execute(OnSelectionChanged);
             AddElement(nodeView);
         }
 
@@ -245,6 +269,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
         /// </summary>
         public event Action TreeLoaded;
 
+        /// <summary>
+        ///     Instantiates a <see cref="BehaviourTreeView" /> using the data read from a UXML file.
+        /// </summary>
         public new class UxmlFactory : UxmlFactory<BehaviourTreeView, UxmlTraits> { }
     }
 }

@@ -10,22 +10,46 @@ using UnityEngine.UIElements;
 
 namespace BehaviourTrees.UnityEditor.UIElements
 {
+    /// <summary>
+    ///     Represents a <see cref="NodeModel" /> on the graph view.
+    /// </summary>
     public sealed class NodeView : Node
     {
+        /// <summary>
+        ///     A reference to the tree container contained in the main editor window.
+        /// </summary>
         private static EditorTreeContainer Container => BehaviourTreeEditor.GetOrOpen().TreeContainer;
+
+        /// <summary>
+        ///     The <see cref="NodeModel" /> this NodeView is representing.
+        /// </summary>
         public readonly NodeModel Node;
-        private bool _isMoving;
 
+        /// <summary>
+        ///     Used to keep track of if the node has been moved recently and when to save the new position.
+        /// </summary>
         private long _timeSinceLastMove;
-        public Port InputPort;
-        public List<Port> OutputPorts;
 
+        /// <summary>
+        ///     The input port on the node.
+        /// </summary>
+        public Port InputPort;
+
+        /// <summary>
+        ///     The output ports on the node.
+        /// </summary>
+        public readonly List<Port> OutputPorts;
+
+        /// <summary>
+        ///     Creates a new instance of a NodeView element.
+        /// </summary>
+        /// <param name="node">The node to represent.</param>
         public NodeView(NodeModel node)
             : base(TreeEditorUtility.LocateUiDefinitionFile(nameof(NodeView)))
         {
             Node = node;
             OutputPorts = new List<Port>();
-            title = TreeEditorUtility.GetMemberName(Node.RepresentingType);
+            title = TreeEditorUtility.GetNodeName(Node.RepresentingType);
             viewDataKey = node.Id;
 
             if (!Container.ModelExtension.NodePositions.TryGetValue(node.Id, out var position))
@@ -44,28 +68,49 @@ namespace BehaviourTrees.UnityEditor.UIElements
             if (node.RepresentingType == typeof(RootNode)) capabilities -= Capabilities.Deletable;
         }
 
+        /// <inheritdoc />
         public override void OnSelected()
         {
             base.OnSelected();
-            SelectionChanged?.Invoke();
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <inheritdoc />
         public override void OnUnselected()
         {
             base.OnUnselected();
-            SelectionChanged?.Invoke();
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        ///     Updates the ports on the node. It add a new port if there is no unconnected one or removes excess
+        ///     unconnected ports if there are more than one empty one. Also sorts ports in their execution order and places
+        ///     the unconnected port at the bottom.
+        /// </summary>
         public void UpdatePorts()
+        {
+            RemoveOrAddPorts();
+            outputContainer.Sort(SortPorts);
+            UpdatePortNames();
+        }
+
+        /// <summary>
+        ///     Removes all unused ports but one or adds new a new port.
+        /// </summary>
+        private void RemoveOrAddPorts()
         {
             var openPorts = OutputPorts.Where(port => port.connected is false).ToList();
             if (openPorts.Count > 1)
                 foreach (var portToRemove in openPorts.Skip(1))
                     RemovePort(portToRemove);
             else if (Node.RepresentingType.InheritsFrom<CompositeNode>() && openPorts.Count == 0) AddOutputPort();
+        }
 
-            outputContainer.Sort(SortPorts);
-
+        /// <summary>
+        ///     Update the names of the ports if it is a composite node.
+        /// </summary>
+        private void UpdatePortNames()
+        {
             if (Node.RepresentingType.InheritsFrom<CompositeNode>())
             {
                 var num = 1;
@@ -75,7 +120,11 @@ namespace BehaviourTrees.UnityEditor.UIElements
             }
         }
 
-        public Port AddOutputPort()
+        /// <summary>
+        ///     Create a new output port and returns it.
+        /// </summary>
+        /// <returns>The new output port.</returns>
+        private Port AddOutputPort()
         {
             var port = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, null);
             OutputPorts.Add(port);
@@ -84,16 +133,25 @@ namespace BehaviourTrees.UnityEditor.UIElements
             return port;
         }
 
-        public Port GetFreeOutputPort()
+        /// <summary>
+        ///     Gets the first unconnected output port.
+        /// </summary>
+        /// <returns>A port with no connection.</returns>
+        private Port GetUnconnectedOutputPort()
         {
             return OutputPorts.FirstOrDefault(port => port.connected is false) ?? AddOutputPort();
         }
 
+        /// <summary>
+        ///     Set node position.
+        /// </summary>
+        /// <param name="position"></param>
         public void SetPosition(Vector2 position)
         {
             SetPosition(new Rect(position, Vector2.zero));
         }
 
+        /// <inheritdoc />
         public override void SetPosition(Rect newPos)
         {
             style.position = Position.Absolute;
@@ -101,19 +159,23 @@ namespace BehaviourTrees.UnityEditor.UIElements
             style.top = newPos.y;
 
             _timeSinceLastMove = 0;
-            if (_isMoving is false)
-            {
-                _isMoving = true;
-                schedule.Execute(EnsureMovingIsComplete);
-            }
+            schedule.Execute(EnsureMovingIsComplete);
         }
 
+        /// <summary>
+        ///     Create a edge between this node and another node on the output side.
+        /// </summary>
+        /// <param name="childView">The node to connect to.</param>
+        /// <returns>The created edge.</returns>
         public Edge ConnectTo(NodeView childView)
         {
-            var port = GetFreeOutputPort();
+            var port = GetUnconnectedOutputPort();
             return port.ConnectTo(childView.InputPort);
         }
 
+        /// <summary>
+        ///     Sets a style class on the node depending on what kind of behaviour node the representing type is.
+        /// </summary>
         private void SetNodeStyle()
         {
             if (Node.RepresentingType == typeof(RootNode))
@@ -125,6 +187,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
             else if (Node.RepresentingType.InheritsFrom(typeof(LeafNode<>))) AddToClassList("leafNode");
         }
 
+        /// <summary>
+        ///     Add a input port to the node, unless it is a root node.
+        /// </summary>
         private void AddInputPorts()
         {
             if (Node.RepresentingType == typeof(RootNode)) return;
@@ -134,6 +199,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
             inputContainer.Add(port);
         }
 
+        /// <summary>
+        ///     Add input ports unless it is a leaf node.
+        /// </summary>
         private void AddOutputPorts()
         {
             if (Node.RepresentingType.InheritsFrom(typeof(LeafNode<>))) return;
@@ -141,6 +209,15 @@ namespace BehaviourTrees.UnityEditor.UIElements
             AddOutputPort();
         }
 
+        /// <summary>
+        ///     Compares two ports and return a int indicating their order.
+        /// </summary>
+        /// <param name="x">The first port.</param>
+        /// <param name="y">The second port.</param>
+        /// <returns>
+        ///     <c>0</c> if the elements are equal,<c>-1</c> if <paramref name="x" /> is lesser
+        ///     and <c>1</c> if <paramref name="x" /> is greater.
+        /// </returns>
         private int SortPorts(VisualElement x, VisualElement y)
         {
             if (x is Port portX && y is Port portY)
@@ -175,6 +252,10 @@ namespace BehaviourTrees.UnityEditor.UIElements
             return 0;
         }
 
+        /// <summary>
+        ///     Removes a port.
+        /// </summary>
+        /// <param name="port">The port to remove.</param>
         private void RemovePort(Port port)
         {
             port.DisconnectAll();
@@ -182,6 +263,10 @@ namespace BehaviourTrees.UnityEditor.UIElements
             outputContainer.Remove(port);
         }
 
+        /// <summary>
+        ///     Check if moving the node is complete. If not it will retry on the next frame.
+        /// </summary>
+        /// <param name="state">The timer state of the scheduler.</param>
         private void EnsureMovingIsComplete(TimerState state)
         {
             _timeSinceLastMove += state.deltaTime;
@@ -195,10 +280,12 @@ namespace BehaviourTrees.UnityEditor.UIElements
             Undo.RecordObject(Container, "Behaviour Tree (Moved Node)");
             var pos = GetPosition();
             Container.ModelExtension.NodePositions[Node.Id] = new Vector2(pos.x, pos.y);
-            _isMoving = false;
             Container.MarkDirty();
         }
 
-        public event Action SelectionChanged;
+        /// <summary>
+        ///     Get raised when the node has been selected or deselected.
+        /// </summary>
+        public event EventHandler SelectionChanged;
     }
 }

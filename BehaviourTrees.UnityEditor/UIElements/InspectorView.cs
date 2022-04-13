@@ -5,12 +5,18 @@ using UnityEngine.UIElements;
 
 namespace BehaviourTrees.UnityEditor.UIElements
 {
+    /// <summary>
+    ///     Shows the field data set on the currently selected node and allows editing it.
+    /// </summary>
     public class InspectorView : VisualElement
     {
         private readonly VisualElement _propertyViewContainer;
         private static BehaviourTreeEditor Window => BehaviourTreeEditor.GetOrOpen();
         private static EditorTreeContainer Tree => Window.TreeContainer;
 
+        /// <summary>
+        ///     Creates a new instance of the inspector view element.
+        /// </summary>
         public InspectorView()
         {
             var visualTree = TreeEditorUtility.GetVisualTree(nameof(InspectorView));
@@ -19,6 +25,10 @@ namespace BehaviourTrees.UnityEditor.UIElements
             _propertyViewContainer = this.Q("property-list");
         }
 
+        /// <summary>
+        ///     Sets the node the inspector is currently showing.
+        /// </summary>
+        /// <param name="nodeView">The node to show the data of.</param>
         public void SetToNode(NodeView nodeView)
         {
             _propertyViewContainer.Clear();
@@ -47,6 +57,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
             }
         }
 
+        /// <summary>
+        ///     Instantiates a <see cref="InspectorView" /> using the data read from a UXML file
+        /// </summary>
         public new class UxmlFactory : UxmlFactory<InspectorView, UxmlTraits> { }
     }
 }

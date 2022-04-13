@@ -2,11 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BehaviourTrees.Model;
+using JetBrains.Annotations;
 
 namespace BehaviourTrees.UnityEditor.Validation
 {
+    /// <summary>
+    ///     Checks if there are problems with the blackboard.
+    /// </summary>
+    [UsedImplicitly]
     public class BlackboardValidator : TreeValidator
     {
+        /// <inheritdoc />
         public override IEnumerable<ValidationResult> Validate(EditorTreeContainer container)
         {
             var results = new List<ValidationResult>();
@@ -37,7 +43,7 @@ namespace BehaviourTrees.UnityEditor.Validation
 
                 var validationResults = mismatches.Select(data => new ValidationResult
                 {
-                    Severity = Severity.Error,
+                    Severity = ProblemSeverity.Error,
                     NodeId = node.Id,
                     Message =
                         $"{data.FieldName} expects type {data.NodeExpectedType} for key {data.FieldName} but is {data.ActualBlackboardType} in blackboard instead."
@@ -66,7 +72,7 @@ namespace BehaviourTrees.UnityEditor.Validation
 
                 var validationResults = missingFields.Select(data => new ValidationResult
                 {
-                    Severity = Severity.Error,
+                    Severity = ProblemSeverity.Error,
                     NodeId = node.Id,
                     Message = $"The field {data.FieldName} does not have a key set."
                 });
@@ -91,7 +97,7 @@ namespace BehaviourTrees.UnityEditor.Validation
 
                 var validationResults = unusedKeys.Select(data => new ValidationResult
                 {
-                    Severity = Severity.Error,
+                    Severity = ProblemSeverity.Error,
                     NodeId = node.Id,
                     Message = $"The blackboard key {data.BlackboardKey} in field {data.FieldName} does not exist."
                 });
@@ -113,11 +119,17 @@ namespace BehaviourTrees.UnityEditor.Validation
 
             return obsoleteKeys.Select(pair => new ValidationResult
             {
-                Severity = Severity.Warning,
+                Severity = ProblemSeverity.Warning,
                 Message = $"The blackboard key {pair.Key} is unused."
             });
         }
 
+        /// <summary>
+        ///     Returns data about all the fields in model that represent blackboard keys.
+        /// </summary>
+        /// <param name="model">The model get fields from.</param>
+        /// <param name="container">The container of the blackboard data.</param>
+        /// <returns>The data about the fields used for blackboard keys.</returns>
         private static IEnumerable<BlackboardFieldData> GetBlackboardFields(NodeModel model,
             EditorTreeContainer container)
         {
@@ -141,6 +153,9 @@ namespace BehaviourTrees.UnityEditor.Validation
                 });
         }
 
+        /// <summary>
+        ///     Contains data about a field used store a key for the blackboard.
+        /// </summary>
         private struct BlackboardFieldData
         {
             public string FieldName;

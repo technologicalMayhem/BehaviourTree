@@ -4,21 +4,39 @@ using System.Linq;
 using BehaviourTrees.Model;
 using BehaviourTrees.UnityEditor.UIElements;
 using BehaviourTrees.UnityEditor.Validation;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace BehaviourTrees.UnityEditor
 {
+    /// <summary>
+    ///     This window shows problems that are detected whilst the behaviour tree is open in the
+    ///     <see cref="BehaviourTreeEditor" />.
+    /// </summary>
     [ExecuteAlways]
     public class ProblemsWindow : EditorWindow
     {
-        private static TreeValidator[] Validators;
+        /// <summary>
+        ///     A collection of all <see cref="TreeValidator" />s found in the current app domain.
+        /// </summary>
+        private static TreeValidator[] _validators;
+
+        /// <summary>
+        ///     A visual element in which a list of <see cref="ProblemItem" />s is placed to be displayed to the user.
+        /// </summary>
         private VisualElement _problemsList;
 
+        /// <summary>
+        ///     Indicates whether should be open or close.
+        /// </summary>
         private static bool ShouldBeOpen =>
             HasOpenInstances<BehaviourTreeEditor>() && BehaviourTreeEditor.GetOrOpen().TreeContainer != null;
 
+        /// <summary>
+        ///     A reference to the tree container contained in the main editor window.
+        /// </summary>
         private static EditorTreeContainer Container => BehaviourTreeEditor.GetOrOpen().TreeContainer;
 
         private void Update()
@@ -26,6 +44,11 @@ namespace BehaviourTrees.UnityEditor
             if (!ShouldBeOpen) Close();
         }
 
+        /// <summary>
+        ///     <para>Gets called when the window opens.</para>
+        ///     <para>Populates the window with UI elements and sets them all up.</para>
+        /// </summary>
+        [UsedImplicitly]
         private void CreateGUI()
         {
             var root = rootVisualElement;
@@ -44,30 +67,40 @@ namespace BehaviourTrees.UnityEditor
             Analyze();
         }
 
+        /// <summary>
+        ///     Opens the problem window.
+        /// </summary>
         public static void OpenWindow()
         {
             if (!ShouldBeOpen) return;
-            if (Validators == null) GetValidators();
+            _validators ??= GetValidators();
             var window = GetWindow<ProblemsWindow>();
             window.titleContent = new GUIContent("Problems");
             window.ShowUtility();
         }
 
-        private static void GetValidators()
+        /// <summary>
+        ///     Finds all classes implementing <see cref="TreeValidator" /> and returns them.
+        /// </summary>
+        private static TreeValidator[] GetValidators()
         {
-            Validators = AppDomain.CurrentDomain.GetAssemblies()
+            return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes()
                     .Where(type => type.InheritsFrom<TreeValidator>() && !type.IsAbstract))
                 .Select(type => Activator.CreateInstance(type) as TreeValidator)
                 .ToArray();
         }
 
+        /// <summary>
+        ///     Analyzes the <see cref="EditorTreeContainer" /> currently loaded in the editor and places all problems
+        ///     found in <see cref="_problemsList" />.
+        /// </summary>
         private void Analyze()
         {
             _problemsList.Clear();
             var problems = new List<ValidationResult>();
 
-            foreach (var validator in Validators) problems.AddRange(validator.Validate(Container));
+            foreach (var validator in _validators) problems.AddRange(validator.Validate(Container));
 
             foreach (var problem in problems) _problemsList.Add(ProblemItem.Create(problem));
         }
