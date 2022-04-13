@@ -154,9 +154,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 }
             }
 
-            //TreeModel.TreeHasChanged += SaveBehaviourTree;
-
-
             if (TreeModel.Nodes.All(node => node.RepresentingType != typeof(RootNode))) CreateNode(typeof(RootNode));
 
             foreach (var element in graphElements)
