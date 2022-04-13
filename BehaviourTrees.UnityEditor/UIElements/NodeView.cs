@@ -68,6 +68,37 @@ namespace BehaviourTrees.UnityEditor.UIElements
             if (node.RepresentingType == typeof(RootNode)) capabilities -= Capabilities.Deletable;
         }
 
+        /// <summary>
+        ///     Set node position.
+        /// </summary>
+        /// <param name="position"></param>
+        public void SetPosition(Vector2 position)
+        {
+            SetPosition(new Rect(position, Vector2.zero));
+        }
+
+        /// <inheritdoc />
+        public override void SetPosition(Rect newPos)
+        {
+            style.position = Position.Absolute;
+            style.left = newPos.x;
+            style.top = newPos.y;
+
+            _timeSinceLastMove = 0;
+            schedule.Execute(EnsureMovingIsComplete);
+        }
+
+        /// <summary>
+        ///     Create a edge between this node and another node on the output side.
+        /// </summary>
+        /// <param name="childView">The node to connect to.</param>
+        /// <returns>The created edge.</returns>
+        public Edge ConnectTo(NodeView childView)
+        {
+            var port = GetUnconnectedOutputPort();
+            return port.ConnectTo(childView.InputPort);
+        }
+
         /// <inheritdoc />
         public override void OnSelected()
         {
@@ -104,109 +135,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 foreach (var portToRemove in openPorts.Skip(1))
                     RemovePort(portToRemove);
             else if (Node.RepresentingType.InheritsFrom<CompositeNode>() && openPorts.Count == 0) AddOutputPort();
-        }
-
-        /// <summary>
-        ///     Update the names of the ports if it is a composite node.
-        /// </summary>
-        private void UpdatePortNames()
-        {
-            if (Node.RepresentingType.InheritsFrom<CompositeNode>())
-            {
-                var num = 1;
-                foreach (var visualElement in outputContainer.Children())
-                    if (visualElement is Port port)
-                        port.portName = $"{num++}";
-            }
-        }
-
-        /// <summary>
-        ///     Create a new output port and returns it.
-        /// </summary>
-        /// <returns>The new output port.</returns>
-        private Port AddOutputPort()
-        {
-            var port = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, null);
-            OutputPorts.Add(port);
-            outputContainer.Add(port);
-            UpdatePorts();
-            return port;
-        }
-
-        /// <summary>
-        ///     Gets the first unconnected output port.
-        /// </summary>
-        /// <returns>A port with no connection.</returns>
-        private Port GetUnconnectedOutputPort()
-        {
-            return OutputPorts.FirstOrDefault(port => port.connected is false) ?? AddOutputPort();
-        }
-
-        /// <summary>
-        ///     Set node position.
-        /// </summary>
-        /// <param name="position"></param>
-        public void SetPosition(Vector2 position)
-        {
-            SetPosition(new Rect(position, Vector2.zero));
-        }
-
-        /// <inheritdoc />
-        public override void SetPosition(Rect newPos)
-        {
-            style.position = Position.Absolute;
-            style.left = newPos.x;
-            style.top = newPos.y;
-
-            _timeSinceLastMove = 0;
-            schedule.Execute(EnsureMovingIsComplete);
-        }
-
-        /// <summary>
-        ///     Create a edge between this node and another node on the output side.
-        /// </summary>
-        /// <param name="childView">The node to connect to.</param>
-        /// <returns>The created edge.</returns>
-        public Edge ConnectTo(NodeView childView)
-        {
-            var port = GetUnconnectedOutputPort();
-            return port.ConnectTo(childView.InputPort);
-        }
-
-        /// <summary>
-        ///     Sets a style class on the node depending on what kind of behaviour node the representing type is.
-        /// </summary>
-        private void SetNodeStyle()
-        {
-            if (Node.RepresentingType == typeof(RootNode))
-                AddToClassList("rootNode");
-            else if (Node.RepresentingType.InheritsFrom<CompositeNode>())
-                AddToClassList("compositeNode");
-            else if (Node.RepresentingType.InheritsFrom<DecoratorNode>())
-                AddToClassList("decoratorNode");
-            else if (Node.RepresentingType.InheritsFrom(typeof(LeafNode<>))) AddToClassList("leafNode");
-        }
-
-        /// <summary>
-        ///     Add a input port to the node, unless it is a root node.
-        /// </summary>
-        private void AddInputPorts()
-        {
-            if (Node.RepresentingType == typeof(RootNode)) return;
-
-            var port = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, null);
-            InputPort = port;
-            inputContainer.Add(port);
-        }
-
-        /// <summary>
-        ///     Add input ports unless it is a leaf node.
-        /// </summary>
-        private void AddOutputPorts()
-        {
-            if (Node.RepresentingType.InheritsFrom(typeof(LeafNode<>))) return;
-
-            AddOutputPort();
         }
 
         /// <summary>
@@ -253,6 +181,42 @@ namespace BehaviourTrees.UnityEditor.UIElements
         }
 
         /// <summary>
+        ///     Update the names of the ports if it is a composite node.
+        /// </summary>
+        private void UpdatePortNames()
+        {
+            if (Node.RepresentingType.InheritsFrom<CompositeNode>())
+            {
+                var num = 1;
+                foreach (var visualElement in outputContainer.Children())
+                    if (visualElement is Port port)
+                        port.portName = $"{num++}";
+            }
+        }
+
+        /// <summary>
+        ///     Gets the first unconnected output port.
+        /// </summary>
+        /// <returns>A port with no connection.</returns>
+        private Port GetUnconnectedOutputPort()
+        {
+            return OutputPorts.FirstOrDefault(port => port.connected is false) ?? AddOutputPort();
+        }
+
+        /// <summary>
+        ///     Create a new output port and returns it.
+        /// </summary>
+        /// <returns>The new output port.</returns>
+        private Port AddOutputPort()
+        {
+            var port = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, null);
+            OutputPorts.Add(port);
+            outputContainer.Add(port);
+            UpdatePorts();
+            return port;
+        }
+
+        /// <summary>
         ///     Removes a port.
         /// </summary>
         /// <param name="port">The port to remove.</param>
@@ -261,6 +225,42 @@ namespace BehaviourTrees.UnityEditor.UIElements
             port.DisconnectAll();
             OutputPorts.Remove(port);
             outputContainer.Remove(port);
+        }
+
+        /// <summary>
+        ///     Add a input port to the node, unless it is a root node.
+        /// </summary>
+        private void AddInputPorts()
+        {
+            if (Node.RepresentingType == typeof(RootNode)) return;
+
+            var port = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, null);
+            InputPort = port;
+            inputContainer.Add(port);
+        }
+
+        /// <summary>
+        ///     Add input ports unless it is a leaf node.
+        /// </summary>
+        private void AddOutputPorts()
+        {
+            if (Node.RepresentingType.InheritsFrom(typeof(LeafNode<>))) return;
+
+            AddOutputPort();
+        }
+
+        /// <summary>
+        ///     Sets a style class on the node depending on what kind of behaviour node the representing type is.
+        /// </summary>
+        private void SetNodeStyle()
+        {
+            if (Node.RepresentingType == typeof(RootNode))
+                AddToClassList("rootNode");
+            else if (Node.RepresentingType.InheritsFrom<CompositeNode>())
+                AddToClassList("compositeNode");
+            else if (Node.RepresentingType.InheritsFrom<DecoratorNode>())
+                AddToClassList("decoratorNode");
+            else if (Node.RepresentingType.InheritsFrom(typeof(LeafNode<>))) AddToClassList("leafNode");
         }
 
         /// <summary>
