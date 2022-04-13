@@ -174,40 +174,47 @@ namespace BehaviourTrees.UnityEditor.UIElements
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
             if (graphViewChange.elementsToRemove != null)
-                //Remove elements
-                foreach (var element in graphViewChange.elementsToRemove)
-                    switch (element)
-                    {
-                        case NodeView nodeView:
-                            Undo.RecordObject(TreeContainer, "Delete Node");
-                            TreeModel.RemoveNode(nodeView.Node);
-                            break;
-                        case Edge edge:
-                            Undo.RecordObject(TreeContainer, "Delete Connection");
-                            var parentView = (NodeView)edge.output.node;
-                            var childView = (NodeView)edge.input.node;
-
-                            TreeModel.RemoveChild(childView.Node, parentView.Node);
-                            //We need to update the ports on the next frame as right now our updates have not propagated properly
-                            schedule.Execute(() => parentView.UpdatePorts());
-                            break;
-                    }
+                ProcessRemovedElements(graphViewChange.elementsToRemove);
 
             if (graphViewChange.edgesToCreate != null)
-                //Create new edges
-                foreach (var edge in graphViewChange.edgesToCreate)
+                ProcessCreatedEdges(graphViewChange.edgesToCreate);
+
+            TreeContainer.MarkDirty();
+            return graphViewChange;
+        }
+
+        private void ProcessRemovedElements(List<GraphElement> removedElements)
+        {
+            foreach (var element in removedElements)
+                switch (element)
+                {
+                    case NodeView nodeView:
+                        Undo.RecordObject(TreeContainer, "Delete Node");
+                        TreeModel.RemoveNode(nodeView.Node);
+                        break;
+                    case Edge edge:
+                        Undo.RecordObject(TreeContainer, "Delete Connection");
+                        var parentView = (NodeView)edge.output.node;
+                        var childView = (NodeView)edge.input.node;
+
+                        TreeModel.RemoveChild(childView.Node, parentView.Node);
+                        //We need to update the ports on the next frame as right now our updates have not propagated properly
+                        schedule.Execute(() => parentView.UpdatePorts());
+                        break;
+                }
+        }
+
+        private void ProcessCreatedEdges(List<Edge> createdEdges)
+        {
+            foreach (var edge in createdEdges)
+                if (edge.output.node is NodeView parentView && edge.input.node is NodeView childView)
                 {
                     Undo.RecordObject(TreeContainer, "Create Connection");
-                    var parentView = edge.output.node as NodeView;
                     var parentPortIndex = edge.output.node.outputContainer.IndexOf(edge.output);
-                    var childView = edge.input.node as NodeView;
 
                     TreeModel.AddChild(parentView.Node, childView.Node, parentPortIndex);
                     schedule.Execute(() => parentView.UpdatePorts());
                 }
-
-            TreeContainer.MarkDirty();
-            return graphViewChange;
         }
 
         /// <summary>
