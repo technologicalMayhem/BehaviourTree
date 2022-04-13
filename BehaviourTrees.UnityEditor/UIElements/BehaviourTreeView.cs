@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using BehaviourTrees.Core;
 using BehaviourTrees.Model;
-using JetBrains.Annotations;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -36,9 +35,8 @@ namespace BehaviourTrees.UnityEditor.UIElements
             Undo.undoRedoPerformed += OnUndoRedo;
         }
 
-        private BehaviourTreeModel TreeModel => TreeContainer.TreeModel;
-
-        [CanBeNull] public EditorTreeContainer TreeContainer { get; private set; }
+        private static BehaviourTreeModel TreeModel => TreeContainer.TreeModel;
+        private static EditorTreeContainer TreeContainer => BehaviourTreeEditor.GetOrOpen().TreeContainer;
 
         /// <inheritdoc />
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -69,11 +67,11 @@ namespace BehaviourTrees.UnityEditor.UIElements
             AlignChildren(root);
         }
 
-        public void LoadTree(EditorTreeContainer container)
+        public void LoadTree()
         {
             //Clear previous undo operations
             if (TreeContainer != null) Undo.ClearUndo(TreeContainer);
-            PopulateView(container);
+            PopulateView();
         }
 
         public void MoveTo(string nodeId)
@@ -132,17 +130,15 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
         private void OnUndoRedo()
         {
-            if (TreeContainer != null) PopulateView(TreeContainer);
+            if (TreeContainer != null) PopulateView();
         }
 
         /// <summary>
         ///     Clears the view and populates it with all the elements from the given <see cref="EditorTreeContainer" /> to allow
         ///     editing.
         /// </summary>
-        private void PopulateView(EditorTreeContainer container)
+        private void PopulateView()
         {
-            TreeContainer = container;
-
             graphViewChanged -= OnGraphViewChanged;
             DeleteElements(graphElements);
             graphViewChanged += OnGraphViewChanged;
@@ -242,7 +238,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
         /// <param name="node">The NodeModel that a NodeView should be created for.</param>
         private void CreateNodeView(NodeModel node)
         {
-            var nodeView = new NodeView(node, TreeContainer);
+            var nodeView = new NodeView(node);
             nodeView.SelectionChanged += () => schedule.Execute(OnSelectionChanged);
             AddElement(nodeView);
         }

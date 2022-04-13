@@ -20,7 +20,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
         private readonly Type[] _nonGenericTypes;
         private Type[] _choices;
 
-        private EditorTreeContainer _container;
+        private static EditorTreeContainer Container => BehaviourTreeEditor.GetOrOpen().TreeContainer;
 
         public BlackboardView()
         {
@@ -46,16 +46,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
             _newTypeSearch.RegisterValueChangedCallback(UpdateList);
             button.clicked += CreateNewKey;
-        }
-
-        public EditorTreeContainer Container
-        {
-            get => _container;
-            set
-            {
-                _container = value;
-                UpdateBlackboard();
-            }
         }
 
         private void UpdateList(ChangeEvent<string> evt)
@@ -107,8 +97,8 @@ namespace BehaviourTrees.UnityEditor.UIElements
             if (CheckForErrors()) return;
 
             var type = _choices.First(t => TreeEditorUtility.GetTypeName(t) == _newTypeList.value);
-            _container.ModelExtension.BlackboardKeys[_newKey.value] = type;
-            _container.ModelExtension.InvokeBlackboardKeysChanged(this);
+            Container.ModelExtension.BlackboardKeys[_newKey.value] = type;
+            Container.ModelExtension.InvokeBlackboardKeysChanged(this);
 
             UpdateBlackboard();
         }
@@ -121,7 +111,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
             if (string.IsNullOrEmpty(_newKey.value))
                 errors.Add("No key name set.");
 
-            if (_container.ModelExtension.BlackboardKeys.ContainsKey(_newKey.value))
+            if (Container.ModelExtension.BlackboardKeys.ContainsKey(_newKey.value))
                 errors.Add("Key already exists.");
 
             if (_choices.All(type => TreeEditorUtility.GetTypeName(type) != _newTypeList.value))
@@ -133,11 +123,11 @@ namespace BehaviourTrees.UnityEditor.UIElements
             return errors.Any();
         }
 
-        private void UpdateBlackboard()
+        public void UpdateBlackboard()
         {
             _list.Clear();
 
-            foreach (var pair in _container.ModelExtension.BlackboardKeys)
+            foreach (var pair in Container.ModelExtension.BlackboardKeys)
             {
                 var blackboardItem =
                     new BlackboardItem(pair.Key, TreeEditorUtility.GetTypeName(pair.Value), () => DeleteKey(pair.Key));
@@ -147,7 +137,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
         private void DeleteKey(string key)
         {
-            _container.ModelExtension.BlackboardKeys.Remove(key);
+            Container.ModelExtension.BlackboardKeys.Remove(key);
             UpdateBlackboard();
         }
 

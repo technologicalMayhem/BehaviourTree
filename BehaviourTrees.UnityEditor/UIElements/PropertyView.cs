@@ -13,7 +13,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
         private readonly Label _name;
         private Type _type;
-        public EditorTreeContainer Tree;
 
         public PropertyView()
         {
@@ -37,13 +36,13 @@ namespace BehaviourTrees.UnityEditor.UIElements
         }
 
 
-        public static PropertyView CreateBlackboardDropdown(EditorTreeContainer tree, string name,
-            Type blackboardType, string key, Action<object> callback, BlackboardView blackboardView)
+        public static PropertyView CreateBlackboardDropdown(string name,
+            Type blackboardType, string key, Action<object> callback)
         {
             var propertyView = new PropertyView();
 
             propertyView._name.text = name;
-            propertyView._editorElement.Add(new BlackboardDropdown(tree, blackboardType, key, callback));
+            propertyView._editorElement.Add(new BlackboardDropdown(blackboardType, key, callback));
 
             return propertyView;
         }

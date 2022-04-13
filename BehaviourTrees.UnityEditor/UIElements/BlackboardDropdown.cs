@@ -10,12 +10,11 @@ namespace BehaviourTrees.UnityEditor.UIElements
     {
         private readonly Type _blackboardType;
         private readonly Action<string> _callback;
-        private readonly EditorTreeContainer _tree;
+        private static EditorTreeContainer Tree => BehaviourTreeEditor.GetOrOpen().TreeContainer;
 
-        public BlackboardDropdown(EditorTreeContainer tree, Type blackboardType, string key, Action<string> callback)
+        public BlackboardDropdown(Type blackboardType, string key, Action<string> callback)
             : base(null, 0, FormatSelectedValueCallback, FormatListItemCallback)
         {
-            _tree = tree;
             _blackboardType = blackboardType;
             _callback = callback;
 
@@ -23,7 +22,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
             this.RegisterValueChangedCallback(ValueChanged);
             SetValueWithoutNotify($"{key} ({TreeEditorUtility.GetTypeName(blackboardType)})");
 
-            _tree.ModelExtension.BlackboardKeysChanged += (sender, args) => UpdateChoices();
+            Tree.ModelExtension.BlackboardKeysChanged += (sender, args) => UpdateChoices();
         }
 
         private void ValueChanged(ChangeEvent<string> evt)
@@ -34,7 +33,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
         private void UpdateChoices()
         {
-            choices = _tree.ModelExtension.BlackboardKeys
+            choices = Tree.ModelExtension.BlackboardKeys
                 .Where(pair => _blackboardType.InheritsFrom(pair.Value))
                 .Select(pair => $"{pair.Key} ({TreeEditorUtility.GetTypeName(pair.Value)})")
                 .ToList();

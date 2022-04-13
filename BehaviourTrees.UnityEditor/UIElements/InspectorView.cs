@@ -8,9 +8,8 @@ namespace BehaviourTrees.UnityEditor.UIElements
     public class InspectorView : VisualElement
     {
         private readonly VisualElement _propertyViewContainer;
-        public BlackboardView BlackboardView;
-
-        public EditorTreeContainer Tree;
+        private static BehaviourTreeEditor Window => BehaviourTreeEditor.GetOrOpen();
+        private static EditorTreeContainer Tree => Window.TreeContainer;
 
         public InspectorView()
         {
@@ -41,7 +40,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 var propertyView =
                     TreeEditorUtility.IsBlackboardField(node.RepresentingType, info.FieldName, out var blackboardType)
                         ? PropertyView.CreateBlackboardDropdown
-                            (Tree, splitName, blackboardType, value as string, callback, BlackboardView)
+                            (splitName, blackboardType, value as string, callback)
                         : PropertyView.CreateEditor(splitName, info.FieldType, value, callback);
 
                 _propertyViewContainer.Add(propertyView);

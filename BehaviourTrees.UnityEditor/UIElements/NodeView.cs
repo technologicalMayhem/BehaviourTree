@@ -12,7 +12,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
 {
     public sealed class NodeView : Node
     {
-        private readonly EditorTreeContainer _container;
+        private static EditorTreeContainer Container => BehaviourTreeEditor.GetOrOpen().TreeContainer;
         public readonly NodeModel Node;
         private bool _isMoving;
 
@@ -20,16 +20,15 @@ namespace BehaviourTrees.UnityEditor.UIElements
         public Port InputPort;
         public List<Port> OutputPorts;
 
-        public NodeView(NodeModel node, EditorTreeContainer container)
+        public NodeView(NodeModel node)
             : base(TreeEditorUtility.LocateUiDefinitionFile(nameof(NodeView)))
         {
             Node = node;
-            _container = container;
             OutputPorts = new List<Port>();
             title = TreeEditorUtility.GetMemberName(Node.RepresentingType);
             viewDataKey = node.Id;
 
-            if (!_container.ModelExtension.NodePositions.TryGetValue(node.Id, out var position))
+            if (!Container.ModelExtension.NodePositions.TryGetValue(node.Id, out var position))
                 position = Vector2.zero;
 
             style.left = position.x;
@@ -163,7 +162,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
                         var nodeY = (NodeView)portY.connections.First().input.node;
 
                         //Get their indexes from their parent node
-                        var collection = _container.TreeModel.Connections[Node.Id].ToList();
+                        var collection = Container.TreeModel.Connections[Node.Id].ToList();
                         var indexX = collection.IndexOf(nodeX.Node.Id);
                         var indexY = collection.IndexOf(nodeY.Node.Id);
 
@@ -193,11 +192,11 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 return;
             }
 
-            Undo.RecordObject(_container, "Behaviour Tree (Moved Node)");
+            Undo.RecordObject(Container, "Behaviour Tree (Moved Node)");
             var pos = GetPosition();
-            _container.ModelExtension.NodePositions[Node.Id] = new Vector2(pos.x, pos.y);
+            Container.ModelExtension.NodePositions[Node.Id] = new Vector2(pos.x, pos.y);
             _isMoving = false;
-            _container.MarkDirty();
+            Container.MarkDirty();
         }
 
         public event Action SelectionChanged;

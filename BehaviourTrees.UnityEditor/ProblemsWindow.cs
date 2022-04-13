@@ -17,9 +17,9 @@ namespace BehaviourTrees.UnityEditor
         private VisualElement _problemsList;
 
         private static bool ShouldBeOpen =>
-            BehaviourTreeEditor.Instance != null && BehaviourTreeEditor.Instance.TreeView.TreeContainer != null;
+            HasOpenInstances<BehaviourTreeEditor>() && BehaviourTreeEditor.GetOrOpen().TreeContainer != null;
 
-        private static EditorTreeContainer Container => BehaviourTreeEditor.Instance!.TreeView.TreeContainer;
+        private static EditorTreeContainer Container => BehaviourTreeEditor.GetOrOpen().TreeContainer;
 
         private void Update()
         {
