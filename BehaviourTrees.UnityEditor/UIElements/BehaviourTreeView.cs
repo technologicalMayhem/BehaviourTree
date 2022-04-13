@@ -60,13 +60,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 .ToList();
         }
 
-        //Todo: Remove or implement properly
-        public void AlignTest()
-        {
-            var root = TreeModel.Nodes.First(model => model.RepresentingType == typeof(RootNode));
-            AlignChildren(root);
-        }
-
         public void LoadTree()
         {
             //Clear previous undo operations
@@ -171,21 +164,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
                     node.UpdatePorts();
 
             TreeLoaded?.Invoke();
-        }
-
-        private void AlignChildren(NodeModel nodeParent)
-        {
-            var children = TreeModel.GetChildren(nodeParent);
-            var position = GetNodeByGuid(nodeParent.Id).GetPosition();
-            var targetX = position.xMax + 25;
-            foreach (var child in children)
-            {
-                var childNode = GetNodeByGuid(child.Id);
-                var pos = childNode.GetPosition();
-                pos.x = targetX;
-                childNode.SetPosition(pos);
-                schedule.Execute(() => AlignChildren(child));
-            }
         }
 
         /// <summary>
