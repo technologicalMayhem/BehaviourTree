@@ -60,13 +60,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
                 .ToList();
         }
 
-        public void LoadTree()
-        {
-            //Clear previous undo operations
-            if (TreeContainer != null) Undo.ClearUndo(TreeContainer);
-            PopulateView();
-        }
-
         public void MoveTo(string nodeId)
         {
             MoveTo(TreeContainer.ModelExtension.NodePositions[nodeId]);
@@ -130,8 +123,10 @@ namespace BehaviourTrees.UnityEditor.UIElements
         ///     Clears the view and populates it with all the elements from the given <see cref="EditorTreeContainer" /> to allow
         ///     editing.
         /// </summary>
-        private void PopulateView()
+        public void PopulateView()
         {
+            if (TreeContainer != null) Undo.ClearUndo(TreeContainer);
+            
             graphViewChanged -= OnGraphViewChanged;
             DeleteElements(graphElements);
             graphViewChanged += OnGraphViewChanged;

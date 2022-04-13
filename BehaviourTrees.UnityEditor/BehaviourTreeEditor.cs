@@ -58,7 +58,7 @@ namespace BehaviourTrees.UnityEditor
         private void LoadTree(EditorTreeContainer container)
         {
             TreeContainer = container;
-            TreeView.LoadTree();
+            TreeView.PopulateView();
             Blackboard.UpdateBlackboard();
         }
 
