@@ -50,6 +50,12 @@ namespace BehaviourTrees.UnityEditor
         [CanBeNull] public EditorTreeContainer TreeContainer { get; private set; }
 
         /// <summary>
+        ///     The path to the currently loaded <see cref="TreeContainer" />.
+        /// </summary>
+        [CanBeNull]
+        public string TreeContainerPath { get; private set; }
+
+        /// <summary>
         ///     <para>Gets called when the window opens.</para>
         ///     <para>Populates the window with UI elements and sets them all up.</para>
         /// </summary>
@@ -106,6 +112,19 @@ namespace BehaviourTrees.UnityEditor
         }
 
         /// <summary>
+        ///     Resets the editor window, effectively unloading all editor data.
+        /// </summary>
+        public void UnloadTree()
+        {
+            TreeContainer = null;
+            TreeContainerPath = null;
+
+            //Recreate the UI.
+            rootVisualElement.Clear();
+            CreateGUI();
+        }
+
+        /// <summary>
         ///     Creates a new instance of the editor window.
         /// </summary>
         /// <returns>A instance of the editor window.</returns>
@@ -146,6 +165,7 @@ namespace BehaviourTrees.UnityEditor
             if (treeContainer != null)
             {
                 var editor = GetOrOpen();
+                editor.TreeContainerPath = assetPath;
                 editor.LoadTree(treeContainer);
             }
 
