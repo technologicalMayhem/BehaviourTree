@@ -29,6 +29,9 @@ namespace BehaviourTrees.UnityEditor
             BlackboardKeysChanged?.Invoke(sender, EventArgs.Empty);
         }
 
+        /// <summary>
+        ///     Gets raised if changes are being made to keys in the blackboard.
+        /// </summary>
         public event EventHandler BlackboardKeysChanged;
     }
 }
