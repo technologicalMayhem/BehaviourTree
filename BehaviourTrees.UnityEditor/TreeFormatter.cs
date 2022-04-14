@@ -30,9 +30,8 @@ namespace BehaviourTrees.UnityEditor
         ///     Creates <see cref="AlignmentBlock" />s for the node and all its children.
         /// </summary>
         /// <param name="node">The node to create alignment blocks for.</param>
-        /// <param name="parent">Optional. The parent of the node. Only used during recursively generating blocks.</param>
         /// <returns>The alignment block of the node.</returns>
-        private static AlignmentBlock CreateAlignmentBlockTree(NodeView node, AlignmentBlock parent = null)
+        private static AlignmentBlock CreateAlignmentBlockTree(NodeView node)
         {
             var children = GetChildren(node);
 
@@ -42,7 +41,7 @@ namespace BehaviourTrees.UnityEditor
                 Position = new Rect(0, 0, node.layout.width, node.layout.height)
             };
 
-            block.Children = children.Select(child => CreateAlignmentBlockTree(child, block)).ToList();
+            block.Children = children.Select(CreateAlignmentBlockTree).ToList();
 
             return block;
         }
