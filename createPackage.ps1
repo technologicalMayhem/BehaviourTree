@@ -45,6 +45,7 @@ dotnet build "$PSScriptRoot\BehaviourTrees.UnityEditor" -c Release -o "$packageL
 
 #Copy files over
 Copy-Item -Path @( "$PSScriptRoot\README.md" ) -Destination $packageLocation
+Copy-Item -Path @( "$PSScriptRoot\LICENSE" ) -Destination "$packageLocation\LICENSE.md"
 
 #Create package.json
 $json = ConvertTo-Json @{
