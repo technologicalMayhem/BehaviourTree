@@ -218,6 +218,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
         /// <summary>
         ///     Instantiates a <see cref="BlackboardView" /> using the data read from a UXML file.
         /// </summary>
-        public class UxmlFactory : UxmlFactory<BlackboardView, UxmlTraits> { }
+        public new class UxmlFactory : UxmlFactory<BlackboardView, UxmlTraits> { }
     }
 }
