@@ -62,9 +62,9 @@ $json = ConvertTo-Json @{
     dependencies = @{
         "com.unity.nuget.newtonsoft-json" = "3.0.1";
     };
-};
+} -Compress
 
-$json | Out-File -FilePath "$packageLocation\package.json" -Encoding utf8
+[IO.File]::WriteAllLines("$packageLocation\package.json", $json)
 
 if ($Compress) {
     Compress-Archive -Path "$packageLocation\*" -DestinationPath "$packageOutput\Behaviour Tree.zip"
