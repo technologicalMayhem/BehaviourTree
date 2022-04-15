@@ -51,7 +51,7 @@ namespace BehaviourTrees.Core
         ///         is a 'clean slate' again.
         ///     </p>
         /// </summary>
-        public virtual void OnStartup() { }
+        protected virtual void OnStartup() { }
 
         /// <summary>
         ///     <p>

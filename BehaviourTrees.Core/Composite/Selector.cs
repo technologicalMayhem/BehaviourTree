@@ -12,7 +12,7 @@ namespace BehaviourTrees.Core.Composite
         private int _currentChild;
 
         /// <inheritdoc />
-        public override void OnStartup()
+        protected override void OnStartup()
         {
             _currentChild = 0;
         }
