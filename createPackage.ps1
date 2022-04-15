@@ -67,8 +67,7 @@ $json = ConvertTo-Json @{
 [IO.File]::WriteAllLines("$packageLocation\package.json", $json)
 
 if ($Compress) {
-    Compress-Archive -Path "$packageLocation\*" -DestinationPath "$packageOutput\Behaviour Tree.zip"
-    Remove-Item $packageLocation -Recurse
+    tar -czf "$packageOutput\Behaviour Tree.tar.gz" -C "$packageLocation" *
 }
 
 Write-Host "Package creation sucessful."
