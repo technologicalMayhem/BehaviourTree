@@ -47,7 +47,8 @@ namespace BehaviourTrees.UnityEditor
         /// <summary>
         ///     The currently loaded <see cref="EditorTreeContainer" /> instance.
         /// </summary>
-        [CanBeNull] public EditorTreeContainer TreeContainer { get; private set; }
+        [CanBeNull]
+        public EditorTreeContainer TreeContainer { get; private set; }
 
         /// <summary>
         ///     The path to the currently loaded <see cref="TreeContainer" />.
@@ -82,6 +83,8 @@ namespace BehaviourTrees.UnityEditor
             Inspector = root.Q<InspectorView>();
             Blackboard = root.Q<BlackboardView>();
 
+            _splitView.RegisterDraglineMovedCallback(ClampSplitViewSize);
+
             root.Q<ToolbarMenu>("toolbar-view").menu
                 .AppendAction("Problems Window", _ => ProblemsWindow.OpenWindow());
 
@@ -89,6 +92,21 @@ namespace BehaviourTrees.UnityEditor
 
             TreeView.TreeLoaded += RemoveCurtain;
             TreeView.SelectionChanged += Inspector.SetToNode;
+        }
+
+        /// <summary>
+        ///     Clamp the size of the split view so it can not be so small that its not visible or so big that
+        ///     it cant be dragged back.
+        /// </summary>
+        /// <param name="_">The <see cref="GeometryChangedEvent" />. It is not used in the method.</param>
+        private void ClampSplitViewSize(GeometryChangedEvent _)
+        {
+            var dragLinePosition = _splitView.DragLinePosition;
+            var windowWidth = rootVisualElement.layout.width;
+
+            if (dragLinePosition > windowWidth * .9f) _splitView.DragLinePosition = windowWidth * .9f;
+
+            if (dragLinePosition < windowWidth * .05f) _splitView.DragLinePosition = windowWidth * .05f;
         }
 
         /// <summary>
