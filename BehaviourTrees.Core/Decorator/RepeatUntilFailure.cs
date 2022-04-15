@@ -5,6 +5,7 @@ namespace BehaviourTrees.Core.Decorator
     /// </summary>
     public class RepeatUntilFailure : DecoratorNode
     {
+        /// <inheritdoc />
         protected override NodeStatus OnUpdate()
         {
             return Child.Update() != NodeStatus.Failure ? NodeStatus.Running : NodeStatus.Success;

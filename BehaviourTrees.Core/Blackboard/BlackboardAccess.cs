@@ -8,7 +8,14 @@ namespace BehaviourTrees.Core.Blackboard
     [Flags]
     public enum BlackboardAccess
     {
+        /// <summary>
+        ///     Read access is allowed.
+        /// </summary>
         Read = 1,
+
+        /// <summary>
+        ///     Write access is allowed.
+        /// </summary>
         Write = 2
     }
 }

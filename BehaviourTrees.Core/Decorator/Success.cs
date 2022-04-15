@@ -7,6 +7,7 @@ namespace BehaviourTrees.Core.Decorator
     /// </summary>
     public class Success : DecoratorNode
     {
+        /// <inheritdoc />
         protected override NodeStatus OnUpdate()
         {
             return Child.Update() switch

@@ -1,5 +1,8 @@
 namespace BehaviourTrees.Core
 {
+    /// <summary>
+    ///     Provides a common set of functionality used by all nodes in the behaviour tree during execution.
+    /// </summary>
     public interface IBehaviourTreeNode
     {
         /// <summary>

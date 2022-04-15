@@ -7,6 +7,9 @@ namespace BehaviourTrees.Core
     /// </summary>
     public abstract class CompositeNode : BehaviourTreeNode
     {
+        /// <summary>
+        ///     The children of the node.
+        /// </summary>
         public IReadOnlyList<IBehaviourTreeNode> Children;
     }
 }

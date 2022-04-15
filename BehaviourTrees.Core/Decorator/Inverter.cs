@@ -12,6 +12,7 @@ namespace BehaviourTrees.Core.Decorator
     /// </summary>
     public class Inverter : DecoratorNode
     {
+        /// <inheritdoc />
         protected override NodeStatus OnUpdate()
         {
             return Child.Update() switch

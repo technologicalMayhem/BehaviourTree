@@ -1,5 +1,8 @@
 namespace BehaviourTrees.Core.Blackboard
 {
+    /// <summary>
+    ///     Allows a node to be discovered and registered with the blackboard.
+    /// </summary>
     public interface IRegistersToBlackboard
     {
         /// <summary>

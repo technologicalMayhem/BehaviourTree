@@ -22,6 +22,9 @@ namespace BehaviourTrees.Core.Blackboard
         /// </summary>
         private readonly Dictionary<object, Dictionary<string, BlackboardAccess>> _registrationData;
 
+        /// <summary>
+        ///     Initializes a new instance of the BehaviourTreeBlackboard class.
+        /// </summary>
         public BehaviourTreeBlackboard()
         {
             _blackboardValues = new List<IValueHolder>();

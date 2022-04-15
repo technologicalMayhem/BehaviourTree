@@ -5,6 +5,9 @@ namespace BehaviourTrees.Core
     /// </summary>
     public abstract class DecoratorNode : BehaviourTreeNode
     {
+        /// <summary>
+        ///     The nodes child.
+        /// </summary>
         public IBehaviourTreeNode Child;
     }
 }

@@ -5,6 +5,9 @@ namespace BehaviourTrees.Core
     /// </summary>
     public class RootNode : BehaviourTreeNode
     {
+        /// <summary>
+        ///     The nodes child.
+        /// </summary>
         public IBehaviourTreeNode Child;
 
         /// <summary>
