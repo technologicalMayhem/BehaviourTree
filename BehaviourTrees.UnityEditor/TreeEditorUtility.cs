@@ -18,7 +18,10 @@ namespace BehaviourTrees.UnityEditor
         ///     The base path of all editor resources.
         /// </summary>
         private const string BasePath =
-            "Packages/com.github.technologicalmayhem.behaviourtree/Editor";
+            "Packages/" + PackageName + "/Editor/BehaviourTrees.UnityEditor";
+
+        private const string PackageName =
+            "com.github.technologicalmayhem.behaviourtree";
 
         /// <summary>
         ///     The location of the style sheet.
