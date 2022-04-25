@@ -1,5 +1,4 @@
 using BehaviourTrees.Model;
-using BehaviourTrees.UnityEditor.Converters;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
@@ -13,20 +12,6 @@ namespace BehaviourTrees.UnityEditor
     [CreateAssetMenu(fileName = "New Behaviour Tree", menuName = "Behaviour Tree", order = 250)]
     public class EditorTreeContainer : ScriptableObject, ISerializationCallbackReceiver
     {
-        /// <summary>
-        ///     Settings used for the serialization of <see cref="TreeModel" /> and <see cref="ModelExtension" />.
-        /// </summary>
-        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
-        {
-            Converters = new JsonConverter[]
-            {
-                new RectConverter(),
-                new Vector2Converter(),
-                new Vector3Converter(),
-                new Vector4Converter()
-            }
-        };
-
         /// <summary>
         ///     Represents the <see cref="BehaviourTreeModel" /> in serialized form.
         /// </summary>
@@ -51,8 +36,8 @@ namespace BehaviourTrees.UnityEditor
 
             try
             {
-                tree = JsonConvert.SerializeObject(TreeModel, Settings);
-                extension = JsonConvert.SerializeObject(ModelExtension, Settings);
+                tree = JsonConvert.SerializeObject(TreeModel, TreeEditorUtility.Settings);
+                extension = JsonConvert.SerializeObject(ModelExtension, TreeEditorUtility.Settings);
             }
             catch (JsonSerializationException e)
             {
@@ -72,8 +57,9 @@ namespace BehaviourTrees.UnityEditor
 
             try
             {
-                tree = JsonConvert.DeserializeObject<BehaviourTreeModel>(SerializedTree, Settings);
-                extension = JsonConvert.DeserializeObject<EditorModelExtension>(SerializedExtensions, Settings);
+                tree = JsonConvert.DeserializeObject<BehaviourTreeModel>(SerializedTree, TreeEditorUtility.Settings);
+                extension = JsonConvert.DeserializeObject<EditorModelExtension>(SerializedExtensions,
+                    TreeEditorUtility.Settings);
             }
             catch (JsonSerializationException e)
             {

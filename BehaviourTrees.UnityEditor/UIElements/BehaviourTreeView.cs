@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BehaviourTrees.Core;
 using BehaviourTrees.Model;
+using BehaviourTrees.UnityEditor.Data;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -32,7 +34,59 @@ namespace BehaviourTrees.UnityEditor.UIElements
             //Remove default stylesheet
             styleSheets.Clear();
 
+            unserializeAndPaste = UnserializeAndPaste;
+            serializeGraphElements = SerializeNodes;
+
             Undo.undoRedoPerformed += OnUndoRedo;
+        }
+
+        /// <summary>
+        ///     Serializes the nodes into a shareable format.
+        /// </summary>
+        /// <param name="elements">A collection of elements to serialize.</param>
+        /// <returns>A string that can be used to paste nodes into the behaviour tree editor.</returns>
+        private static string SerializeNodes(IEnumerable<GraphElement> elements)
+        {
+            var nodeViews = elements
+                .Where(element => element is NodeView)
+                .Cast<NodeView>();
+
+            var data = ExportedData.CreateFromNodeViews(nodeViews, TreeModel.Connections);
+            return JsonConvert.SerializeObject(data, TreeEditorUtility.Settings);
+        }
+
+        /// <summary>
+        ///     Deserializes and pastes the given data into the behaviour tree editor.
+        /// </summary>
+        /// <param name="operationName">The name of the operation. Unused by this method.</param>
+        /// <param name="data">A string containing a serialized <see cref="ExportedData" /> object.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Will be thrown if <paramref name="data" /> cannot be serialized into a
+        ///     <see cref="ExportedData" /> object.
+        /// </exception>
+        private void UnserializeAndPaste(string operationName, string data)
+        {
+            var exportedData = JsonConvert.DeserializeObject<ExportedData>(data);
+            if (exportedData == null)
+                throw new ArgumentException($"The data could not be deserialized into a {nameof(ExportedData)} object.",
+                    nameof(data));
+            var viewportCenter = new Vector2(viewTransform.position.x, viewTransform.position.y) * -1 + layout.size / 2;
+
+            NodeModel PasteNode(ExportedNode node)
+            {
+                var btNode = TreeModel.CreateNode(exportedData!.Types[node.TypeId]);
+                TreeContainer.ModelExtension.NodePositions[btNode.Id] = viewportCenter + node.Position;
+                btNode.Properties = node.Properties;
+
+                foreach (var child in node.Children) TreeModel.AddChild(btNode, PasteNode(child));
+
+                return btNode;
+            }
+
+            foreach (var node in exportedData.Nodes) PasteNode(node);
+
+            //Rebuild the view. Reflects our changes in the easiest way.
+            PopulateView();
         }
 
         /// <summary>

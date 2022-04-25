@@ -3,6 +3,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using BehaviourTrees.Model;
+using BehaviourTrees.UnityEditor.Converters;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -120,5 +122,19 @@ namespace BehaviourTrees.UnityEditor
 
             return pascalRegex.Replace(pascalCaseString, " ");
         }
+
+        /// <summary>
+        ///     Settings used for serialization throughout the entire project.
+        /// </summary>
+        public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        {
+            Converters = new JsonConverter[]
+            {
+                new RectConverter(),
+                new Vector2Converter(),
+                new Vector3Converter(),
+                new Vector4Converter()
+            }
+        };
     }
 }
