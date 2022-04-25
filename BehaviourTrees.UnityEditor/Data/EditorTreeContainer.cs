@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
-namespace BehaviourTrees.UnityEditor
+namespace BehaviourTrees.UnityEditor.Data
 {
     /// <summary>
     ///     Contains the data that the <see cref="BehaviourTreeEditor" /> used to create and edit behaviour trees, as well

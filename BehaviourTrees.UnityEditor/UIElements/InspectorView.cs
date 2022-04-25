@@ -1,5 +1,6 @@
 using System;
 using BehaviourTrees.Model;
+using BehaviourTrees.UnityEditor.Data;
 using UnityEditor;
 using UnityEngine.UIElements;
 

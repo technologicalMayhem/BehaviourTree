@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using BehaviourTrees.Model;
 using UnityEngine;
 
-namespace BehaviourTrees.UnityEditor
+namespace BehaviourTrees.UnityEditor.Data
 {
     /// <summary>
     ///     Contains data about the <see cref="BehaviourTreeEditor" /> that is only relevant to the editor.

@@ -1,3 +1,4 @@
+using BehaviourTrees.UnityEditor.Data;
 using JetBrains.Annotations;
 
 namespace BehaviourTrees.UnityEditor.Validation

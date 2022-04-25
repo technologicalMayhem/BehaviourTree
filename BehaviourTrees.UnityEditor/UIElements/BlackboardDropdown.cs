@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using BehaviourTrees.Model;
+using BehaviourTrees.UnityEditor.Data;
 using UnityEngine.UIElements;
 
 namespace BehaviourTrees.UnityEditor.UIElements

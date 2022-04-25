@@ -1,3 +1,4 @@
+using BehaviourTrees.UnityEditor.Data;
 using BehaviourTrees.UnityEditor.UIElements;
 using JetBrains.Annotations;
 using UnityEditor;

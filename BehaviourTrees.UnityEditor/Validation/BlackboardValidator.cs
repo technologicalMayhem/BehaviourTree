@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BehaviourTrees.Model;
+using BehaviourTrees.UnityEditor.Data;
 using JetBrains.Annotations;
 
 namespace BehaviourTrees.UnityEditor.Validation
