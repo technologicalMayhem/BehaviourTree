@@ -1,6 +1,6 @@
 using System;
-using BehaviourTrees.Model;
 using BehaviourTrees.UnityEditor.Data;
+using BehaviourTrees.UnityEditor.Inspector;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -13,7 +13,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
     {
         private readonly VisualElement _propertyViewContainer;
         private static BehaviourTreeEditor Window => BehaviourTreeEditor.GetOrOpen();
-        private static EditorTreeContainer Tree => Window.TreeContainer;
+        private static EditorTreeContainer Container => Window.TreeContainer;
 
         /// <summary>
         ///     Creates a new instance of the inspector view element.
@@ -27,34 +27,30 @@ namespace BehaviourTrees.UnityEditor.UIElements
         }
 
         /// <summary>
-        ///     Sets the node the inspector is currently showing.
+        ///     Assigns the object the editor is currently showing. Pass null to clear window.
         /// </summary>
-        /// <param name="nodeView">The node to show the data of.</param>
-        public void SetToNode(NodeView nodeView)
+        /// <param name="editable">The object to edit the data of.</param>
+        public void AssignObject(IEditable editable)
         {
             _propertyViewContainer.Clear();
-            if (nodeView == null) return;
+            if (editable == null) return;
 
-            var node = nodeView.Node;
-
-            foreach (var info in nodeView.Node.GetFillableFieldsFromType())
+            foreach (var property in editable.GetProperties())
             {
-                var splitName = TreeEditorUtility.SplitPascalCase(info.FieldName);
-                var value = node.Properties[info.FieldName];
                 var callback = new Action<object>(o =>
                 {
-                    Undo.RecordObject(Tree, $"Edit node properties: ({node.GetType().Name} -> {splitName})");
-                    node.Properties[info.FieldName] = o;
-                    Tree.MarkDirty();
+                    Undo.RecordObject(Container, $"Edit properties: {property.Name}");
+                    editable.SetValue(property.Name, o);
+                    Container.MarkDirty();
                 });
 
-                var propertyView =
-                    TreeEditorUtility.IsBlackboardField(node.RepresentingType, info.FieldName, out var blackboardType)
-                        ? PropertyView.CreateBlackboardDropdown
-                            (splitName, blackboardType, value as string, callback)
-                        : PropertyView.CreateEditor(splitName, info.FieldType, value, callback);
-
-                _propertyViewContainer.Add(propertyView);
+                if (editable is NodeView view && TreeEditorUtility.IsBlackboardField
+                        (view.Node.RepresentingType, property.Name, out var blackboardType))
+                    _propertyViewContainer.Add(PropertyView.CreateBlackboardDropdown
+                        (property.FriendlyName, blackboardType, property.Value as string, callback));
+                else
+                    _propertyViewContainer.Add(
+                        PropertyView.CreateEditor(property.FriendlyName, property.Type, property.Value, callback));
             }
         }
 

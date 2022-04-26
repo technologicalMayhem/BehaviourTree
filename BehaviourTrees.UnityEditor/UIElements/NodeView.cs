@@ -5,6 +5,7 @@ using BehaviourTrees.Core;
 using BehaviourTrees.Model;
 using BehaviourTrees.UnityEditor.Data;
 using BehaviourTrees.UnityEditor.Data.Events;
+using BehaviourTrees.UnityEditor.Inspector;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
     /// <summary>
     ///     Represents a <see cref="NodeModel" /> on the graph view.
     /// </summary>
-    public sealed class NodeView : Node
+    public sealed class NodeView : Node, IEditable
     {
         /// <summary>
         ///     A reference to the tree container contained in the main editor window.
@@ -371,6 +372,25 @@ namespace BehaviourTrees.UnityEditor.UIElements
             }
 
             return descendants;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<PropertyInfo> GetProperties()
+        {
+            return Node.GetFillableFieldsFromType().Select(info =>
+                new PropertyInfo(info.FieldName, info.FieldType, Node.Properties[info.FieldName]));
+        }
+
+        /// <inheritdoc />
+        public object GetValue(string propertyName)
+        {
+            return Node.Properties[propertyName];
+        }
+
+        /// <inheritdoc />
+        public void SetValue(string propertyName, object value)
+        {
+            Node.Properties[propertyName] = value;
         }
     }
 }

@@ -92,7 +92,7 @@ namespace BehaviourTrees.UnityEditor
             root.Q<ToolbarButton>("toolbar-format").clicked += () => TreeFormatter.FormatTreeStructure(TreeView);
 
             TreeView.TreeLoaded += RemoveCurtain;
-            TreeView.SelectionChanged += Inspector.SetToNode;
+            TreeView.SelectionChanged += Inspector.AssignObject;
         }
 
         /// <summary>
