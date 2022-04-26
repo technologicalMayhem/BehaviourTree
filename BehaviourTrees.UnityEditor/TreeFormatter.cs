@@ -33,7 +33,7 @@ namespace BehaviourTrees.UnityEditor
         /// <returns>The alignment block of the node.</returns>
         private static AlignmentBlock CreateAlignmentBlockTree(NodeView node)
         {
-            var children = GetChildren(node);
+            var children = node.GetChildren();
 
             var block = new AlignmentBlock
             {
@@ -44,19 +44,6 @@ namespace BehaviourTrees.UnityEditor
             block.Children = children.Select(CreateAlignmentBlockTree).ToList();
 
             return block;
-        }
-
-        /// <summary>
-        ///     Gets the children connected to a <see cref="NodeView" />.
-        /// </summary>
-        /// <param name="node">The node to get the children of.</param>
-        /// <returns>The <see cref="NodeView" />s of the children of the node.</returns>
-        private static IEnumerable<NodeView> GetChildren(NodeView node)
-        {
-            return node.OutputPorts
-                .Select(port => port.connections
-                    .FirstOrDefault()?.input.node as NodeView)
-                .Where(view => view != null);
         }
 
         /// <summary>

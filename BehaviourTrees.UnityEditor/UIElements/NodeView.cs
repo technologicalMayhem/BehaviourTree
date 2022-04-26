@@ -4,6 +4,7 @@ using System.Linq;
 using BehaviourTrees.Core;
 using BehaviourTrees.Model;
 using BehaviourTrees.UnityEditor.Data;
+using BehaviourTrees.UnityEditor.Data.Events;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -20,6 +21,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
         ///     A reference to the tree container contained in the main editor window.
         /// </summary>
         private static EditorTreeContainer Container => BehaviourTreeEditor.GetOrOpen().TreeContainer;
+
+        private bool _isConnectionChangeUpdateScheduled;
+        private readonly List<NodeView> _nodeConnectionSnapshot;
 
         /// <summary>
         ///     The <see cref="NodeModel" /> this NodeView is representing.
@@ -52,6 +56,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
             OutputPorts = new List<Port>();
             title = TreeEditorUtility.GetNodeName(Node.RepresentingType);
             viewDataKey = node.Id;
+            _nodeConnectionSnapshot = new List<NodeView>();
 
             if (!Container.ModelExtension.NodePositions.TryGetValue(node.Id, out var position))
                 position = Vector2.zero;
@@ -121,9 +126,42 @@ namespace BehaviourTrees.UnityEditor.UIElements
         /// </summary>
         public void UpdatePorts()
         {
+            BeginConnectionUpdateEvent();
             RemoveOrAddPorts();
             outputContainer.Sort(SortPorts);
             UpdatePortNames();
+        }
+
+        /// <summary>
+        ///     <p>Collects a snapshot and schedules the <see cref="ConnectionsChanged" /> update to be raised next frame.</p>
+        ///     <p>
+        ///         Calling this multiple time in the same frame will not raise the event multiple time or override the snapshot.
+        ///         This will only be done the first time.
+        ///     </p>
+        /// </summary>
+        private void BeginConnectionUpdateEvent()
+        {
+            if (_isConnectionChangeUpdateScheduled == false)
+            {
+                _isConnectionChangeUpdateScheduled = true;
+                _nodeConnectionSnapshot.AddRange(GetChildren());
+                schedule.Execute(RaiseConnectionUpdateEvent);
+            }
+        }
+
+        /// <summary>
+        ///     Raises the <see cref="ConnectionsChanged" /> event. Sends the set of changes to all subscribers.
+        /// </summary>
+        private void RaiseConnectionUpdateEvent()
+        {
+            var currentNodes = GetChildren().ToArray();
+
+            ConnectionsChanged?.Invoke(this, new ConnectionChangedEventArgs(
+                currentNodes.Except(_nodeConnectionSnapshot),
+                _nodeConnectionSnapshot.Except(currentNodes)
+            ));
+
+            _isConnectionChangeUpdateScheduled = false;
         }
 
         /// <summary>
@@ -280,6 +318,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
             Undo.RecordObject(Container, "Behaviour Tree (Moved Node)");
             var pos = GetPosition();
+            NodeMoved?.Invoke(this,
+                new MovedEventArgs(pos.position, Container.ModelExtension.NodePositions[Node.Id]));
+
             Container.ModelExtension.NodePositions[Node.Id] = new Vector2(pos.x, pos.y);
             Container.MarkDirty();
         }
@@ -288,5 +329,48 @@ namespace BehaviourTrees.UnityEditor.UIElements
         ///     Get raised when the node has been selected or deselected.
         /// </summary>
         public event EventHandler SelectionChanged;
+
+        /// <summary>
+        ///     Raised when the node has moved.
+        /// </summary>
+        public event EventHandler<MovedEventArgs> NodeMoved;
+
+        /// <summary>
+        ///     Raised when the output connections have changed.
+        /// </summary>
+        public event EventHandler<ConnectionChangedEventArgs> ConnectionsChanged;
+
+        /// <summary>
+        ///     Gets the children connected to this <see cref="NodeView" />.
+        /// </summary>
+        /// <returns>The children of the node.</returns>
+        public IEnumerable<NodeView> GetChildren()
+        {
+            return OutputPorts
+                .Where(port => port.connected)
+                .Select(port => port.connections
+                    .First().input.node as NodeView);
+        }
+
+        /// <summary>
+        ///     Gets all descendants of this <see cref="NodeView" />.
+        /// </summary>
+        /// <returns>All descendants of the node.</returns>
+        public IEnumerable<NodeView> GetDescendants()
+        {
+            var descendants = new List<NodeView>();
+            var newDescendants = new Queue<NodeView>(GetChildren());
+
+            while (newDescendants.Count > 0)
+            {
+                var view = newDescendants.Dequeue();
+
+                foreach (var child in view.GetChildren()) newDescendants.Enqueue(child);
+
+                descendants.Add(view);
+            }
+
+            return descendants;
+        }
     }
 }
