@@ -127,6 +127,17 @@ GridBackground {
     border-bottom-color: brown;
 }
 
+/* Comment Block */
+.comment-block {
+    border-color: rgba(255, 140, 0, 100);
+    border-width: 1px;
+    flex-grow: 1;
+}
+
+.comment-text {
+    font-size: 20px;
+}
+
 /* Node View */
 NodeView {
     padding: 0;

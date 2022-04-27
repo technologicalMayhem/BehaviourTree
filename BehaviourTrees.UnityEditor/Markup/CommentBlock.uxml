@@ -1,0 +1,5 @@
+<UXML xmlns="UnityEngine.UIElements">
+    <VisualElement name="comment-block" class="comment-block">
+        <Label name="comment-text" class="comment-text"/>
+    </VisualElement>
+</UXML>

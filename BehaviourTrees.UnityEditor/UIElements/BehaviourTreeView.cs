@@ -4,6 +4,7 @@ using System.Linq;
 using BehaviourTrees.Core;
 using BehaviourTrees.Model;
 using BehaviourTrees.UnityEditor.Data;
+using BehaviourTrees.UnityEditor.Inspector;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -97,7 +98,9 @@ namespace BehaviourTrees.UnityEditor.UIElements
         /// <summary>
         ///     A reference to the tree container contained in the main editor window.
         /// </summary>
-        private static EditorTreeContainer TreeContainer => BehaviourTreeEditor.GetOrOpen().TreeContainer;
+        private static EditorTreeContainer TreeContainer => Window.TreeContainer;
+
+        private static BehaviourTreeEditor Window => BehaviourTreeEditor.GetOrOpen();
 
         /// <inheritdoc />
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -189,6 +192,28 @@ namespace BehaviourTrees.UnityEditor.UIElements
             TreeContainer.MarkDirty();
         }
 
+        public void CreateComment(NodeView nodeView)
+        {
+            var commentBlock = graphElements
+                .FirstOrDefault(element =>
+                    element is CommentBlock commentBlock &&
+                    commentBlock.AttachedTo == nodeView
+                ) as CommentBlock;
+
+            if (commentBlock == null)
+            {
+                Undo.RecordObject(TreeContainer, "Create Comment");
+                if (!TreeContainer.ModelExtension.Comments.ContainsKey(nodeView.Node.Id))
+                    TreeContainer.ModelExtension.Comments[nodeView.Node.Id] = "Click here to edit text.";
+
+                TreeContainer.MarkDirty();
+                var comment = new CommentBlock(nodeView);
+                comment.Selected += (_, __) => schedule.Execute(UpdateInspector);
+                comment.Unselected += (_, __) => schedule.Execute(UpdateInspector);
+                AddElement(comment);
+            }
+        }
+
         /// <summary>
         ///     Gets called when an undo or redo is performed.
         /// </summary>
@@ -226,6 +251,10 @@ namespace BehaviourTrees.UnityEditor.UIElements
                     AddElement(edge);
                 }
             }
+
+            //Create comments
+            foreach (var (nodeId, _) in TreeContainer.ModelExtension.Comments)
+                CreateComment(GetNodeByGuid(nodeId) as NodeView);
 
             if (TreeModel.Nodes.All(node => node.RepresentingType != typeof(RootNode))) CreateNode(typeof(RootNode));
 
@@ -294,29 +323,21 @@ namespace BehaviourTrees.UnityEditor.UIElements
         private void CreateNodeView(NodeModel node)
         {
             var nodeView = new NodeView(node);
-            nodeView.SelectionChanged += (sender, args) => schedule.Execute(OnSelectionChanged);
+            nodeView.Selected += (sender, args) => schedule.Execute(UpdateInspector);
+            nodeView.Unselected += (sender, args) => schedule.Execute(UpdateInspector);
             AddElement(nodeView);
         }
 
         /// <summary>
-        ///     Gets the currently selected node and fires the <see cref="SelectionChanged" /> action.
+        ///     Updates what the inspector window should show. If only one editable element is selected it will show that.
+        ///     Otherwise it will be set to nothing.
         /// </summary>
-        private void OnSelectionChanged()
+        private void UpdateInspector()
         {
-            var selectedNodes = selection.Where(selectable => selectable is NodeView).Cast<NodeView>().ToList();
-            if (selectedNodes.Count > 1)
-            {
-                SelectionChanged?.Invoke(null);
-                return;
-            }
+            var selectedElements = selection.Where(selectable => selectable is IEditable).Cast<IEditable>().ToList();
 
-            SelectionChanged?.Invoke(selectedNodes.FirstOrDefault());
+            Window.Inspector.AssignObject(selectedElements.Count == 1 ? selectedElements.First() : null);
         }
-
-        /// <summary>
-        ///     Gets called when the selection of nodes has changed. Returns null when no nodes or multiple are selected.
-        /// </summary>
-        public event Action<NodeView> SelectionChanged;
 
         /// <summary>
         ///     Gets called once a behaviour tree has been successfully loaded into the view.

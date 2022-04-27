@@ -6,6 +6,7 @@ using BehaviourTrees.Model;
 using BehaviourTrees.UnityEditor.Data;
 using BehaviourTrees.UnityEditor.Data.Events;
 using BehaviourTrees.UnityEditor.Inspector;
+using BehaviourTrees.UnityEditor.Interfaces;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
     /// <summary>
     ///     Represents a <see cref="NodeModel" /> on the graph view.
     /// </summary>
-    public sealed class NodeView : Node, IEditable
+    public sealed class NodeView : Node, IEditable, ISelectionCallback
     {
         /// <summary>
         ///     A reference to the tree container contained in the main editor window.
@@ -71,8 +72,21 @@ namespace BehaviourTrees.UnityEditor.UIElements
             AddInputPorts();
             AddOutputPorts();
             SetNodeStyle();
+            this.AddManipulator(new ContextualMenuManipulator(AddMenuOptions));
 
             if (node.RepresentingType == typeof(RootNode)) capabilities -= Capabilities.Deletable;
+        }
+
+        private void AddMenuOptions(ContextualMenuPopulateEvent evt)
+        {
+            if (!(evt.target is NodeView)) return;
+
+            if (!Container.ModelExtension.Comments.ContainsKey(Node.Id))
+            {
+                evt.menu.AppendAction("Add comment",
+                    action => BehaviourTreeEditor.GetOrOpen().TreeView.CreateComment(this));
+                evt.menu.AppendSeparator();
+            }
         }
 
         /// <summary>
@@ -110,14 +124,14 @@ namespace BehaviourTrees.UnityEditor.UIElements
         public override void OnSelected()
         {
             base.OnSelected();
-            SelectionChanged?.Invoke(this, EventArgs.Empty);
+            Selected?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
         public override void OnUnselected()
         {
             base.OnUnselected();
-            SelectionChanged?.Invoke(this, EventArgs.Empty);
+            Unselected?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -327,11 +341,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
         }
 
         /// <summary>
-        ///     Get raised when the node has been selected or deselected.
-        /// </summary>
-        public event EventHandler SelectionChanged;
-
-        /// <summary>
         ///     Raised when the node has moved.
         /// </summary>
         public event EventHandler<MovedEventArgs> NodeMoved;
@@ -392,5 +401,11 @@ namespace BehaviourTrees.UnityEditor.UIElements
         {
             Node.Properties[propertyName] = value;
         }
+
+        /// <inheritdoc />
+        public event EventHandler Selected;
+
+        /// <inheritdoc />
+        public event EventHandler Unselected;
     }
 }

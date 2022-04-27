@@ -21,6 +21,11 @@ namespace BehaviourTrees.UnityEditor.Data
         public readonly Dictionary<string, Vector2> NodePositions = new Dictionary<string, Vector2>();
 
         /// <summary>
+        ///     Contains comments that are attached to nodes.
+        /// </summary>
+        public readonly Dictionary<string, string> Comments = new Dictionary<string, string>();
+
+        /// <summary>
         ///     Raises the <see cref="BlackboardKeysChanged" /> event.
         /// </summary>
         /// <param name="sender">The sender of this event.</param>
