@@ -80,13 +80,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
         private void AddMenuOptions(ContextualMenuPopulateEvent evt)
         {
             if (!(evt.target is NodeView)) return;
-
-            if (!Container.ModelExtension.Comments.ContainsKey(Node.Id))
-            {
-                evt.menu.AppendAction("Add comment",
-                    action => BehaviourTreeEditor.GetOrOpen().TreeView.CreateComment(this));
-                evt.menu.AppendSeparator();
-            }
         }
 
         /// <summary>
@@ -145,6 +138,27 @@ namespace BehaviourTrees.UnityEditor.UIElements
             RemoveOrAddPorts();
             outputContainer.Sort(SortPorts);
             UpdatePortNames();
+        }
+
+        private void SetComment(string comment)
+        {
+            tooltip = comment;
+            if (string.IsNullOrWhiteSpace(comment))
+            {
+                Container.ModelExtension.Comments.Remove(Node.Id);
+                RemoveFromClassList("comment");
+            }
+            else
+            {
+                Container.ModelExtension.Comments[Node.Id] = comment;
+                AddToClassList("comment");
+            }
+        }
+
+        private string GetComment()
+        {
+            Container.ModelExtension.Comments.TryGetValue(Node.Id, out var comment);
+            return comment ?? string.Empty;
         }
 
         /// <summary>
@@ -315,6 +329,13 @@ namespace BehaviourTrees.UnityEditor.UIElements
             else if (Node.RepresentingType.InheritsFrom<DecoratorNode>())
                 AddToClassList("decoratorNode");
             else if (Node.RepresentingType.InheritsFrom(typeof(LeafNode<>))) AddToClassList("leafNode");
+
+            var comment = GetComment();
+            if (!string.IsNullOrWhiteSpace(comment))
+            {
+                tooltip = comment;
+                AddToClassList("comment");
+            }
         }
 
         /// <summary>
@@ -387,19 +408,32 @@ namespace BehaviourTrees.UnityEditor.UIElements
         public IEnumerable<PropertyInfo> GetProperties()
         {
             return Node.GetFillableFieldsFromType().Select(info =>
-                new PropertyInfo(info.FieldName, info.FieldType, Node.Properties[info.FieldName]));
+                    new PropertyInfo(info.FieldName, info.FieldType, Node.Properties[info.FieldName]))
+                .Append(new PropertyInfo("Comment", typeof(string), GetComment()));
         }
 
         /// <inheritdoc />
         public object GetValue(string propertyName)
         {
-            return Node.Properties[propertyName];
+            return propertyName switch
+            {
+                "Comment" => GetComment(),
+                _ => Node.Properties[propertyName]
+            };
         }
 
         /// <inheritdoc />
         public void SetValue(string propertyName, object value)
         {
-            Node.Properties[propertyName] = value;
+            switch (propertyName)
+            {
+                case "Comment":
+                    SetComment(value as string);
+                    break;
+                default:
+                    Node.Properties[propertyName] = value;
+                    break;
+            }
         }
 
         /// <inheritdoc />

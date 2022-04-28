@@ -55,7 +55,14 @@ namespace BehaviourTrees.UnityEditor
         /// <returns>True if the field is used as a key for the blackboard.</returns>
         public static bool IsBlackboardField(Type type, string fieldName, out Type blackboardType)
         {
-            var attribute = type.GetField(fieldName).GetCustomAttribute<BlackboardDropdownAttribute>();
+            var fieldInfo = type.GetField(fieldName);
+            if (fieldInfo == null)
+            {
+                blackboardType = null;
+                return false;
+            }
+
+            var attribute = fieldInfo.GetCustomAttribute<BlackboardDropdownAttribute>();
             blackboardType = attribute?.Type;
             return blackboardType != null;
         }

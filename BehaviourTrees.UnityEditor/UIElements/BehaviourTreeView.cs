@@ -192,28 +192,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
             TreeContainer.MarkDirty();
         }
 
-        public void CreateComment(NodeView nodeView)
-        {
-            var commentBlock = graphElements
-                .FirstOrDefault(element =>
-                    element is CommentBlock commentBlock &&
-                    commentBlock.AttachedTo == nodeView
-                ) as CommentBlock;
-
-            if (commentBlock == null)
-            {
-                Undo.RecordObject(TreeContainer, "Create Comment");
-                if (!TreeContainer.ModelExtension.Comments.ContainsKey(nodeView.Node.Id))
-                    TreeContainer.ModelExtension.Comments[nodeView.Node.Id] = "Click here to edit text.";
-
-                TreeContainer.MarkDirty();
-                var comment = new CommentBlock(nodeView);
-                comment.Selected += (_, __) => schedule.Execute(UpdateInspector);
-                comment.Unselected += (_, __) => schedule.Execute(UpdateInspector);
-                AddElement(comment);
-            }
-        }
-
         /// <summary>
         ///     Gets called when an undo or redo is performed.
         /// </summary>
@@ -251,10 +229,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
                     AddElement(edge);
                 }
             }
-
-            //Create comments
-            foreach (var (nodeId, _) in TreeContainer.ModelExtension.Comments)
-                CreateComment(GetNodeByGuid(nodeId) as NodeView);
 
             if (TreeModel.Nodes.All(node => node.RepresentingType != typeof(RootNode))) CreateNode(typeof(RootNode));
 

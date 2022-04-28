@@ -127,17 +127,6 @@ GridBackground {
     border-bottom-color: brown;
 }
 
-/* Comment Block */
-.comment-block {
-    border-color: rgba(255, 140, 0, 100);
-    border-width: 1px;
-    flex-grow: 1;
-}
-
-.comment-text {
-    font-size: 20px;
-}
-
 /* Node View */
 NodeView {
     padding: 0;
@@ -172,6 +161,9 @@ NodeView {
     background-color: rgb(54, 80, 54);
 }
 
+.comment > #node-border {
+    border-color: rgb(184, 134, 11);
+}
 
 #selection-border {
     border-radius: 8px;
