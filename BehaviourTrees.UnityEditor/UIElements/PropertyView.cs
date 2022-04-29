@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -21,6 +22,24 @@ namespace BehaviourTrees.UnityEditor.UIElements
         ///     The label with the property name.
         /// </summary>
         private readonly Label _name;
+
+        /// <summary>
+        ///     A dictionary containing a supplier for a editor field identified by the supported type as a key.
+        /// </summary>
+        public readonly Dictionary<Type, Func<object, Action<object>, VisualElement>> EditorFields =
+            new Dictionary<Type, Func<object, Action<object>, VisualElement>>
+            {
+                [typeof(string)] = CreateEditorField<TextField, string>,
+                [typeof(int)] = CreateEditorField<IntegerField, int>,
+                [typeof(long)] = CreateEditorField<LongField, long>,
+                [typeof(float)] = CreateEditorField<FloatField, float>,
+                [typeof(double)] = CreateEditorField<DoubleField, double>,
+                [typeof(Vector2)] = CreateEditorField<Vector2Field, Vector2>,
+                [typeof(Vector3)] = CreateEditorField<Vector3Field, Vector3>,
+                [typeof(Vector4)] = CreateEditorField<Vector4Field, Vector4>,
+                [typeof(Rect)] = CreateEditorField<RectField, Rect>
+            };
+
 
         /// <summary>
         ///     Creates a new instance of the PropertyView element.
@@ -82,32 +101,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
         /// <returns>A editor for the value.</returns>
         private VisualElement GetEditorElement(Type type, object value, Action<object> callback)
         {
-            if (type == typeof(string))
-                return CreateEditorField<TextField, string>(value, callback);
-
-            if (type == typeof(int))
-                return CreateEditorField<IntegerField, int>(value, callback);
-
-            if (type == typeof(long))
-                return CreateEditorField<LongField, long>(value, callback);
-
-            if (type == typeof(float))
-                return CreateEditorField<FloatField, float>(value, callback);
-
-            if (type == typeof(double))
-                return CreateEditorField<DoubleField, double>(value, callback);
-
-            if (type == typeof(Vector2))
-                return CreateEditorField<Vector2Field, Vector2>(value, callback);
-
-            if (type == typeof(Vector3))
-                return CreateEditorField<Vector3Field, Vector3>(value, callback);
-
-            if (type == typeof(Vector4))
-                return CreateEditorField<Vector4Field, Vector4>(value, callback);
-
-            if (type == typeof(Rect))
-                return CreateEditorField<RectField, Rect>(value, callback);
+            if (EditorFields.TryGetValue(type, out var supplier)) return supplier(value, callback);
 
             if (TypeCache.GetTypesDerivedFrom<GameObject>().Contains(type) ||
                 TypeCache.GetTypesDerivedFrom<ScriptableObject>().Contains(type))
