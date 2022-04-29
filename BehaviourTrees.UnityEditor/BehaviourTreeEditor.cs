@@ -30,8 +30,6 @@ namespace BehaviourTrees.UnityEditor
         /// </summary>
         private static BehaviourTreeEditor _instance;
 
-        private NodeView _debugView;
-
         /// <summary>
         ///     The <see cref="BlackboardView" /> element in the editor.
         /// </summary>
