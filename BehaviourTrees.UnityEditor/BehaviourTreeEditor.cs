@@ -115,7 +115,8 @@ namespace BehaviourTrees.UnityEditor
         /// <returns>A instance of the editor window.</returns>
         public static BehaviourTreeEditor GetOrOpen()
         {
-            return _instance != null ? _instance : CreateWindow();
+            _instance ??= GetWindow<BehaviourTreeEditor>();
+            return _instance;
         }
 
         /// <summary>
@@ -147,12 +148,11 @@ namespace BehaviourTrees.UnityEditor
         /// </summary>
         /// <returns>A instance of the editor window.</returns>
         [MenuItem("Window/AI/Behaviour Tree Editor")]
-        public static BehaviourTreeEditor CreateWindow()
+        public static void CreateWindow()
         {
             var wnd = GetWindow<BehaviourTreeEditor>("Behaviour Tree", true, typeof(SceneView));
             wnd.titleContent = new GUIContent("Behaviour Tree", TreeEditorUtility.GetEditorIcon());
             _instance = wnd;
-            return wnd;
         }
 
         /// <summary>
