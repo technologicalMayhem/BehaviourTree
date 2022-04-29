@@ -72,14 +72,8 @@ namespace BehaviourTrees.UnityEditor.UIElements
             AddInputPorts();
             AddOutputPorts();
             SetNodeStyle();
-            this.AddManipulator(new ContextualMenuManipulator(AddMenuOptions));
 
             if (node.RepresentingType == typeof(RootNode)) capabilities -= Capabilities.Deletable;
-        }
-
-        private void AddMenuOptions(ContextualMenuPopulateEvent evt)
-        {
-            if (!(evt.target is NodeView)) return;
         }
 
         /// <summary>
