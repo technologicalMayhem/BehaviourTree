@@ -18,12 +18,17 @@ namespace BehaviourTrees.UnityEditor.Inspector
         ///     A user-friendly name for the property. Defaults to the name given in <see cref="Name" />,
         ///     split by pascal case rules.
         /// </param>
-        public PropertyInfo(string name, Type type, object value, string prettyName = null)
+        /// <param name="categoryName">Optional, but recommended. A category name to place the property under in the inspector.</param>
+        /// <param name="categoryOrder">The order of the category in the inspector. Higher numbers will be placed higher.</param>
+        public PropertyInfo(string name, Type type, object value, string prettyName = null, string categoryName = null,
+            int categoryOrder = 0)
         {
             Name = name;
             FriendlyName = prettyName ?? TreeEditorUtility.SplitPascalCase(name);
             Type = type;
             Value = value;
+            CategoryName = categoryName;
+            CategoryOrder = categoryOrder;
         }
 
         /// <summary>
@@ -45,5 +50,15 @@ namespace BehaviourTrees.UnityEditor.Inspector
         ///     The value of the property.
         /// </summary>
         [MaybeNull] public readonly object Value;
+
+        /// <summary>
+        ///     Optional, but recommended. A category name to place the property under in the inspector.
+        /// </summary>
+        [MaybeNull] public readonly string CategoryName;
+
+        /// <summary>
+        ///     The order of the category in the inspector. Higher numbers will be placed higher.
+        /// </summary>
+        public readonly int CategoryOrder;
     }
 }

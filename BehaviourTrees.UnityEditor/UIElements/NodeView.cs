@@ -401,9 +401,17 @@ namespace BehaviourTrees.UnityEditor.UIElements
         /// <inheritdoc />
         public IEnumerable<PropertyInfo> GetProperties()
         {
-            return Node.GetFillableFieldsFromType().Select(info =>
-                    new PropertyInfo(info.FieldName, info.FieldType, Node.Properties[info.FieldName]))
-                .Append(new PropertyInfo("Comment", typeof(string), GetComment()));
+            return Node.GetFillableFieldsFromType().Select(info => new PropertyInfo(
+                    info.FieldName,
+                    info.FieldType,
+                    Node.Properties[info.FieldName],
+                    categoryName: $"{Node.RepresentingType.Name} Properties"))
+                .Append(new PropertyInfo(
+                    "Comment",
+                    typeof(string),
+                    GetComment(),
+                    categoryName: "Common Properties",
+                    categoryOrder: 100));
         }
 
         /// <inheritdoc />

@@ -1,0 +1,6 @@
+<UXML xmlns="UnityEngine.UIElements">
+    <VisualElement class="inspector-separator">
+        <Label name="separator-text" class="inspector-separator-text" text="Label"/>
+        <VisualElement class="inspector-separator-line"/>
+    </VisualElement>
+</UXML>

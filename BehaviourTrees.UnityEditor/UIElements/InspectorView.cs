@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using BehaviourTrees.UnityEditor.Data;
 using BehaviourTrees.UnityEditor.Inspector;
 using UnityEditor;
@@ -12,6 +14,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
     public class InspectorView : VisualElement
     {
         private readonly VisualElement _propertyViewContainer;
+        private readonly VisualTreeAsset _inspectorSeparator;
         private static BehaviourTreeEditor Window => BehaviourTreeEditor.GetOrOpen();
         private static EditorTreeContainer Container => Window.TreeContainer;
 
@@ -22,6 +25,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
         {
             var visualTree = TreeEditorUtility.GetVisualTree(nameof(InspectorView));
             visualTree.CloneTree(this);
+            _inspectorSeparator = TreeEditorUtility.GetVisualTree("InspectorSeparator");
 
             _propertyViewContainer = this.Q("property-list");
         }
@@ -35,22 +39,48 @@ namespace BehaviourTrees.UnityEditor.UIElements
             _propertyViewContainer.Clear();
             if (editable == null) return;
 
-            foreach (var property in editable.GetProperties())
+            //Get properties and sort them into a dictionary.
+            //Properties are grouped by category name and the categories are ordered by priority first, then category.
+            var propertyInfos = editable.GetProperties().ToArray();
+            var dictionary = new Dictionary<string, IEnumerable<PropertyInfo>>(propertyInfos
+                .Select(info => info.CategoryName)
+                .Distinct()
+                .Select(category => new KeyValuePair<string, IEnumerable<PropertyInfo>>(
+                    string.IsNullOrWhiteSpace(category) ? string.Empty : category,
+                    propertyInfos.Where(info => info.CategoryName == category)))
+                .OrderByDescending(pair => propertyInfos.First(info => info.CategoryName == pair.Key).CategoryOrder)
+                .ThenBy(pair => pair.Key)
+            );
+            //Add properties to the inspector window by category
+            foreach (var (category, list) in dictionary)
             {
-                var callback = new Action<object>(o =>
+                //Do not add a category header if the category name is empty
+                if (category != string.Empty)
                 {
-                    Undo.RecordObject(Container, $"Edit properties: {property.Name}");
-                    editable.SetValue(property.Name, o);
-                    Container.MarkDirty();
-                });
+                    var separator = new VisualElement();
+                    _inspectorSeparator.CloneTree(separator);
+                    separator.Q<Label>("separator-text").text = category;
+                    _propertyViewContainer.Add(separator);
+                }
 
-                if (editable is NodeView view && TreeEditorUtility.IsBlackboardField
-                        (view.Node.RepresentingType, property.Name, out var blackboardType))
-                    _propertyViewContainer.Add(PropertyView.CreateBlackboardDropdown
-                        (property.FriendlyName, blackboardType, property.Value as string, callback));
-                else
-                    _propertyViewContainer.Add(
-                        PropertyView.CreateEditor(property.FriendlyName, property.Type, property.Value, callback));
+                //Add properties
+                foreach (var property in list)
+                {
+                    var callback = new Action<object>(o =>
+                    {
+                        Undo.RecordObject(Container, $"Edit properties: {property.Name}");
+                        editable.SetValue(property.Name, o);
+                        Container.MarkDirty();
+                    });
+
+                    if (editable is NodeView view && TreeEditorUtility.IsBlackboardField
+                            (view.Node.RepresentingType, property.Name, out var blackboardType))
+                        _propertyViewContainer.Add(PropertyView.CreateBlackboardDropdown
+                            (property.FriendlyName, blackboardType, property.Value as string, callback));
+                    else
+                        _propertyViewContainer.Add(
+                            PropertyView.CreateEditor(property.FriendlyName, property.Type, property.Value, callback));
+                }
             }
         }
 
