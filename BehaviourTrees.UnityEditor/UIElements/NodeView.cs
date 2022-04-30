@@ -405,7 +405,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
                     info.FieldName,
                     info.FieldType,
                     Node.Properties[info.FieldName],
-                    categoryName: $"{Node.RepresentingType.Name} Properties"))
+                    categoryName: $"{TreeEditorUtility.GetNodeName(Node.RepresentingType)} Properties"))
                 .Append(new PropertyInfo(
                     "Comment",
                     typeof(string),
