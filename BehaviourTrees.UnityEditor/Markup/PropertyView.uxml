@@ -1,5 +1,5 @@
 <UXML xmlns:editor="UnityEditor.UIElements" xmlns="UnityEngine.UIElements">
-    <VisualElement name="property-container">
+    <VisualElement name="property-container" class="property-container">
         <Label class="propertyLabel" text="Label" display-tooltip-when-elided="true" name="property-name"/>
         <editor:PropertyField class="propertyValue" name="property-value" style="min-height: 16px; width: 60%;"/>
     </VisualElement>

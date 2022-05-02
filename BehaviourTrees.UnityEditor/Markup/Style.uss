@@ -6,14 +6,14 @@ GridBackground {
     --spacing: 15;
 }
 
-#graph-curtain {
+.graph-curtain {
     flex: auto 1 1;
     background-color: rgb(20, 20, 20);
     justify-content: center;
     align-items: center;
 }
 
-#graph-curtain > Label {
+.graph-curtain-text {
     font-size: 24px;
     max-width: 90%;
     -unity-text-align: upper-center;
@@ -38,27 +38,6 @@ GridBackground {
     height: 60%;
 }
 
-/* Tree View */
-.comment {
-    flex-direction: column;
-}
-
-#comment-text {
-    white-space: normal;
-    margin: 6px;
-}
-
-.behaviour-node {
-    flex-direction: row;
-}
-
-.comment-title {
-    -unity-text-align: upper-center;
-    margin: 2px;
-    font-size: 18px;
-    -unity-font-style: bold;
-}
-
 /* Inspector */
 .propertyLabel {
     align-self: center;
@@ -68,7 +47,7 @@ GridBackground {
     flex-grow: 1;
 }
 
-#property-container {
+.property-container {
     flex-direction: row;
     margin: 2px 6px 2px 2px;
 }
@@ -95,7 +74,7 @@ GridBackground {
 }
 
 /* Blackboard */
-.blackboard {
+BlackboardView {
     flex-grow: 1;
 }
 
@@ -150,38 +129,39 @@ NodeView {
     -unity-overflow-clip-box: content-box;
 }
 
-.graphElement {
-    margin: 0;
-}
-
-#node-border {
+.behaviour-node {
+    flex-direction: row;
     border-radius: 6px;
     border-width: 1px;
     border-color: rgb(25, 25, 25);
     overflow: hidden;
 }
 
-.rootNode > #node-border {
+.graphElement {
+    margin: 0;
+}
+
+.rootNode > .behaviour-node {
     background-color: rgb(80, 54, 54);
 }
 
-.compositeNode > #node-border {
+.compositeNode > .behaviour-node {
     background-color: rgb(80, 80, 54);
 }
 
-.decoratorNode > #node-border {
+.decoratorNode > .behaviour-node {
     background-color: rgb(54, 80, 80);
 }
 
-.leafNode > #node-border {
+.leafNode > .behaviour-node {
     background-color: rgb(54, 80, 54);
 }
 
-.comment > #node-border {
+.comment > .behaviour-node {
     border-color: rgb(184, 134, 11);
 }
 
-#selection-border {
+.behaviour-node-border {
     border-radius: 8px;
     margin: 4px;
     position: absolute;
@@ -191,74 +171,46 @@ NodeView {
     bottom: -8px;
 }
 
-:hover > #selection-border {
+:hover > .behaviour-node-border {
     border-color: rgb(68, 192, 255);
     /*border-color: white;*/
     border-width: 1px;
 }
 
-:selected > #selection-border {
+:selected > .behaviour-node-border {
     border-color: rgb(68, 192, 255);
     /*border-color: white;*/
     border-width: 1px;
 }
 
-:selected:hover > #selection-border {
+:selected:hover > .behaviour-node-border {
     border-color: rgb(68, 192, 255);
     /*border-color: white;*/
     border-width: 2px;
 }
 
-#title {
+.behaviour-node-middle {
     flex-direction: row;
     justify-content: center;
-    height: 36px;
 }
 
-#title-label {
+.behaviour-node-title {
     margin: 4px;
     align-self: center;
 }
 
-#contents {
-    flex: 1 0 auto;
+.behaviour-node-contents {
+    display: none;
 }
 
-#contents > #top {
-    flex-direction: row;
-}
-
-#input {
+.behaviour-node-ports {
     padding-top: 4px;
     padding-bottom: 4px;
     flex: 1 0 auto;
     justify-content: center;
-}
-
-#output {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    flex: 1 0 auto;
-    justify-content: center;
-}
-
-#divider {
-    border-color: rgb(35, 35, 35);
-    background-color: rgb(35, 35, 35);
-}
-
-#divider.vertical {
-    width: 1px;
-    border-right-width: 1px;
-}
-
-#divider.horizontal {
-    height: 1px;
-    border-bottom-width: 1px;
 }
 
 /* Problem Window */
-
 .problem-item {
     flex-direction: row;
 }

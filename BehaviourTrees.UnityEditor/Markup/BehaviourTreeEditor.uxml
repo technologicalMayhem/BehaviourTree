@@ -4,8 +4,9 @@
         <editor:ToolbarMenu name="toolbar-view" text="View"/>
         <editor:ToolbarButton name="toolbar-format" text="Format Tree"/>
     </editor:Toolbar>
-    <VisualElement name="graph-curtain">
-        <Label text="Load a behaviour tree by opening it in the project view or using the assets dropdown."
+    <VisualElement name="graph-curtain" class="graph-curtain">
+        <Label class="graph-curtain-text"
+               text="Load a behaviour tree by opening it in the project view or using the assets dropdown."
                display-tooltip-when-elided="true"/>
     </VisualElement>
     <bte:SplitView class="hide" orientation="Horizontal" name="split-view" fixed-pane-initial-dimension="1200">
