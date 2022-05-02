@@ -104,6 +104,8 @@ namespace BehaviourTrees.UnityEditor
             foreach (var validator in _validators) problems.AddRange(validator.Validate(Container));
 
             foreach (var problem in problems) _problemsList.Add(ProblemItem.Create(problem));
+
+            if (problems.Any() == false) _problemsList.Add(new Label("No problems found."));
         }
     }
 }
