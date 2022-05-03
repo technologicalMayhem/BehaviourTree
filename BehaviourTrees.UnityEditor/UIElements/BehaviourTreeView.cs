@@ -258,6 +258,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
 
         private void ProcessRemovedElements(List<GraphElement> removedElements)
         {
+            var nodesRequiringUpdate = new HashSet<NodeView>();
             foreach (var element in removedElements)
                 switch (element)
                 {
@@ -271,10 +272,13 @@ namespace BehaviourTrees.UnityEditor.UIElements
                         var childView = (NodeView)edge.input.node;
 
                         TreeModel.RemoveChild(childView.Node, parentView.Node);
-                        //We need to update the ports on the next frame as right now our updates have not propagated properly
-                        schedule.Execute(() => parentView.UpdatePorts());
+                        nodesRequiringUpdate.Add(parentView);
                         break;
                 }
+
+            foreach (var nodeView in nodesRequiringUpdate)
+                //We need to update the ports on the next frame as right now our updates have not propagated properly
+                schedule.Execute(() => nodeView.UpdatePorts());
         }
 
         private void ProcessCreatedEdges(List<Edge> createdEdges)

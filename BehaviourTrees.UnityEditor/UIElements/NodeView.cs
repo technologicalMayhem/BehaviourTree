@@ -274,7 +274,6 @@ namespace BehaviourTrees.UnityEditor.UIElements
             var port = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, null);
             OutputPorts.Add(port);
             outputContainer.Add(port);
-            UpdatePorts();
             return port;
         }
 
