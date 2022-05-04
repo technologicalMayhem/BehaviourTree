@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BehaviourTrees.Model;
 using BehaviourTrees.UnityEditor.Data;
 using BehaviourTrees.UnityEditor.UIElements;
 using BehaviourTrees.UnityEditor.Validation;
@@ -85,9 +84,9 @@ namespace BehaviourTrees.UnityEditor
         /// </summary>
         private static TreeValidator[] GetValidators()
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(assembly => assembly.GetTypes()
-                    .Where(type => type.InheritsFrom<TreeValidator>() && !type.IsAbstract))
+            return TypeLocater.GetAllTypes()
+                .ThatInheritFrom<TreeValidator>()
+                .ThatHaveADefaultConstructor()
                 .Select(type => Activator.CreateInstance(type) as TreeValidator)
                 .ToArray();
         }

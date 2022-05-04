@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using BehaviourTrees.Model;
 using UnityEngine.UIElements;
 
 namespace BehaviourTrees.UnityEditor.UIElements
@@ -51,11 +50,10 @@ namespace BehaviourTrees.UnityEditor.UIElements
         /// <returns>The created instances of <see cref="SidebarElement" />s.</returns>
         private static ReadOnlyCollection<SidebarElement> CreateSidebarElements()
         {
-            var sidebarElements = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(assembly => assembly.GetTypes())
-                .Where(type => !type.IsAbstract && type.InheritsFrom<SidebarElement>());
-
-            return sidebarElements
+            return TypeLocater
+                .GetAllTypes()
+                .ThatInheritFrom<SidebarElement>()
+                .ThatHaveADefaultConstructor()
                 .Select(type => (SidebarElement)Activator.CreateInstance(type))
                 .OrderByDescending(element => element.DefaultPosition)
                 .ToList()

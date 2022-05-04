@@ -76,11 +76,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
             visualTree.CloneTree(this);
 
             //Gets all types that could be created in the blackboard
-            var allTypes = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => !assembly.FullName.StartsWith("UnityEditor"))
-                .SelectMany(assembly => assembly.GetTypes())
-                .Where(type => !type.IsAbstract || !type.IsInterface)
-                .ToArray();
+            var allTypes = TypeLocater.GetAllTypes().ThatHaveADefaultConstructor().ToArray();
 
             _nonGenericTypes = allTypes.Where(type => !type.IsGenericType).ToArray();
             _genericTypes = allTypes.Where(type => type.IsGenericType).ToArray();

@@ -139,15 +139,13 @@ namespace BehaviourTrees.UnityEditor.Data
                 bool hasExistingValue,
                 JsonSerializer serializer)
             {
-                var allTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes())
-                    .ToArray();
                 var list = new List<Type>();
 
                 reader.Read();
                 do
                 {
                     var t = reader.Value as string;
-                    list.Add(allTypes.FirstOrDefault(type => type.FullName == t));
+                    list.Add(TypeLocater.GetTypeByName(t));
                     reader.Read();
                 } while (reader.TokenType != JsonToken.EndArray);
 
