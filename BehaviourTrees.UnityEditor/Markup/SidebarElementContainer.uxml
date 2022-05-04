@@ -1,0 +1,7 @@
+<UXML xmlns="UnityEngine.UIElements">
+    <VisualElement name="sidebar-header" class="sidebar-header">
+        <Label name="element-collapse" class="sidebar-header-element sidebar-header-collapse"/>
+        <Label name="element-name" class="sidebar-header-element"/>
+    </VisualElement>
+    <VisualElement name="sidebar-content" class="sidebar-content"/>
+</UXML>

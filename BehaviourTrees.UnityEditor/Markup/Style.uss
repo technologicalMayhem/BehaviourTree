@@ -38,7 +38,38 @@ GridBackground {
     height: 60%;
 }
 
+/* Sidebar */
+.sidebar-header {
+    background-color: #282828;
+    flex-direction: row;
+}
+
+.sidebar-header-element {
+    margin: 2px;
+    font-size: 14px;
+    -unity-font-style: bold;
+}
+
+.sidebar-header-collapse {
+    width: 20px;
+    height: 20px;
+    color: #666666;
+}
+
+.sidebar-content {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 /* Inspector */
+.inspector-not-selected {
+    margin: 25px;
+}
+
+.inspector-not-selected > Label {
+    white-space: normal;
+}
+
 .propertyLabel {
     align-self: center;
 }

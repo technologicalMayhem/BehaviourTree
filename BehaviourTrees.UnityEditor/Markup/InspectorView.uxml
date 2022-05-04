@@ -1,3 +1,6 @@
 <UXML xmlns="UnityEngine.UIElements">
-    <VisualElement name="property-list"/>
+    <VisualElement name="not-selected" class="inspector-not-selected">
+        <Label text="No node to edit selected. Select a node to start editing it's properties."/>
+    </VisualElement>
+    <VisualElement name="property-list" class="hide"/>
 </UXML>

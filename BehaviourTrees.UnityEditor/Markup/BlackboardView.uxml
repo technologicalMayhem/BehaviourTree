@@ -1,22 +1,18 @@
 <UXML xmlns="UnityEngine.UIElements">
-    <VisualElement>
-        <VisualElement class="new-block">
-            <VisualElement class="new-labels">
-                <Label text="Key"/>
-                <Label text="Type Search"/>
-                <Label text="Type Select"/>
-            </VisualElement>
-            <VisualElement class="new-fields">
-                <TextField name="new-key"/>
-                <TextField name="new-type-search"/>
-                <DropdownField name="new-type-list"/>
-            </VisualElement>
+    <VisualElement class="new-block">
+        <VisualElement class="new-labels">
+            <Label text="Key"/>
+            <Label text="Type Search"/>
+            <Label text="Type Select"/>
         </VisualElement>
-        <VisualElement name="new-error"/>
-        <Button name="new-create" text="Create new key"/>
+        <VisualElement class="new-fields">
+            <TextField name="new-key"/>
+            <TextField name="new-type-search"/>
+            <DropdownField name="new-type-list"/>
+        </VisualElement>
     </VisualElement>
+    <VisualElement name="new-error"/>
+    <Button name="new-create" text="Create new key"/>
     <VisualElement class="separator-horizontal"/>
-    <ScrollView class="blackboard-scroller" vertical-scroller-visibility="AlwaysVisible">
-        <VisualElement name="blackboard-list"/>
-    </ScrollView>
+    <VisualElement name="blackboard-list"/>
 </UXML>

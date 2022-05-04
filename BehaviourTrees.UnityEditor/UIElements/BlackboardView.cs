@@ -11,8 +11,11 @@ namespace BehaviourTrees.UnityEditor.UIElements
     /// <summary>
     ///     Visualizes the blackboard and allows making edits to it.
     /// </summary>
-    public class BlackboardView : VisualElement
+    public class BlackboardView : SidebarElement
     {
+        /// <inheritdoc />
+        public override int DefaultPosition => 50;
+
         /// <summary>
         ///     A regex for checking if a string is a descriptor for a generic class with type arguments.
         ///     Selects the generic class and type arguments as groups.

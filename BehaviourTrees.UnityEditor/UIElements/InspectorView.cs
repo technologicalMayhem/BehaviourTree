@@ -11,9 +11,12 @@ namespace BehaviourTrees.UnityEditor.UIElements
     /// <summary>
     ///     Shows the field data set on the currently selected node and allows editing it.
     /// </summary>
-    public class InspectorView : VisualElement
+    public class InspectorView : SidebarElement
     {
+        /// <inheritdoc />
+        public override int DefaultPosition => 100;
         private readonly VisualElement _propertyViewContainer;
+        private readonly VisualElement _notSelected;
         private readonly VisualTreeAsset _inspectorSeparator;
         private static BehaviourTreeEditor Window => BehaviourTreeEditor.GetOrOpen();
         private static EditorTreeContainer Container => Window.TreeContainer;
@@ -28,6 +31,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
             _inspectorSeparator = TreeEditorUtility.GetVisualTree("InspectorSeparator");
 
             _propertyViewContainer = this.Q("property-list");
+            _notSelected = this.Q("not-selected");
         }
 
         /// <summary>
@@ -37,7 +41,15 @@ namespace BehaviourTrees.UnityEditor.UIElements
         public void AssignObject(IEditable editable)
         {
             _propertyViewContainer.Clear();
-            if (editable == null) return;
+            if (editable == null)
+            {
+                _notSelected.RemoveFromClassList("hide");
+                _propertyViewContainer.AddToClassList("hide");
+                return;
+            }
+
+            _propertyViewContainer.RemoveFromClassList("hide");
+            _notSelected.AddToClassList("hide");
 
             //Get properties and sort them into a dictionary.
             //Properties are grouped by category name and the categories are ordered by priority first, then category.

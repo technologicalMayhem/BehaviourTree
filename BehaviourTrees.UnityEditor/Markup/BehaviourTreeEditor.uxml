@@ -11,11 +11,6 @@
     </VisualElement>
     <bte:SplitView class="hide" orientation="Horizontal" name="split-view" fixed-pane-initial-dimension="1200">
         <bte:BehaviourTreeView focusable="true"/>
-        <VisualElement class="right-panel">
-            <ScrollView class="right-panel-inspector">
-                <bte:InspectorView/>
-            </ScrollView>
-            <bte:BlackboardView class="right-panel-blackboard"/>
-        </VisualElement>
+        <bte:Sidebar/>
     </bte:SplitView>
 </UXML>

@@ -31,6 +31,11 @@ namespace BehaviourTrees.UnityEditor
         private static BehaviourTreeEditor _instance;
 
         /// <summary>
+        ///     The <see cref="Sidebar" /> element in the editor.
+        /// </summary>
+        public Sidebar Sidebar { get; private set; }
+        
+        /// <summary>
         ///     The <see cref="BlackboardView" /> element in the editor.
         /// </summary>
         public BlackboardView Blackboard { get; private set; }
@@ -81,8 +86,9 @@ namespace BehaviourTrees.UnityEditor
             _splitView = root.Q<SplitView>();
             _curtain = root.Q("graph-curtain");
             TreeView = root.Q<BehaviourTreeView>();
-            Inspector = root.Q<InspectorView>();
-            Blackboard = root.Q<BlackboardView>();
+            Sidebar = root.Q<Sidebar>();
+            Inspector = Sidebar.GetElement<InspectorView>();
+            Blackboard = Sidebar.GetElement<BlackboardView>();
 
             _splitView.RegisterDraglineMovedCallback(ClampSplitViewSize);
 
