@@ -105,14 +105,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
         /// <inheritdoc />
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
-            var worldMousePosition = GetWorldMousePosition(evt);
-            var menu = evt.menu;
-
-            AddDerivedTypesToContextMenu(typeof(CompositeNode), menu, worldMousePosition);
-            menu.AppendSeparator();
-            AddDerivedTypesToContextMenu(typeof(DecoratorNode), menu, worldMousePosition);
-            menu.AppendSeparator();
-            AddDerivedTypesToContextMenu(typeof(LeafNode<>), menu, worldMousePosition);
+            evt.menu.AppendAction("Organize Layout", action => TreeFormatter.FormatTreeStructure(this));
         }
 
         /// <inheritdoc />
@@ -148,33 +141,18 @@ namespace BehaviourTrees.UnityEditor.UIElements
         }
 
         /// <summary>
-        ///     Gets the position of the mouse cursor on the GraphView element.
+        ///     Converts a point on the <see cref="BehaviourTreeView"/> element to the position inside of it.
         /// </summary>
-        /// <param name="evt">The event holding the mouse position.</param>
-        /// <returns>The position of the cursor.</returns>
-        private Vector2 GetWorldMousePosition(IMouseEvent evt)
+        /// <param name="position">The position to convert.</param>
+        /// <returns>The position inside the <see cref="BehaviourTreeView"/>.</returns>
+        public Vector2 GetWorldPosition(Vector2 position)
         {
             //Code from: http://answers.unity.com/answers/1853975/view.html
-            var screenMousePosition = evt.localMousePosition;
             var transformPosition = contentViewContainer.transform.position;
-            var worldMousePosition = screenMousePosition - new Vector2(transformPosition.x, transformPosition.y);
+            var worldPosition = position - new Vector2(transformPosition.x, transformPosition.y);
             var scaleX = 1 / contentViewContainer.transform.scale.x;
-            worldMousePosition *= scaleX;
-            return worldMousePosition;
-        }
-
-        /// <summary>
-        ///     Adds all behaviour nodes to the context menu that derive from the given type with an action to create it at the
-        ///     current mouse position.
-        /// </summary>
-        /// <param name="menu">The context menu to be populated.</param>
-        /// <param name="mousePosition">The current position of the mouse cursor.</param>
-        /// <param name="baseType">The type from which the behaviour nodes must derive from.</param>
-        private void AddDerivedTypesToContextMenu(Type baseType, DropdownMenu menu, Vector2 mousePosition)
-        {
-            foreach (var derivedType in TypeCache.GetTypesDerivedFrom(baseType))
-                menu.AppendAction(TreeEditorUtility.GetNodeName(derivedType),
-                    _ => CreateNode(derivedType, mousePosition.x, mousePosition.y));
+            worldPosition *= scaleX;
+            return worldPosition;
         }
 
         /// <summary>
@@ -183,7 +161,7 @@ namespace BehaviourTrees.UnityEditor.UIElements
         /// <param name="type">The type of the node to create.</param>
         /// <param name="posX">The X position of the new node.</param>
         /// <param name="posY">The Y position of the new node.</param>
-        private void CreateNode(Type type, float posX = 0, float posY = 0)
+        public void CreateNode(Type type, float posX = 0, float posY = 0)
         {
             Undo.RecordObject(TreeContainer, "Create Node");
             var node = TreeModel.CreateNode(type);

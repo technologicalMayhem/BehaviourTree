@@ -1,0 +1,5 @@
+<UXML xmlns="UnityEngine.UIElements">
+    <ScrollView>
+        <VisualElement name="container" class="node-container"/>
+    </ScrollView>
+</UXML>

@@ -1,0 +1,9 @@
+<UXML xmlns="UnityEngine.UIElements">
+    <VisualElement name="node-border" class="behaviour-node">
+        <VisualElement name="input" class="behaviour-node-ports"/>
+        <VisualElement name="title" class="behaviour-node-middle">
+            <Label name="title-label" class="unity-text-element unity-label behaviour-node-title" text="Example Text"/>
+        </VisualElement>
+        <VisualElement name="output" class="behaviour-node-ports"/>
+    </VisualElement>
+</UXML>

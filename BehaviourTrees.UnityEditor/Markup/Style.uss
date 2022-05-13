@@ -39,6 +39,10 @@ GridBackground {
 }
 
 /* Sidebar */
+Sidebar > ScrollView {
+    flex-grow: 1;
+}
+
 .sidebar-header {
     background-color: #282828;
     flex-direction: row;
@@ -151,6 +155,22 @@ BlackboardView {
 .blackboard-item-remove:hover {
     cursor: link;
     border-bottom-color: brown;
+}
+
+/* Node Drawer */
+.node-container {
+    justify-content: center;
+    align-items: center;
+
+    padding-top: 2px;
+    padding-bottom: 2px;
+
+    /*background-color: #2D2D2D;*/
+}
+
+.drawer-node {
+    margin-top: 2px;
+    margin-bottom: 2px;
 }
 
 /* Node View */
