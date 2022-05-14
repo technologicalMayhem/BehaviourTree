@@ -30,6 +30,7 @@ namespace BehaviourTrees.UnityEditor.UIElements.NodeDrawer
             var ghostNode = new GhostNode(NodeType, evt, evt.position - (Vector3)rootVisualElement.worldBound.position,
                 layout.size);
             rootVisualElement.Add(ghostNode);
+            ghostNode.HandleExternalPointerDown(evt);
         }
     }
 }

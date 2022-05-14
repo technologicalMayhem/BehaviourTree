@@ -12,6 +12,8 @@ namespace BehaviourTrees.UnityEditor.UIElements.NodeDrawer
     /// </summary>
     public class GhostNode : FauxNode
     {
+        private readonly GhostNodeDragAndDropManipulator _manipulator;
+        
         /// <summary>
         ///     Creates a new ghost node element.
         /// </summary>
@@ -24,8 +26,16 @@ namespace BehaviourTrees.UnityEditor.UIElements.NodeDrawer
             style.position = new StyleEnum<Position>(Position.Absolute);
             transform.position = nodePosition - new Vector3(nodeSize.x / 2, nodeSize.y / 2);
 
-            var manipulator = new GhostNodeDragAndDropManipulator(this);
-            manipulator.HandleExternalPointerDown(evt);
+            _manipulator = new GhostNodeDragAndDropManipulator(this);
+        }
+
+        /// <summary>
+        ///     Insert an external <see cref="PointerDownEvent" /> into the ghost nodes manipulator.
+        /// </summary>
+        /// <param name="evt">The event to handle.</param>
+        public void HandleExternalPointerDown(PointerDownEvent evt)
+        {
+            _manipulator.HandleExternalPointerDownInternal(evt);
         }
 
         /// <summary>
@@ -97,7 +107,7 @@ namespace BehaviourTrees.UnityEditor.UIElements.NodeDrawer
             ///     Uses an external <see cref="PointerDownEvent" /> in this manipulator.
             /// </summary>
             /// <param name="evt">The even to use.</param>
-            public void HandleExternalPointerDown(PointerDownEvent evt)
+            public void HandleExternalPointerDownInternal(PointerDownEvent evt)
             {
                 PointerDownHandler(evt);
             }
