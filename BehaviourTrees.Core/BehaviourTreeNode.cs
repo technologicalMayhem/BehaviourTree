@@ -1,3 +1,5 @@
+using BehaviourTrees.Core.Diagnostic;
+
 namespace BehaviourTrees.Core
 {
     /// <summary>
@@ -30,7 +32,7 @@ namespace BehaviourTrees.Core
             }
 
             var result = OnUpdate();
-            BehaviourTreeDebug.ReportNodeResult(this, result);
+            NodeDiagnostics.ReportNodeResult(this, result);
             if (result != NodeStatus.Running) _isRunning = false;
             return result;
         }
