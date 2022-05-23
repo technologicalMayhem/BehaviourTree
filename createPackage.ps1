@@ -115,12 +115,12 @@ New-Item -Path "$packageLocation\Runtime" -ItemType "Directory" | Out-Null
 $exlusions = @( "obj", "bin", "*.csproj" )
 Copy-Folder -FromPath "$PSScriptRoot\BehaviourTrees.Core" -ToPath "$packageLocation\Runtime\BehaviourTrees.Core" -Exclude $exlusions
 Copy-Folder -FromPath "$PSScriptRoot\BehaviourTrees.Model" -ToPath "$packageLocation\Runtime\BehaviourTrees.Model" -Exclude $exlusions
-Copy-Folder -FromPath "$PSScriptRoot\BehaviourTrees.UnityEditor" -ToPath "$packageLocation\Editor\BehaviourTrees.UnityEditor" -Exclude $exlusions
+Copy-Folder -FromPath "$PSScriptRoot\BehaviourTrees.UnityEditor" -ToPath "$packageLocation\Runtime\BehaviourTrees.UnityEditor" -Exclude $exlusions
 
 #Create assembly definitions
 New-AssemblyDefintion -Path "$packageLocation\Runtime\BehaviourTrees.Core\BehaviourTrees.Core.asmdef" -Name "technologicalMayhem.BehaviourTrees.Core" -NoEngineReferences
 New-AssemblyDefintion -Path "$packageLocation\Runtime\BehaviourTrees.Model\BehaviourTrees.Model.asmdef" -Name "technologicalMayhem.BehaviourTrees.Model" -NoEngineReferences -References @( "technologicalMayhem.BehaviourTrees.Core" )
-New-AssemblyDefintion -Path "$packageLocation\Editor\BehaviourTrees.UnityEditor\BehaviourTrees.UnityEditor.asmdef" -Name "technologicalMayhem.BehaviourTrees.UnityEditor" -References @( "technologicalMayhem.BehaviourTrees.Core", "technologicalMayhem.BehaviourTrees.Model" ) -IncludePlatforms @( "Editor" ) -NoAutoReferenced
+New-AssemblyDefintion -Path "$packageLocation\Runtime\BehaviourTrees.UnityEditor\BehaviourTrees.UnityEditor.asmdef" -Name "technologicalMayhem.BehaviourTrees.UnityEditor" -References @( "technologicalMayhem.BehaviourTrees.Core", "technologicalMayhem.BehaviourTrees.Model" )
 
 #Copy info files
 Copy-Item -Path @( "$PSScriptRoot\README.md" ) -Destination $packageLocation
