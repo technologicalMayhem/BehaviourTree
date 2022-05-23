@@ -3,7 +3,12 @@ A implementation of behaviour trees in C# with Unity editor support.
 
 I created this since I didn't find a satisfactory way to create behaviour trees in unity. It's still a bit rough around the edges but mostly feature complete.
 
-Though there are some ways in how i want to improve this. They are, in no particular order:
+## Usage
+To use this just simply get the archive from the [releases](https://github.com/technologicalMayhem/BehaviourTree/releases) page and extract it. Then in Unity open the package manager, click on the plus and select 'Add package from disk'.  
+Alternatively you can also clone the repository and run 'createPackage.ps1'. This creates the same folder as you would get by unzipping the release archive. It can then be added the same way to Unity.
+
+## Roadmap
+There are some ways in how I want to improve this. They are, in no particular order:
 - Editor
   - **Runtime Debugging**: It would be very helpful if for diagnostic purposes you could see what nodes are in which states and what part of the tree is currently being executed as well as what values are currently set on the blackboard.
   - **Runtime Editing**: It could be really cool to make edits to the behaviour tree whilst it's executing. It's not really high priority right now but it could be a worthwhile addition.
