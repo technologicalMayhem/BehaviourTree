@@ -7,6 +7,8 @@ Though there are some ways in how i want to improve this. They are, in no partic
 - Editor
   - **Runtime Debugging**: It would be very helpful if for diagnostic purposes you could see what nodes are in which states and what part of the tree is currently being executed as well as what values are currently set on the blackboard.
   - **Runtime Editing**: It could be really cool to make edits to the behaviour tree whilst it's executing. It's not really high priority right now but it could be a worthwhile addition.
+  - **Better Selector**: The current drag selector in the editor doesn't work properly at zoom level other than fully zoomed in.
+  - **Inspector Actions**: Allow nodes to send actions to the inspector that when used might make some more complicated changes that can't be made with basic editor boxes.
 - General
   - **Automation**: Add some way to automatically put all the dependencies and stuff in one output folder. Right now this is a bit of a mess.
   - **Tests**: Add tests to the project so that i know ahead of time if a change i might make breaks things.
