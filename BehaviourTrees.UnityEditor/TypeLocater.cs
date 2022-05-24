@@ -81,7 +81,8 @@ namespace BehaviourTrees.UnityEditor
         /// <returns>True if the type has a default constructor.</returns>
         public static bool HasDefaultConstructor(this Type type)
         {
-            return type.GetConstructors().Any(info => info.IsPublic && !info.IsAbstract && !info.GetParameters().Any());
+            return type.IsValueType || type.GetConstructors()
+                .Any(info => info.IsPublic && !info.IsAbstract && !info.GetParameters().Any());
         }
     }
 }
