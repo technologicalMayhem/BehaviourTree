@@ -69,6 +69,8 @@ namespace BehaviourTrees.UnityEditor
         [UsedImplicitly]
         private void CreateGUI()
         {
+            titleContent = new GUIContent("Behaviour Tree", TreeEditorUtility.GetEditorIcon());
+            
             // Each editor window contains a root VisualElement object 
             var root = rootVisualElement;
 
@@ -157,7 +159,6 @@ namespace BehaviourTrees.UnityEditor
         public static void CreateWindow()
         {
             var wnd = GetWindow<BehaviourTreeEditor>("Behaviour Tree", true, typeof(SceneView));
-            wnd.titleContent = new GUIContent("Behaviour Tree", TreeEditorUtility.GetEditorIcon());
             _instance = wnd;
         }
 
